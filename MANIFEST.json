@@ -1,0 +1,25 @@
+{
+  "short_name": "SistemaWeb",
+  "name": "Sistema Administrativo Enkarga Courier S.A.C.",
+  "icons": [
+    {
+      "src": "/EC-FrontEnd/Elementos/E-Icon.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/EC-FrontEnd/Elementos/E-Icon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/EC-FrontEnd/Elementos/E-Icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/EC-FrontEnd/?utm_source=homescreen",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "theme_color": "#CB6306"
+}

@@ -1,0 +1,314 @@
+<!--DISEÑO GENERAL DE LA VISTA-->
+<section id="listado">
+  <!--TITULO DE LA VISTA-->
+  <h3 class="h3-responsive titulo font-weight-bold">LISTAR PERSONAL</h3>
+
+  <!--CONTENIDO PRINCIPAL DE LA VISTA-->
+  <table id="tablaListado" class="table table-striped table-bordered" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+        <th>COD</th>
+        <th>NOMBRES</th>
+        <th>APELLIDOS</th>
+        <th>TIPO DOCUMENTO</th>
+        <th>NRO DOCUMENTO</th>
+        <th>PERFIL</th>
+        <th>USUARIO</th>
+        <th>ESTADO</th>
+        <th>INFO</th>
+      </tr>
+    </thead>
+    <tbody id="cuerpoTabla"></tbody>
+  </table>
+</section>
+
+<div class="modal fade" id="infoPersonal" tabindex="-1" role="dialog" aria-labelledby="infoPersonalTitulo"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header principal">
+        <h5 class="modal-title white-text font-weight-bold">
+          Informacion del Personal
+        </h5>
+        <button id="closeModal" type="button" class="close white-text font-weight-bold" data-dismiss="modal"
+          aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="form-row">
+
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold">USUARIO:</label>
+            <span class="col-form-label" id="usuario"></span>
+          </div>
+
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold">PERFIL:</label>
+            <span class="col-form-label" id="perfil"></span>
+          </div>
+
+          <div class="w-100"></div>
+
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold">NOMBRES:</label>
+            <span class="col-form-label" id="nombres"></span>
+          </div>
+
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold">APELLIDOS:</label>
+            <span class="col-form-label" id="apellidos"></span>
+          </div>
+
+          <div class="w-100"></div>
+
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold">TIPO DOCUMENTO:</label>
+            <span class="col-form-label" id="tipoDocumento"></span>
+          </div>
+
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold">NRO DOCUMENTO:</label>
+            <span class="col-form-label" id="nroDocumento"></span>
+          </div>
+
+          <div class="w-100"></div>
+
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold">CORREO:</label>
+            <span class="col-form-label" id="correo"></span>
+          </div>
+
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold">FECHA NACIMIENTO:</label>
+            <span class="col-form-label" id="fechaNacimiento"></span>
+          </div>
+
+          <div class="w-100"></div>
+
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold">DEPARTAMENTO:</label>
+            <span class="col-form-label" id="departamento"></span>
+          </div>
+
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold">PROVINCIA:</label>
+            <span class="col-form-label" id="provincia"></span>
+          </div>
+
+          <div class="w-100"></div>
+
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold">DISTRITO:</label>
+            <span class="col-form-label" id="distrito"></span>
+          </div>
+
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold">DIRECCION:</label>
+            <span class="col-form-label" id="direccion"></span>
+          </div>
+
+          <div class="w-100"></div>
+
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold">TELEFONO:</label>
+            <span class="col-form-label" id="telefono"></span>
+          </div>
+
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold">CELULAR:</label>
+            <span class="col-form-label" id="celular"></span>
+          </div>
+
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--ARCHIVOS JS DE LA VISTA-->
+<script type="text/javascript" src="Modulos/ModClientes/VistaClientes.js"></script>
+<script type="text/javascript" src="Modulos/ModPersonal/VistaPersonal.js"></script>
+<script type="text/javascript" src="Bootstrap/js/tablaDinamica.js"></script>
+<script type="text/javascript">
+  cargarDatos();
+
+  /*=============================================
+    - CARGAR PERSONAL
+  =============================================*/
+
+  function cargarDatos() {
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Personal/Controlador_MostrarPersonal.php",
+      type: "GET",
+      dataType: "json",
+      error: function (error) {
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        mostrarDatosPersonal(datos);
+      },
+    });
+  }
+
+  /*=============================================
+    - MOSTRAR PERSONAL
+  =============================================*/
+
+  function mostrarDatosPersonal(datos) {
+    var tablaPersonal = "";
+    if (Array.isArray(datos)) {
+      for (const personal of datos) {
+        tablaPersonal += `
+        <tr>
+          <td>${personal.id_personal}</td>
+          <td>${personal.nombres}</td>
+          <td>${personal.apellidos}</td>
+          <td>${personal.tipo_documento}</td>
+          <td>${personal.numero_documento}</td>
+          <td>${personal.perfil}</td>
+          <td>${personal.usuario}</td>
+          <td>${personal.estado}</td>
+          <td><button class="btn btn-primary" onclick="mostrarModal(${personal.id_personal});return false" >Ver</button></td>
+        </tr>
+      `;
+      }
+      $("#cuerpoTabla").html(tablaPersonal);
+    } else {
+      $("#cuerpoTabla").html(tablaPersonal);
+    }
+
+    $("#tablaListado").DataTable({
+      dom: "Bfrtip",
+      lengthMenu: [
+        [10, 25, 50, -1],
+        ["VER 10 FILAS", "VER 25 FILAS", "VER 50 FILAS", "TODO"],
+      ],
+      buttons: [
+        {
+          extend: "pageLength",
+          text: "VER 10 FILAS",
+        },
+        {
+          extend: "print",
+          title: "LISTADO PERSONAL",
+          text: "IMPRIMIR",
+        },
+        {
+          extend: "pdfHtml5",
+          download: "open",
+          title: "LISTADO PERSONAL",
+          text: "EXPORTAR PDF",
+        },
+      ],
+    });
+  }
+
+  /*=============================================
+    - CARGAR PERSONAL
+  =============================================*/
+
+  async function cargarDatosPersonal($personal) {
+    return new Promise(function (resolve, reject) {
+      $.ajax({
+        url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Personal/Controlador_CargarPersonal.php",
+        type: "POST",
+        data: $personal,
+        dataType: "json",
+        success: function (datos) {
+          resolve(datos); // Resuelve la promesa con los datos
+        },
+        error: function (error) {
+          if (error.status == 401) {
+            Swal.fire({
+              icon: "error",
+              title: "Error del servidor",
+              text: "No se pudo establecer conexion con el servidor",
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error no identificado",
+              text: "Contactarse con su proveedor",
+            });
+          }
+          reject(error);
+        },
+      });
+    });
+  }
+
+  /*=============================================
+      - MOSTRAR MODAL PERSONAL
+    =============================================*/
+
+  async function mostrarModal(idPersonal) {
+    const modalPersonal = new bootstrap.Modal(
+      document.getElementById("infoPersonal")
+    );
+
+    const datos = await cargarDatosPersonal({
+      _idPersonal: idPersonal,
+    });
+
+    const tipoDocumento = await obtenerTipoDocumento();
+
+    const tipoDocumentoPersonal = tipoDocumento.find(item => item.tipo_documento === datos.tipo_documento);
+
+    const distrito = await obtenerDistritoId({
+      _idDistrito: datos.id_distrito
+    });
+
+    const provincia = await obtenerProvinciaId({
+      _idProvincia: distrito.id_provincia
+    });
+
+    const usuario = await obtenerUsuarioPersonal({
+      _idPersonal: idPersonal
+    })
+
+    const departamentos = await obtenerDepartamento();
+
+    const perfiles = await obtenerPerfil();
+    
+    const perfilUsuario = perfiles.find((item) => item.id_perfil === usuario.id_perfil);
+    const departamento = departamentos.find((item) => item.id_departamento === distrito.id_departamento)
+
+    $("#nombres").html(datos.nombres);
+    $("#apellidos").html(datos.apellidos);
+    $("#tipoDocumento").html(tipoDocumentoPersonal.descripcion);
+    $("#nroDocumento").html(datos.numero_documento);
+    $("#correo").html(datos.correo);
+    $("#distrito").html(distrito.descripcion);
+    $("#provincia").html(provincia.descripcion);
+    $("#departamento").html(departamento.descripcion);
+    $("#direccion").html(datos.direccion);
+    $("#fechaNacimiento").html(datos.fecha_nacimiento);
+    $("#ruc").html(datos.ruc);
+    $("#razonSocial").html(datos.razon_social);
+    $("#telefono").html(datos.telefono);
+    $("#celular").html(datos.celular);
+    $("#usuario").html(usuario.usuario);
+    $("#perfil").html(perfilUsuario.perfil);
+
+    modalPersonal.show();
+  }
+</script>

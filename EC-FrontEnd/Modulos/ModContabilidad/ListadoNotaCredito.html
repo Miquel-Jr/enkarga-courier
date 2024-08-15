@@ -1,0 +1,120 @@
+<!--DISEÑO GENERAL DE LA VISTA-->
+<section id="listado">
+  <!--TITULO DE LA VISTA-->
+  <h3 class="h3-responsive titulo font-weight-bold">LISTAR NOTA DE CREDITO</h3>
+
+  <!--CONTENIDO PRINCIPAL DE LA VISTA-->
+  <table id="tablaListado" class="table table-striped table-bordered" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+        <th>NOTA CREDITO</th>
+        <th>FACTURA</th>
+        <th>FECHA NOTA CREDITO</th>
+        <th>BASE IMPONIBLE</th>
+        <th>IGV</th>
+        <th>TOTAL</th>
+        <th>FECHA REGISTRO</th>
+      </tr>
+    </thead>
+    <tbody id="cuerpoTabla"></tbody>
+  </table>
+</section>
+
+<!--ARCHIVOS JS DE LA VISTA-->
+<script type="text/javascript" src="Modulos/ModContabilidad/VistaContabilidad.js"></script>
+<script type="text/javascript" src="Bootstrap/js/tablaDinamica.js"></script>
+<script type="text/javascript">
+
+  /*=============================================
+    - CARGAR NOTAS DE CREDITO - DOCUMENTO
+  =============================================*/
+
+  mostrarDatosNotaCredito()
+
+  /*=============================================
+    - MOSTRAR NOTAS DE CREDITO
+  =============================================*/
+
+  async function mostrarDatosNotaCredito() {
+    const datos = await cargarListadoNotaCredito();
+    var tablaFacturas = "";
+    if (Array.isArray(datos)) {
+      for (const factura of datos) {
+        tablaFacturas += `
+        <tr onclick="opcionesEliminarNotaCredito('${factura.id_nota_credito}', ${factura.id_factura})" >
+          <td>${factura.serie_nota_credito} - ${factura.numero_nota_credito}</td>
+          <td>${factura.serie_factura} - ${factura.numero_factura}</td>
+          <td>${factura.fecha_nota_credito}</td>
+          <td>S/ ${factura.base_imponible}</td>
+          <td>S/ ${factura.igv}</td>
+          <td>S/ ${factura.total}</td>
+          <td>${factura.fecha_registro}</td>
+        </tr>
+      `;
+      }
+      $("#cuerpoTabla").html(tablaFacturas);
+    } else {
+      $("#cuerpoTabla").html(tablaFacturas);
+    }
+
+    $("#tablaListado").DataTable({
+      dom: "Bfrtip",
+      lengthMenu: [
+        [10, 25, 50, -1],
+        ["VER 10 FILAS", "VER 25 FILAS", "VER 50 FILAS", "TODO"],
+      ],
+      order: [[6, 'desc']],
+      buttons: [
+        {
+          extend: "pageLength",
+          text: "VER 10 FILAS",
+        },
+        {
+          extend: "print",
+          title: "LISTADO NOTA DE CREDITO",
+          text: "IMPRIMIR",
+        },
+        {
+          extend: "pdfHtml5",
+          download: "open",
+          title: "LISTADO NOTA DE CREDITO",
+          text: "EXPORTAR PDF",
+        },
+      ],
+    });
+  }
+
+  /*=============================================
+    - OPCIONES ELIMINAR DEPOSITO
+  =============================================*/
+
+  async function opcionesEliminarNotaCredito(id_nota_credito, id_factura) {
+    Swal.fire({
+      title: "¿Deseas eliminar esta nota de credito?. Al eliminar este registro se actualizará a pagado",
+      showCancelButton: true,
+      confirmButtonText: "Eliminar registro",
+      confirmButtonColor: "#d33",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+
+        const datos = await actualizarEstadoFactura({
+          _idFactura: id_factura,
+          _idEstadoFactura: 2
+        });
+
+        await eliminarNotaCredito({
+          _idNotaCredito: id_nota_credito
+        });
+
+        ventanaDepositoListar();
+
+        Swal.fire({
+          icon: "success",
+          title: "Nota de credito eliminado",
+          text: "La nota de credito se eliminó correctamente",
+        });
+
+      }
+    });
+  }
+</script>

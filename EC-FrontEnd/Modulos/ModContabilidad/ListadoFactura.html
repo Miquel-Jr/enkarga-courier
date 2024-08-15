@@ -1,0 +1,144 @@
+<!--DISEÑO GENERAL DE LA VISTA-->
+<section id="listado">
+  <!--TITULO DE LA VISTA-->
+  <h3 class="h3-responsive titulo font-weight-bold">LISTAR FACTURAS</h3>
+
+  <!--CONTENIDO PRINCIPAL DE LA VISTA-->
+  <table id="tablaListado" class="table table-striped table-bordered" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+        <th>FACTURA</th>
+        <th>CLIENTE</th>
+        <th>RUC</th>
+        <th>RAZON SOCIAL</th>
+        <th>ORDEN SERVICIO</th>
+        <th>TOTAL COBRAR</th>
+        <th>FECHA REGISTRO</th>
+        <th>ESTADO</th>
+      </tr>
+    </thead>
+    <tbody id="cuerpoTabla"></tbody>
+  </table>
+</section>
+
+<!--ARCHIVOS JS DE LA VISTA-->
+<script type="text/javascript" src="Modulos/ModContabilidad/VistaContabilidad.js"></script>
+<script type="text/javascript" src="Bootstrap/js/tablaDinamica.js"></script>
+<script type="text/javascript">
+
+  /*=============================================
+    - CARGAR FACTURAS - DOCUMENTO
+  =============================================*/
+
+  mostrarDatosFacturas()
+
+  /*=============================================
+    - MOSTRAR FACTURAS
+  =============================================*/
+
+  async function mostrarDatosFacturas() {
+    const datos = await cargarListadoFacturas();
+    var tablaFacturas = "";
+    if (Array.isArray(datos)) {
+      for (const factura of datos) {
+        let badgeClass = "";
+        if (factura.id_estado_factura == "1") {
+          badgeClass = "bg-warning";
+        } else if (factura.id_estado_factura == "2") {
+          badgeClass = "bg-success";
+        } else if (factura.id_estado_factura == "3") {
+          badgeClass = "bg-danger";
+        }
+        tablaFacturas += `
+        <tr onclick="opcionesEliminarFactura('${factura.id_factura}', '${factura.id_factura_deposito}', '${factura.id_nota_credito}')" >
+          <td>${factura.serie_factura} - ${factura.numero_factura}</td>
+          <td>${factura.cliente}</td>
+          <td>${factura.ruc}</td>
+          <td>${factura.razon_social}</td>
+          <td>${factura.orden_servicio}</td>
+          <td>S/ ${factura.total_cobrar}</td>
+          <td>${factura.fecha_registro}</td>
+          <td>
+            <span class="badge ${badgeClass}">${factura.estado}</span>  
+          </td>
+        </tr>
+      `;
+      }
+      $("#cuerpoTabla").html(tablaFacturas);
+    } else {
+      $("#cuerpoTabla").html(tablaFacturas);
+    }
+
+    $("#tablaListado").DataTable({
+      dom: "Bfrtip",
+      lengthMenu: [
+        [10, 25, 50, -1],
+        ["VER 10 FILAS", "VER 25 FILAS", "VER 50 FILAS", "TODO"],
+      ],
+      order: [[6, 'desc']],
+      buttons: [
+        {
+          extend: "pageLength",
+          text: "VER 10 FILAS",
+        },
+        {
+          extend: "print",
+          title: "LISTADO FACTURA",
+          text: "IMPRIMIR",
+        },
+        {
+          extend: "pdfHtml5",
+          download: "open",
+          title: "LISTADO FACTURA",
+          text: "EXPORTAR PDF",
+        },
+      ],
+    });
+  }
+
+  /*=============================================
+    - OPCIONES ELIMINAR FACTURAS
+  =============================================*/
+
+  async function opcionesEliminarFactura(id_factura, id_factura_deposito, id_nota_credito) {
+    Swal.fire({
+      title: "¿Deseas eliminar esta factura? Se eliminará el depósito y/o nota de crédito asociado",
+      showCancelButton: true,
+      confirmButtonText: "Eliminar registro",
+      confirmButtonColor: "#d33",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+
+        if (id_factura_deposito) {
+          await eliminarFacturaDeposito({
+            _idFacturaDeposito: id_factura_deposito
+          })
+        }
+
+        if (id_nota_credito) {
+          await eliminarNotaCredito({
+            _idNotaCredito: id_nota_credito
+          })
+        }
+
+        await eliminarDatosGuiasFactura({
+          _idFactura: id_factura
+        });
+
+        await eliminarFactura({
+          _idFactura: id_factura
+        });
+
+
+        ventanaFacturaListar();
+
+        Swal.fire({
+          icon: "success",
+          title: "Factura eliminada",
+          text: "La factura se eliminó correctamente",
+        });
+
+      }
+    });
+  }
+</script>

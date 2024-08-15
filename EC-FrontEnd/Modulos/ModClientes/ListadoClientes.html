@@ -1,0 +1,134 @@
+<!--DISEÑO GENERAL DE LA VISTA-->
+<section id="listado">
+  <!--TITULO DE LA VISTA-->
+  <h3 class="h3-responsive titulo font-weight-bold">LISTAR CLIENTES</h3>
+
+  <!--CONTENIDO PRINCIPAL DE LA VISTA-->
+  <table id="tablaListado" class="table table-striped table-bordered" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+        <th>COD</th>
+        <th>NOMBRES</th>
+        <th>APELLIDOS</th>
+        <th>TIPO DOCUMENTO</th>
+        <th>NRO DOCUMENTO</th>
+        <th>ESTADO</th>
+      </tr>
+    </thead>
+    <tbody id="cuerpoTabla"></tbody>
+  </table>
+</section>
+
+<!--ARCHIVOS JS DE LA VISTA-->
+<script type="text/javascript" src="Modulos/ModClientes/VistaClientes.js"></script>
+<script type="text/javascript" src="Bootstrap/js/tablaDinamica.js"></script>
+<script type="text/javascript">
+
+  mostrarDatosCliente();
+
+  /*=============================================
+    - MOSTRAR CLIENTES
+  =============================================*/
+
+  async function mostrarDatosCliente() {
+
+    let datos = await cargarDatosListadoClientes();
+    var tablaClientes = "";
+    if (Array.isArray(datos)) {
+      for (const cliente of datos) {
+        tablaClientes += `
+        <tr>
+          <td>${cliente.id_cliente}</td>
+          <td>${cliente.nombres}</td>
+          <td>${cliente.apellidos}</td>
+          <td>${cliente.tipo_documento}</td>
+          <td>${cliente.numero_documento}</td>
+          <td class="editable no-sort">${cliente.estado}</td>
+        </tr>
+      `;
+      }
+      $("#cuerpoTabla").html(tablaClientes);
+    } else {
+      datos = [];
+      $("#cuerpoTabla").html(tablaClientes);
+    }
+
+    const table = $("#tablaListado").DataTable({
+      dom: "Bfrtip",
+      lengthMenu: [
+        [10, 25, 50, -1],
+        ["VER 10 FILAS", "VER 25 FILAS", "VER 50 FILAS", "TODO"],
+      ],
+      buttons: [
+        {
+          extend: "pageLength",
+          text: "VER 10 FILAS",
+        },
+        {
+          extend: "print",
+          title: "LISTADO CLIENTE",
+          text: "IMPRIMIR",
+        },
+        {
+          extend: "pdfHtml5",
+          download: "open",
+          title: "LISTADO CLIENTE",
+          text: "EXPORTAR PDF",
+        },
+      ],
+    });
+
+    // Función para convertir td a select
+    function convertTdToSelect(td) {
+      var cellData = td.text();
+      var selectHtml = `
+        <select class="form-control">
+          <option value="1" ${cellData === 'ACTIVO' ? 'selected' : ''}>ACTIVO</option>
+          <option value="2" ${cellData === 'INACTIVO' ? 'selected' : ''}>INACTIVO</option>
+        </select>
+      `;
+      td.html(selectHtml);
+    }
+
+    // Evento para convertir td a select al pasar el mouse
+    $('#tablaListado tbody').on('mouseenter', 'td.editable', function () {
+      if ($(this).find('select').length === 0) {
+        convertTdToSelect($(this));
+      }
+    });
+
+    $('#tablaListado tbody').on('mouseleave', 'td.editable', async function () {
+      if ($(this).find('select').length > 0) {
+        const selectedValue = Number($(this).find('select').val());
+        const selectedText = $(this).find('select option:selected').text();
+        const row = $(this).closest('tr');
+        const index = row.index();
+        const id = row.find('td:first').text();
+        if (selectedValue !== datos[index].id_estado) {
+          const resultado = await actualizarEstadoCliente({
+            _idCliente: id,
+            _idEstado: selectedValue
+          });
+
+          if (resultado.response === 0) {
+            Swal.fire({
+              icon: "error",
+              title: "Cliente no actualizado",
+              text: resultado.message
+            });
+          } else {
+            Swal.fire({
+              icon: "success",
+              title: "Estado cliente registrado",
+              text: resultado.message
+            });
+            ventanaClienteListar();
+          }
+        } else {
+          $(this).html(selectedText);
+        }
+      }
+    });
+  }
+
+</script>

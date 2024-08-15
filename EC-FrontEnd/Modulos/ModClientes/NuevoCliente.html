@@ -1,0 +1,488 @@
+<!--DISEÑO GENERAL DE LA VISTA-->
+<form>
+  <!--DATOS GENERALES-->
+  <div class="card">
+    <div class="card-body">
+      <div class="row justify-content-center">
+        <!--TITULO DE LA VISTA-->
+        <div class="col-12 col-md-8 text-center">
+          <h3 class="h3-responsive titulo font-weight-bold">
+            REGISTRO DE NUEVO CLIENTE
+          </h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATOS CLIENTE -->
+  <div class="card">
+    <h5 class="card-header h5">Datos Cliente</h5>
+    <div class="card-body">
+      <div class="form-row">
+        <!-- NOMBRES -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="nombres">Nombres</label>
+          <input required id="nombres" onkeyup="obtenerMayuscula(this);" class="form-control" type="string"
+            aria-describedby="nombresHelp" placeholder="Ingresar nombres del cliente" />
+          <small id="nombresHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!--APELLIDOS -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="apellidos">Apellidos</label>
+          <input required id="apellidos" onkeyup="obtenerMayuscula(this);" class="form-control" type="string"
+            aria-describedby="apellidosHelp" placeholder="Ingresar apellidos del cliente" />
+          <small id="apellidosHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <div class="w-100"></div>
+
+        <!--TIPO DE DOCUMENTO -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="tipoDocumento">Tipo de documento</label>
+          <select required id="tipoDocumento" class="form-control" aria-describedby="tipoDocumentoHelp"></select>
+          <small id="tipoDocumentoHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!--NUMERO DE DOCUMENTO  -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="numeroDocumento">Nro de Documento</label>
+          <input required id="numeroDocumento" onkeyup="obtenerMayuscula(this);" class="form-control" type="string"
+            aria-describedby="numeroDocumentoHelp" placeholder="Ingresar numero de documento" min="1"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            maxlength="20" />
+          <small id="numeroDocumentoHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <div class="w-100"></div>
+
+        <!--CORREO  -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="correo">Correo</label>
+          <input id="correo" class="form-control" type="string" aria-describedby="correoHelp"
+            placeholder="Ingresar correo del cliente" />
+          <small id="correoHelp" class="form-text text-muted">Campo opcional.</small>
+        </div>
+
+        <!-- TELEFONO -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="telefono">Telefono</label>
+          <input id="telefono" class="form-control" type="string" aria-describedby="telefonoHelp"
+            placeholder="Ingresar telefono del cliente" />
+          <small id="telefonoHelp" class="form-text text-muted">Campo opcional.</small>
+        </div>
+
+        <!-- CELULAR -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="celular">Celular</label>
+          <input id="celular" class="form-control" type="string" aria-describedby="celularHelp"
+            placeholder="Ingresar celular del cliente" />
+          <small id="celularHelp" class="form-text text-muted">Campo opcional.</small>
+        </div>
+
+        <div class="w-100"></div>
+      </div>
+    </div>
+  </div>
+
+  <!--DATOS -->
+  <div class="card">
+    <h5 class="card-header h5">Cliente - Sucursal</h5>
+    <div class="card-body">
+      <div class="form-row">
+
+        <!-- DEPARTAMENTO -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="departamento">Departamento</label>
+          <select required id="departamento" onchange="cargarProvincia(this.value);" class="form-control"
+            aria-describedby="departamentoHelp"></select>
+          <small id="departamentoHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!-- PROVINCIA -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="provincia">Provincia</label>
+          <select required id="provincia" onchange="cargarDistrito(this.value);" class="form-control"
+            aria-describedby="provinciaHelp"></select>
+          <small id="provinciaHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!-- DISTRITO -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="distrito">Distrito</label>
+          <select required id="distrito" class="form-control" aria-describedby="distritoHelp"></select>
+          <small id="distritoHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <div class="w-100"></div>
+
+        <!--DIRECCION SUCURSAL-->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="direccion">Direccion</label>
+          <input required id="direccion" class="form-control" type="string" aria-describedby="direccionHelp"
+            placeholder="Ingresar direccion de la sucursal" onchange="mostrarRegistroSucursal()" />
+          <small id="direccionHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="ruc">Ruc</label>
+          <input required class="form-control" id="ruc" type="number" min="1"
+            oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            maxlength="11" onchange="mostrarRegistroSucursal()" placeholder="Ingresar ruc de la sucursal"
+            aria-describedby="rucHelp">
+          <small id="rucHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="razonSocial">Razon Social</label>
+          <input required class="form-control" id="razonSocial" type="text" onchange="mostrarRegistroSucursal()"
+            placeholder="Ingresar razon social de la sucursal" aria-describedby="razonSocialHelp">
+          <small id="razonSocialHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <div class="col-12 text-right mb-3">
+          <button id="clear" class="btn btn-clear" onclick="return false">Limpiar</button>
+          <button id="registrarSucursal" onclick="return false" class="btn btn-default">Agregar</button>
+        </div>
+        <div class="col-12">
+
+          <table id="tablaSucursales" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th class='th-sm' width="15%">DISTRITO</th>
+                <th class='th-sm' width="40%">DIRECCION</th>
+                <th class='th-sm' width="20%">RUC</th>
+                <th class='th-sm' width="20%">RAZON SOCIAL</th>
+                <th class='th-sm' width="5%">ACCIONES</th>
+              </tr>
+            </thead>
+            <tbody id="cuerpoTablaSucursales">
+              <tr>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="w-100"></div>
+
+      </div>
+    </div>
+  </div>
+
+  <!--OPCIONES DEL FORMULARIO-->
+  <div id="opcionesFormulario" class="form-inline justify-content-center">
+    <button type="button" onclick="loaderRegistrarCliente();return false" class="btn btn-guardar">
+      Guardar
+    </button>
+  </div>
+
+  <div id="loader"></div>
+</form>
+
+<!--ARCHIVOS JS DE LA VISTA-->
+<script src="Bootstrap/js/select2.min.js"></script>
+<link href="Bootstrap/css/select2.min.css" rel="stylesheet" />
+<script type="text/javascript" src="Modulos/ModClientes/VistaClientes.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/validator/13.6.0/validator.min.js"></script>
+
+<script type="text/javascript">
+
+  var sucursales = []
+
+  /*=============================================
+    - CARGAR DOCUMENTO
+  =============================================*/
+
+  cargarTipoDocumentos();
+  cargarDepartamento();
+  cargarProvincia(false);
+  cargarDistrito(false);
+
+  $("#clear").click(function () {
+    cargarDepartamento();
+    cargarProvincia(false);
+    cargarDistrito(false);
+    $("#direccion").val("");
+    $("#ruc").val("");
+    $("#razonSocial").val("");
+  });
+
+  $("#registrarSucursal").click(function () {
+    registrarListadoSucursal();
+  });
+
+  function mostrarLoader() {
+    document.getElementById("loader").style.display = "block";
+  }
+  
+  function loaderRegistrarCliente() {
+    mostrarLoader();
+    setTimeout(validarCampos, 1500);
+  }
+
+  function cerrarLoader() {
+    document.getElementById("loader").style.display = "none";
+  }
+
+  /*=============================================
+    - VALIDAR FORMULARIO
+  =============================================*/
+
+  function validarCampos() {
+    const nombres = $("#nombres").val().trim();
+    const apellidos = $("#apellidos").val().trim();
+    const tipoDocumento = $("#tipoDocumento").val();
+    const numeroDocumento = $("#numeroDocumento").val();
+    const correo = $("#correo").val();
+    const celular = $("#celular").val();
+    const telefono = $("#telefono").val();
+
+    const info = {
+      icon: "error",
+      title: "Campo Inválido",
+    };
+
+    if (!validator.isLength(nombres, { min: 1 })) {
+      info.text = "El campo nombres no debe estar vacio";
+    } else if (!validator.isLength(apellidos, { min: 1 })) {
+      info.text = "El campo apellido no debe estar vacio";
+    } else if (!validator.isLength(numeroDocumento, { min: 8 })) {
+      info.text =
+        "El campo numero documento debe tener 8 caracteres como minimo";
+    } else if (correo && !validator.isEmail(correo)) {
+      info.text = "El campo correo debe ser un correo válido";
+    } else if (
+      celular &&
+      !validator.isLength(celular, { min: 1 }) &&
+      !validator.isNumeric(celular)
+    ) {
+      info.text = "El campo celular debe ser numérico";
+    } else if (
+      telefono &&
+      !validator.isLength(telefono, { min: 1 }) &&
+      !validator.isNumeric(telefono)
+    ) {
+      info.text = "El campo telefono debe ser numérico";
+    } else if (sucursales.length === 0) {
+      info.text = "No hay sucursales registrados"
+    }
+
+    if (info.text) {
+      cerrarLoader();
+      Swal.fire(info);
+      return false;
+    }
+
+    validarCliente({
+      _nombres: nombres,
+      _apellidos: apellidos,
+      _tipoDocumento: tipoDocumento,
+      _numeroDocumento: numeroDocumento,
+      _correo: correo,
+      _celular: celular,
+      _telefono: telefono
+    });
+  }
+
+  /*=============================================
+    - VALIDAR CLIENTE
+  =============================================*/
+
+  function validarCliente($cliente) {
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Clientes/Controlador_ValidarCliente.php",
+      type: "POST",
+      data: $cliente,
+      dataType: "json",
+      error: function (error) {
+        cerrarLoader();
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        if (datos.response == 0) {
+          registrarCliente($cliente);
+        } else {
+          cerrarLoader();
+          Swal.fire({
+            icon: "warning",
+            title: "Cliente encontrado",
+            text: `El numero de documento existe con el nombre de: ${datos.nombres} ${datos.apellidos}`,
+          });
+        }
+      },
+    });
+  }
+
+  /*=============================================
+    - REGISTRAR CLIENTE
+  =============================================*/
+
+  function registrarCliente($cliente) {
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Clientes/Controlador_RegistrarCliente.php",
+      type: "POST",
+      data: $cliente,
+      dataType: "json",
+      error: function (error) {
+        cerrarLoader();
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        cerrarLoader();
+        if (datos.response === 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Cliente no registrado",
+            text: datos.message,
+          });
+        } else {
+          registrarClienteSucursal(datos.id_cliente);
+        }
+      },
+    });
+  }
+
+  /*=============================================
+    - MOSTRAR/OCULTAR REGISTRO SUCURSAL
+  =============================================*/
+
+  function mostrarRegistroSucursal() {
+    const departamento = $("#departamento").val();
+    const provincia = $("#provincia").val();
+    const distrito = $("#distrito").val();
+    const direccion = $("#direccion").val();
+    const ruc = $("#ruc").val();
+    const razonSocial = $("#razonSocial").val();
+    if (departamento && provincia && distrito && direccion && ruc && razonSocial) {
+      document.getElementById("registrarSucursal").classList.remove("disabled");
+    } else {
+      document.getElementById("registrarSucursal").classList.add("disabled");
+    }
+  }
+
+  /*=============================================
+    - REGISTRAR SUCURSAL - TEMPORAL
+  =============================================*/
+
+  function registrarListadoSucursal() {
+    sucursales.push({
+      idDistrito: $("#distrito").val(),
+      distrito: $('#distrito option:selected').text().trim(),
+      direccion: $("#direccion").val(),
+      ruc: $("#ruc").val(),
+      razonSocial: $("#razonSocial").val(),
+    });
+    cargarDepartamento();
+    cargarProvincia(false);
+    cargarDistrito(false);
+    $("#direccion").val("")
+    $("#ruc").val("")
+    $("#razonSocial").val("");
+    mostrarListadoSucursales();
+    mostrarRegistroSucursal();
+  }
+
+  /*=============================================
+    - LISTADO SUCURSAL - TEMPORAL
+  =============================================*/
+
+  function mostrarListadoSucursales() {
+    var tablaSucursales = "";
+    for (const [index, sucursal] of sucursales.entries()) {
+      tablaSucursales += `
+        <tr>
+          <td class="text-center">${sucursal.distrito}</td>
+          <td class="text-center">${sucursal.direccion}</td>
+          <td class="text-center">${sucursal.ruc}</td>
+          <td class="text-center">${sucursal.razonSocial}</td>
+          <td class="text-center">
+            <button onclick="eliminarSucursal(${index})" class="btn btn-eliminar">Eliminar</button>
+          </td>
+        </tr>
+      `;
+    }
+    $("#cuerpoTablaSucursales").html(tablaSucursales);
+  }
+
+  /*=============================================
+    - ELIMINAR SUCURSAL - TEMPORAL
+  =============================================*/
+
+  function eliminarSucursal(id) {
+    sucursales = sucursales.filter((item, index) => index !== id);
+    mostrarListadoSucursales();
+  }
+
+  /*=============================================
+    - REGISTRAR SUCURSAL
+  =============================================*/
+
+  function registrarClienteSucursal(idCliente) {
+    const $cliente = {
+      _idCliente: idCliente,
+      _sucursales: sucursales
+    }
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Clientes/Controlador_RegistrarSucursal.php",
+      type: "POST",
+      data: $cliente,
+      dataType: "json",
+      error: function (error) {
+        cerrarLoader();
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        cerrarLoader();
+        if (datos.response == 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Cliente no registrado",
+            text: datos.message,
+          });
+        } else {
+          ventanaClienteCrear();
+          Swal.fire({
+            icon: "success",
+            title: "Cliente registrado",
+            text: datos.message,
+          });
+        }
+      },
+    });
+  }
+</script>

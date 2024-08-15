@@ -1,0 +1,418 @@
+<!--DISEÑO GENERAL DE LA VISTA-->
+<form>
+  <!--DATOS GENERALES-->
+  <div class="card">
+    <div class="card-body">
+      <div class="row justify-content-center">
+        <!--TITULO DE LA VISTA-->
+        <div class="col-12 col-md-8 text-center">
+          <h3 class="h3-responsive titulo font-weight-bold">
+            REGISTRO DE NUEVO PERSONAL
+          </h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--DATOS PERSONALES-->
+  <div class="card">
+    <h5 class="card-header h5">Datos Personales</h5>
+    <div class="card-body">
+      <div class="form-row">
+        <!-- NOMBRES -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="nombres">Nombres</label>
+          <input required id="nombres" onkeyup="obtenerMayuscula(this);" class="form-control" type="string"
+            aria-describedby="nombresHelp" placeholder="Ingresar nombres del personal" />
+          <small id="nombresHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!--APELLIDOS -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="apellidos">Apellidos</label>
+          <input required id="apellidos" onkeyup="obtenerMayuscula(this);" class="form-control" type="string"
+            aria-describedby="apellidosHelp" placeholder="Ingresar apellidos del personal" />
+          <small id="apellidosHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <div class="w-100"></div>
+
+        <!--TIPO DE DOCUMENTO -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="tipoDocumento">Tipo de documento</label>
+          <select required id="tipoDocumento" class="form-control" aria-describedby="tipoDocumentoHelp"></select>
+          <small id="tipoDocumentoHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!--NUMERO DE DOCUMENTO  -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="numeroDocumento">Nro de Documento</label>
+          <input required id="numeroDocumento" onkeyup="obtenerMayuscula(this);" class="form-control" type="string"
+            aria-describedby="numeroDocumentoHelp" placeholder="Ingresar numero de documento" min="1"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            maxlength="20" />
+          <small id="numeroDocumentoHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <div class="w-100"></div>
+
+        <!--CORREO  -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="correo">Correo</label>
+          <input id="correo" class="form-control" type="string" aria-describedby="correoHelp"
+            placeholder="Ingresar correo del personal" />
+          <small id="correoHelp" class="form-text text-muted">Campo opcional.</small>
+        </div>
+
+        <!-- FECHA NACIMIENTO  -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="fechaNacimiento">Fecha Nacimiento</label>
+          <input required id="fechaNacimiento" class="form-control" type="date" aria-describedby="fechaNacimientoHelp"
+            placeholder="Ingresar fecha nacimiento del personal" />
+          <small id="fechaNacimientoHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <div class="w-100"></div>
+
+        <!-- DEPARTAMENTO -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="departamento">Departamento</label>
+          <select required id="departamento" onchange="cargarProvincia(this.value);" class="form-control"
+            aria-describedby="departamentoHelp"></select>
+          <small id="departamentoHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!-- PROVINCIA -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="provincia">Provincia</label>
+          <select required id="provincia" onchange="cargarDistrito(this.value);" class="form-control"
+            aria-describedby="provinciaHelp"></select>
+          <small id="provinciaHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <div class="w-100"></div>
+
+        <!-- DISTRITO -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="distrito">Distrito</label>
+          <select required id="distrito" class="form-control" aria-describedby="distritoHelp"></select>
+          <small id="distritoHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!--DIRECCION DEL PERSONAL-->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="direccion">Direccion del personal</label>
+          <input id="direccion" class="form-control" type="string" aria-describedby="direccionHelp"
+            placeholder="Ingresar direccion del personal" />
+          <small id="direccionHelp" class="form-text text-muted">Campo opcional.</small>
+        </div>
+
+
+        <div class="w-100"></div>
+
+        <!-- CELULAR -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="celular">Celular</label>
+          <input id="celular" class="form-control" type="string" aria-describedby="celularHelp"
+            placeholder="Ingresar celular del personal" />
+          <small id="celularHelp" class="form-text text-muted">Campo opcional.</small>
+        </div>
+
+        <!-- TELEFONO -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="telefono">Telefono</label>
+          <input id="telefono" class="form-control" type="string" aria-describedby="telefonoHelp"
+            placeholder="Ingresar telefono del personal" />
+          <small id="telefonoHelp" class="form-text text-muted">Campo opcional.</small>
+        </div>
+
+        <div class="w-100"></div>
+      </div>
+    </div>
+  </div>
+
+  <!--OPCIONES DEL FORMULARIO-->
+  <div id="opcionesFormulario" class="form-inline justify-content-center">
+    <button type="button" onclick="mostrarLoader();return false" class="btn btn-guardar">
+      Guardar
+    </button>
+  </div>
+
+  <div id="loader"></div>
+</form>
+<!--ARCHIVOS JS DE LA VISTA-->
+<script src="Bootstrap/js/select2.min.js"></script>
+<link href="Bootstrap/css/select2.min.css" rel="stylesheet" />
+<script type="text/javascript" src="Modulos/ModClientes/VistaClientes.js"></script>
+<script type="text/javascript" src="Modulos/ModPersonal/VistaPersonal.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/validator/13.6.0/validator.min.js"></script>
+
+<script type="text/javascript">
+  /*=============================================
+    - CARGAR DOCUMENTO
+  =============================================*/
+
+  cargarTipoDocumentos();
+  cargarDepartamento();
+  cargarProvincia(false);
+  cargarDistrito(false);
+
+  function mostrarLoader() {
+    document.getElementById("loader").style.display = "block";
+    setTimeout(validarCampos, 1500);
+  }
+
+  function cerrarLoader() {
+    document.getElementById("loader").style.display = "none";
+  }
+
+  /*=============================================
+    - VALIDAR FORMULARIO
+=============================================*/
+
+  function validarCampos() {
+    const nombres = $("#nombres").val().trim();
+    const apellidos = $("#apellidos").val().trim();
+    const tipoDocumento = $("#tipoDocumento").val();
+    const numeroDocumento = $("#numeroDocumento").val();
+    const correo = $("#correo").val();
+    const fechaNacimiento = $("#fechaNacimiento").val();
+    const distrito = $("#distrito").val();
+    const direccion = $("#direccion").val();
+    const celular = $("#celular").val();
+    const telefono = $("#telefono").val();
+
+    const info = {
+      icon: "error",
+      title: "Campo Inválido",
+    };
+
+    if (!validator.isLength(nombres, { min: 4 })) {
+      info.text = "El campo nombres debe tener 4 caracteres como minimo";
+    } else if (!validator.isLength(apellidos, { min: 4 })) {
+      info.text = "El campo apellido debe tener 4 caracteres como minimo";
+    } else if (!validator.isLength(numeroDocumento, { min: 8 })) {
+      info.text =
+        "El campo numero documento debe tener 8 caracteres como minimo";
+    } else if (correo && !validator.isEmail(correo)) {
+      info.text = "El campo correo debe ser un correo válido";
+    } else if (!validator.isLength(fechaNacimiento, { min: 8 })) {
+      info.text = "El campo fecha nacimiento es obligatorio";
+    } else if (direccion && !validator.isLength(direccion, { min: 6 })) {
+      info.text = "El campo direccion debe tener 6 caracteres como minimo";
+    } else if (!distrito || !validator.isLength(distrito, { min: 1 })) {
+      info.text = "El campo distrito es obligatorio";
+    } else if (
+      celular &&
+      !validator.isLength(celular, { min: 1 }) &&
+      !validator.isNumeric(celular)
+    ) {
+      info.text = "El campo celular debe ser numérico";
+    } else if (
+      telefono &&
+      !validator.isLength(telefono, { min: 1 }) &&
+      !validator.isNumeric(telefono)
+    ) {
+      info.text = "El campo telefono debe ser numérico";
+    }
+
+    if (info.text) {
+      cerrarLoader();
+      Swal.fire(info);
+      return false;
+    }
+
+    validarPersonal({
+      _nombres: nombres,
+      _apellidos: apellidos,
+      _tipoDocumento: tipoDocumento,
+      _numeroDocumento: numeroDocumento,
+      _correo: correo,
+      _fechaNacimiento: fechaNacimiento,
+      _distrito: distrito,
+      _direccion: direccion,
+      _celular: celular,
+      _telefono: telefono
+    });
+  }
+
+  /*=============================================
+    - VALIDAR PERSONAL
+  =============================================*/
+
+  function validarPersonal($personal) {
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Personal/Controlador_ValidarPersonal.php",
+      type: "POST",
+      data: $personal,
+      dataType: "json",
+      error: function (error) {
+        cerrarLoader();
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        if (datos.response == 0) {
+          registrarPersonal($personal);
+        } else {
+          cerrarLoader();
+          Swal.fire({
+            icon: "warning",
+            title: "Personal encontrado",
+            text: `El numero de documento existe con el nombre de: ${datos.nombres} ${datos.apellidos}`,
+          });
+        }
+      },
+    });
+  }
+
+  /*=============================================
+    - REGISTRAR PERSONAL
+  =============================================*/
+
+  function registrarPersonal($personal) {
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Personal/Controlador_RegistrarPersonal.php",
+      type: "POST",
+      data: $personal,
+      dataType: "json",
+      error: function (error) {
+        cerrarLoader();
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        cerrarLoader();
+        if (datos.response == 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Personal no registrado",
+            text: datos.message,
+          });
+        } else {
+          const { _numeroDocumento, _nombres, _apellidos } = $personal;
+          var usuario = "";
+          var [primerNombre, segundoNombre] = _nombres.split(" ");
+          var [primerApellido] = _apellidos.split(" ");
+
+          usuario = primerNombre.slice(0, 1);
+          if (segundoNombre && segundoNombre.length > 0) {
+            usuario = usuario.concat(segundoNombre.slice(0, 1));
+          } else {
+            usuario = usuario.concat(primerNombre.slice(1, 2));
+          }
+          usuario = usuario.concat(primerApellido);
+
+          registrarUsuario({ _usuario: usuario.toLowerCase(), _clave: _numeroDocumento, _idPersonal: datos.id_personal, _idPerfil: 4 });
+        }
+      },
+    });
+  }
+
+  /*=============================================
+    - REGISTRAR USUARIO
+  =============================================*/
+
+  function registrarUsuario($usuario) {
+
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Usuario/Controlador_RegistrarUsuario.php",
+      type: "POST",
+      data: $usuario,
+      dataType: "json",
+      error: function (error) {
+        cerrarLoader();
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        const accesos = {
+          _idPersonal: $usuario._idPersonal,
+          _operaciones: 1
+        }
+        registrarAccesos(accesos);
+      },
+    });
+  }
+
+  /*=============================================
+    - REGISTRAR ACCESOS
+  =============================================*/
+
+  function registrarAccesos($accesos) {
+
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Accesos/Controlador_RegistrarAccesos.php",
+      type: "POST",
+      data: $accesos,
+      dataType: "json",
+      error: function (error) {
+        cerrarLoader();
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        cerrarLoader();
+        if (datos.response == 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Personal no registrado",
+            text: datos.message,
+          });
+        } else {
+          ventanaClienteCrear();
+          Swal.fire({
+            icon: "success",
+            title: "Personal registrado",
+            text: datos.message,
+          });
+        }
+      },
+    });
+  }
+
+</script>

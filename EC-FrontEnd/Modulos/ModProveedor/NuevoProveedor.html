@@ -1,0 +1,284 @@
+<!--DISEÑO GENERAL DE LA VISTA-->
+<form>
+  <!--DATOS GENERALES-->
+  <div class="card">
+    <div class="card-body">
+      <div class="row justify-content-center">
+        <!--TITULO DE LA VISTA-->
+        <div class="col-12 col-md-8 text-center">
+          <h3 class="h3-responsive titulo font-weight-bold">
+            REGISTRO DE NUEVO TRANSPORTISTA
+          </h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--DATOS TRANSPORTISTA-->
+  <div class="card">
+    <h5 class="card-header h5">Datos Transportista</h5>
+    <div class="card-body">
+      <div class="form-row">
+
+        <!-- RUC -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="ruc">RUC</label>
+          <input required id="ruc" type="number" min="1"
+            oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            maxlength="11" class="form-control" aria-describedby="rucHelp"
+            placeholder="Ingresar ruc del transportista" />
+          <small id="rucHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!--RAZON SOCIAL -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="razonSocial">Razon Social</label>
+          <input required id="razonSocial" class="form-control" onkeyup="obtenerMayuscula(this);" type="string"
+            aria-describedby="razonSocialHelp" placeholder="Ingresar razon social del transportista" />
+          <small id="razonSocialHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <div class="w-100"></div>
+
+        <!--CORREO  -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="correo">Correo</label>
+          <input required id="correo" class="form-control" type="string" aria-describedby="correoHelp"
+            placeholder="Ingresar correo del transportista" />
+          <small id="correoHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!-- DEPARTAMENTO -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="departamento">Departamento</label>
+          <select required id="departamento" onchange="cargarProvincia(this.value);" class="form-control"
+            aria-describedby="departamentoHelp"></select>
+          <small id="departamentoHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <div class="w-100"></div>
+
+        <!-- PROVINCIA -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="provincia">Provincia</label>
+          <select required id="provincia" onchange="cargarDistrito(this.value);" class="form-control"
+            aria-describedby="provinciaHelp"></select>
+          <small id="provinciaHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!-- DISTRITO -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="distrito">Distrito</label>
+          <select required id="distrito" class="form-control" aria-describedby="distritoHelp"></select>
+          <small id="distritoHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <div class="w-100"></div>
+
+        <!--DIRECCION DEL PROVEEDOR-->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="direccion">Direccion del transportista</label>
+          <input required id="direccion" class="form-control" type="string" onkeyup="obtenerMayuscula(this);" aria-describedby="direccionHelp"
+            placeholder="Ingresar direccion del transportista" />
+          <small id="direccionHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <div class="w-100"></div>
+
+        <!-- TELEFONO -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="telefono">Telefono Empresa</label>
+          <input id="telefono" class="form-control" type="string" aria-describedby="telefonoHelp"
+            placeholder="Ingresar telefono del transportista" />
+          <small id="telefonoHelp" class="form-text text-muted">Campo opcional.</small>
+        </div>
+
+        <!-- CELULAR -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="celular">Celular Empresa</label>
+          <input id="celular" class="form-control" type="string" aria-describedby="celularHelp"
+            placeholder="Ingresar celular del transportista" />
+          <small id="celularHelp" class="form-text text-muted">Campo opcional.</small>
+        </div>
+
+        <div class="w-100"></div>
+
+
+      </div>
+    </div>
+  </div>
+
+  <!--OPCIONES DEL FORMULARIO-->
+  <div id="opcionesFormulario" class="form-inline justify-content-center">
+    <button type="button" onclick="mostrarLoader();return false" class="btn btn-guardar">
+      Guardar
+    </button>
+  </div>
+
+  <div id="loader"></div>
+</form>
+<!--ARCHIVOS JS DE LA VISTA-->
+<script src="Bootstrap/js/select2.min.js"></script>
+<link href="Bootstrap/css/select2.min.css" rel="stylesheet" />
+<script type="text/javascript" src="Modulos/ModClientes/VistaClientes.js"></script>
+<script type="text/javascript" src="Modulos/ModProveedor/VistaProveedor.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/validator/13.6.0/validator.min.js"></script>
+
+<script type="text/javascript">
+  /*=============================================
+      - CARGAR DOCUMENTO
+  =============================================*/
+  cargarDepartamento();
+  cargarProvincia(false);
+  cargarDistrito(false);
+
+  function mostrarLoader() {
+    document.getElementById("loader").style.display = "block";
+    setTimeout(validarCampos, 1500);
+  }
+
+  function cerrarLoader() {
+    document.getElementById("loader").style.display = "none";
+  }
+
+  /*=============================================
+    - VALIDAR FORMULARIO
+  =============================================*/
+
+  function validarCampos() {
+    const idProveedor = $("#codigo").html();
+
+    const ruc = $("#ruc").val();
+    const razonSocial = $("#razonSocial").val();
+    const correo = $("#correo").val();
+    const distrito = $("#distrito").val();
+    const direccion = $("#direccion").val();
+    const telefono = $("#telefono").val();
+    const celular = $("#celular").val();
+
+    const info = {
+      icon: "error",
+      title: "Campo Inválido",
+    };
+
+    if (ruc && !validator.isLength(ruc, { min: 11, max: 11 })) {
+      if (!/^(10|20)$/.test(ruc.substring(0, 2))) {
+        info.text = "El campo ruc debe iniciar con [10|20]";
+      } else {
+        info.text = "El campo ruc debe tener 11 caracteres numéricos";
+      }
+    } else if (razonSocial && !validator.isLength(razonSocial, { min: 1 })) {
+      info.text = "El campo razon social es obligatorio";
+    } else if (correo && !validator.isEmail(correo)) {
+      info.text = "El campo correo debe ser un correo válido";
+    } else if (!distrito || !validator.isLength(distrito, { min: 1 })) {
+      info.text = "El campo distrito es obligatorio";
+    } else if (!validator.isLength(direccion, { min: 1 })) {
+      info.text = "El campo direccion es obligatorio";
+    }
+
+    if (info.text) {
+      cerrarLoader();
+      Swal.fire(info);
+      return false;
+    }
+
+    validarProveedor({
+      _ruc: ruc,
+      _razonSocial: razonSocial,
+      _correo: correo,
+      _distrito: distrito,
+      _direccion: direccion,
+      _celular: celular,
+      _telefono: telefono
+    });
+  }
+
+  /*=============================================
+    - VALIDAR PROVEEDOR
+  =============================================*/
+
+  function validarProveedor($proveedor) {
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Proveedor/Controlador_ValidarProveedor.php",
+      type: "POST",
+      data: $proveedor,
+      dataType: "json",
+      error: function (error) {
+        cerrarLoader();
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        if (datos.response == 0) {
+          registrarProveedor($proveedor);
+        } else {
+          cerrarLoader();
+          Swal.fire({
+            icon: "warning",
+            title: "Transportista encontrado",
+            text: `El numero de ruc existe con el transportista: ${datos.razon_social}`,
+          });
+        }
+      },
+    });
+  }
+
+  /*=============================================
+    - REGISTRAR PROVEEDOR
+  =============================================*/
+
+  function registrarProveedor($proveedor) {
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Proveedor/Controlador_RegistrarProveedor.php",
+      type: "POST",
+      data: $proveedor,
+      dataType: "json",
+      error: function (error) {
+        cerrarLoader();
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        cerrarLoader();
+        if (datos.response == 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Transportista no registrado",
+            text: datos.message,
+          });
+        } else {
+          ventanaProveedorCrear();
+          Swal.fire({
+            icon: "success",
+            title: "Transportista registrado",
+            text: datos.message,
+          });
+        }
+      },
+    });
+  }
+
+</script>

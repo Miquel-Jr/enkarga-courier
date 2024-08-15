@@ -1,0 +1,328 @@
+<!--DISEÑO GENERAL DE LA VISTA-->
+<form>
+  <section id="listado">
+    <!--TITULO DE LA VISTA-->
+    <h3 class="h3-responsive titulo font-weight-bold">LISTAR GUIA</h3>
+
+
+    <div class="form-row justify-content-center ">
+      <div class="form-group col-md-3">
+        <label class="col-form-label font-weight-bold" for="ordenCompra">Orden Compra</label>
+        <input id="ordenCompra" class="form-control" type="text" aria-describedby="ordenCompraHelp"
+          placeholder="Ingresar Orden Compra" />
+        <small id="ordenCompraHelp" class="form-text text-muted">Ejemplo: 98798797</small>
+      </div>
+      <div class="form-group col-md-3">
+        <label class="col-form-label font-weight-bold" for="cotizacion">Cotizacion</label>
+        <input id="cotizacion" class="form-control" type="text" aria-describedby="cotizacionHelp"
+          placeholder="Ingresar Cotizacion" />
+        <small id="cotizacionHelp" class="form-text text-muted">Ejemplo: COT.001-2024</small>
+      </div>
+      <div class="form-group col-md-3">
+        <label class="col-form-label font-weight-bold" for="fechaInicio">Fecha Inicio</label>
+        <input id="fechaInicio" class="form-control" type="date" aria-describedby="fechaInicioHelp"
+          placeholder="Ingresar fecha de inicio" />
+        <small id="fechaInicioHelp" class="form-text text-muted">Ejemplo: 2024-01-01.</small>
+      </div>
+      <div class="form-group col-md-3">
+        <label class="col-form-label font-weight-bold" for="fechaFin">Fecha Fin</label>
+        <input id="fechaFin" class="form-control" type="date" aria-describedby="fechaFinHelp"
+          placeholder="Ingresar fecha fin" />
+        <small id="fechaFinHelp" class="form-text text-muted">Ejemplo: 2024-01-01.</small>
+      </div>
+    </div>
+    <div class="form-inline justify-content-center">
+      <button type="button" onclick="limpiarFiltros();return false" class="btn btn-clear">Limpiar</button>
+      <button type="button" onclick="cargarListadoPrevio();return false" class="btn btn-guardar ">
+        Filtrar
+      </button>
+    </div>
+
+    <!--CONTENIDO PRINCIPAL DE LA VISTA-->
+    <table id="tablaListado" class="table table-striped table-bordered" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th>COD</th>
+          <th>GUIA DE REMISION</th>
+          <th>ORDEN COMPRA</th>
+          <th>COTIZACION</th>
+          <th>FECHA DE EMISION</th>
+          <th>CLIENTE</th>
+          <th>TRANSPORTISTA</th>
+          <th>USUARIO</th>
+          <th>FECHA REGISTRO</th>
+          <th>ESTADO</th>
+        </tr>
+      </thead>
+      <tbody id="cuerpoTabla"></tbody>
+    </table>
+  </section>
+</form>
+
+<div id="loader"></div>
+<!--ARCHIVOS JS DE LA VISTA-->
+<script type="text/javascript" src="Modulos/ModGuia/VistaGuia.js"></script>
+<script type="text/javascript" src="Bootstrap/js/tablaDinamica.js"></script>
+<script type="text/javascript">
+
+  /*=============================================
+    - CARGAR GUIA -DOCUMENTO
+  =============================================*/
+
+  $(document).ready(function () {
+    cargarListadoPrevio();
+  });
+
+  /*=============================================
+    - MOSTRAR LOADER
+  =============================================*/
+
+  function mostrarLoader() {
+    document.getElementById("loader").style.display = "block";
+  }
+
+  /*=============================================
+    - CERRAR LOADER
+  =============================================*/
+
+  function cerrarLoader() {
+    document.getElementById("loader").style.display = "none";
+  }
+
+
+  function cargarListadoPrevio() {
+    mostrarLoader();
+    setTimeout(mostrarDatosGuia, 1500);
+  }
+
+  /*=============================================
+    - LIMPIAR FILTROS
+  =============================================*/
+
+  function limpiarFiltros() {
+    $("#ordenCompra").val("");
+    $("#cotizacion").val("");
+    $("#fechaInicio").val("");
+    $("#fechaFin").val("");
+  }
+
+  /*=============================================
+    - MOSTRAR GUIAS
+  =============================================*/
+
+  async function mostrarDatosGuia() {
+    const ordenCompra = $("#ordenCompra").val();
+    const cotizacion = $("#cotizacion").val();
+    const fechaInicio = $("#fechaInicio").val();
+    const fechaFin = $("#fechaFin").val();
+    var datos = await cargarListadoGuia({
+      _ordenCompra: ordenCompra,
+      _cotizacion: cotizacion,
+      _fechaInicio: fechaInicio,
+      _fechaFin: fechaFin
+    });
+    var tablaGuia = "";
+    if (datos.response !== 1) {
+      for (const guia of datos) {
+        let badgeClass = "";
+        if (guia.id_estado_guia == "1") {
+          badgeClass = "bg-secondary";
+        } else if (guia.id_estado_guia == "2") {
+          badgeClass = "bg-dark";
+        } else if (guia.id_estado_guia == "3") {
+          badgeClass = "bg-info";
+        } else if (guia.id_estado_guia == "4") {
+          badgeClass = "bg-warning";
+        } else if (guia.id_estado_guia == "5") {
+          badgeClass = "bg-primary";
+        } else if (guia.id_estado_guia == "6") {
+          badgeClass = "bg-success";
+        } else if (guia.id_estado_guia == "7") {
+          badgeClass = "bg-danger";
+        }
+        tablaGuia += `
+        <tr>
+          <td>${guia.id_guia}</td>
+          <td>${guia.serie_guia} - ${guia.numero_guia}</td>
+          <td>${guia.orden_compra}</td>
+          <td>${guia.codigo_cotizacion}</td>
+          <td>${guia.fecha_emision}</td>
+          <td>${guia.cliente}</td>
+          <td>${guia.transportista}</td>
+          <td>${guia.usuario}</td>
+          <td>${guia.fecha_registro}</td>
+          <td class='editable no-sort'>
+            <span class="badge ${badgeClass}">${guia.estado}</span>  
+          </td>
+        </tr>
+      `;
+      }
+    } else {
+      datos = [];
+    }
+
+    var table = $('#tablaListado');
+    if ($.fn.dataTable.isDataTable(table)) {
+      table.DataTable().clear().destroy();
+    }
+
+    $("#cuerpoTabla").html(tablaGuia);
+
+    table.DataTable({
+      dom: "Bfrtip",
+      lengthMenu: [
+        [10, 25, 50, -1],
+        ["VER 10 FILAS", "VER 25 FILAS", "VER 50 FILAS", "TODO"],
+      ],
+      order: [[8, 'desc']],
+      buttons: [
+        {
+          extend: "pageLength",
+          text: "VER 10 FILAS",
+        },
+        {
+          extend: "print",
+          title: "LISTADO GUIA",
+          text: "IMPRIMIR",
+        },
+        {
+          extend: "pdfHtml5",
+          download: "open",
+          title: "LISTADO GUIA",
+          text: "EXPORTAR PDF",
+        },
+      ],
+    });
+
+    // Función para convertir td a select
+    function convertTdToSelect(td) {
+      var cellData = td.text().trim();
+      var selectHtml = `
+        <select class="form-control">
+          <option value="1" ${cellData === 'REGISTRADO' ? 'selected' : ''}>REGISTRADO</option>
+          <option value="2" ${cellData === 'PREPARADO' ? 'selected' : ''}>PREPARADO</option>
+          <option value="3" ${cellData === 'EN TRANSITO' ? 'selected' : ''}>EN TRANSITO</option>
+          <option value="4" ${cellData === 'RECIBIDO' ? 'selected' : ''}>RECIBIDO</option>
+          <option value="5" ${cellData === 'ENTREGADO' ? 'selected' : ''}>ENTREGADO</option>
+          <option value="6" ${cellData === 'FACTURADO' ? 'selected' : ''}>FACTURADO</option>
+          <option value="7" ${cellData === 'CANCELADO' ? 'selected' : ''}>CANCELADO</option>
+        </select>
+      `;
+      td.html(selectHtml);
+    }
+
+    // Evento para convertir td a select al pasar el mouse
+    $('#tablaListado tbody').on('mouseenter', 'td.editable', function () {
+      if ($(this).find('select').length === 0) {
+        convertTdToSelect($(this));
+      }
+    });
+
+    $('#tablaListado tbody').on('mouseleave', 'td.editable', async function () {
+      if ($(this).find('select').length > 0) {
+        const selectedValue = Number($(this).find('select').val());
+        const selectedText = $(this).find('select option:selected').text();
+        const row = $(this).closest('tr');
+        const index = row.index();
+        const id = row.find('td:first').text();
+        if (selectedValue > datos[index].id_estado_guia) {
+          mostrarLoader();
+          setTimeout(async () => {
+            if (datos[index].id_estado_guia === 1) {
+              if (selectedValue === 2) {
+                const resultado = await cargarDatosGuiaTransporteIdGuia({
+                  _idGuia: id
+                });
+
+                if (resultado.response === 0) {
+                  Swal.fire({
+                    icon: "warning",
+                    title: "Factura Transporte",
+                    text: "La guia no cuenta con factura de transporte"
+                  });
+                } else {
+                  const resultado = await actualizarEstadoIdGuia({
+                    _idGuia: id,
+                    _idEstadoGuia: selectedValue
+                  });
+                  await registrarSeguimientoGuia({
+                    _idGuia: datos[index].id_guia,
+                    _numeroGuia: `${datos[index].serie_guia} - ${datos[index].numero_guia}`,
+                    _actividad: "Se actualizó el estado por el personal logueado",
+                    _detalle: `${selectedText} ← ${datos[index].estado}`,
+                    _idPersonal: sessionStorage.id_personal
+                  });
+                  Swal.fire({
+                    icon: "success",
+                    title: "Guia actualizada",
+                    text: resultado.message
+                  });
+                  datos[index].id_estado_guia = selectedValue;
+                  datos[index].estado = selectedText;
+
+                }
+              } else {
+                Swal.fire({
+                  icon: "warning",
+                  title: "Factura Transporte",
+                  text: "La guia no cuenta con factura de transporte"
+                });
+              }
+            } else {
+              const resultado = await actualizarEstadoIdGuia({
+                _idGuia: id,
+                _idEstadoGuia: selectedValue
+              });
+              await registrarSeguimientoGuia({
+                _idGuia: datos[index].id_guia,
+                _numeroGuia: `${datos[index].serie_guia} - ${datos[index].numero_guia}`,
+                _actividad: "Se actualizó el estado por el personal logueado",
+                _detalle: `${selectedText} ← ${datos[index].estado}`,
+                _idPersonal: sessionStorage.id_personal
+              });
+              Swal.fire({
+                icon: "success",
+                title: "Guia actualizada",
+                text: resultado.message
+              });
+              datos[index].id_estado_guia = selectedValue;
+              datos[index].estado = selectedText;
+
+            }
+            cargarListadoPrevio();
+            cerrarLoader();
+          }, 1500);
+        } else {
+          if (selectedValue !== datos[index].id_estado_guia) {
+            Swal.fire({
+              icon: "warning",
+              title: "Guia no actualizada",
+              text: "No se puede retroceder el estado de la guia"
+            });
+          }
+          let badgeClassSelected = "";
+          if (datos[index].id_estado_guia == "1") {
+            badgeClassSelected = "bg-secondary";
+          } else if (datos[index].id_estado_guia == "2") {
+            badgeClassSelected = "bg-dark";
+          } else if (datos[index].id_estado_guia == "3") {
+            badgeClassSelected = "bg-info";
+          } else if (datos[index].id_estado_guia == "4") {
+            badgeClassSelected = "bg-warning";
+          } else if (datos[index].id_estado_guia == "5") {
+            badgeClassSelected = "bg-primary";
+          } else if (datos[index].id_estado_guia == "6") {
+            badgeClassSelected = "bg-success";
+          } else if (datos[index].id_estado_guia == "7") {
+            badgeClassSelected = "bg-danger";
+          }
+          const htmlSelected = `<span class="badge ${badgeClassSelected}">${datos[index].estado}</span> `;
+          $(this).html(htmlSelected);
+        }
+      }
+    });
+
+    cerrarLoader();
+  }
+
+</script>

@@ -1,0 +1,492 @@
+<style>
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  input:checked+.slider {
+    background-color: #2196F3;
+  }
+
+  input:focus+.slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+
+  input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+
+  .slider.round:before {
+    border-radius: 50%;
+  }
+</style>
+<!--DISEÑO GENERAL DE LA VISTA-->
+<form id="buscarPersonal" class="">
+  <div class="card">
+    <h5 class="card-header h5">Buscar Personal</h5>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="col-12 col-md-12 form-group text-center">
+          <label class="col-form-label font-weight-bold" for="personalBuscador">Personal</label>
+          <select class="form-control w-50 mx-auto selectpicker" data-live-search="true" id="personal"></select>
+          <small id="personalBuscadorHelp" class="form-text text-muted">Ejemplo: Jorge.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-inline justify-content-center">
+    <button type="button" onclick="mostrarLoader();return false" class="btn btn-guardar disabled" id="buscarPersonalButton">
+      Buscar
+    </button>
+  </div>
+</form>
+
+<form id="accesosPersonal" class="d-none">
+
+  <!--DATOS GENERALES-->
+  <div class="card">
+    <div class="card-body">
+      <div class="row justify-content-center">
+
+        <!--TITULO DE LA VISTA-->
+        <div class="col-12 col-md-8 text-center">
+          <h3 class="h3-responsive titulo font-weight-bold">Accesos del Personal</h3>
+        </div>
+
+        <div class="w-100"></div>
+
+        <!--INFORMACION GENERAL DEL PERSONAL-->
+        <div class="col-12 col-md-5 col-xl-4 form-group text-center">
+          <!--CODIGO-->
+          <h6>Codigo: <span id="codigo">000000</span></h6>
+
+          <!--F. REGISTRO EN EL SISTEMA-->
+          <h6>Fecha de registro: <span id="fechaRegistro"></span></h6>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--DATOS PERFIL-->
+  <div class="card">
+    <h5 class="card-header h5">Perfil del Personal</h5>
+    <div class="card-body">
+      <div class="form-row">
+
+        <!-- PERFIL -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="perfil">Perfil</label>
+          <select required id="perfil" class="form-control" aria-describedby="perfilHelp"
+            placeholder="Ingrese usuario del personal" onchange="actualizarAccesos()"></select>
+          <small id="perfilHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <div class="form-inline justify-content-center">
+          <button type="button" onclick="actualizarAccesos()" class="btn btn-guardar">
+            Actualizar Perfil
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!--DATOS ACCESOS-->
+  <div class="card">
+    <h5 class="card-header h5">Accesos Portal Web</h5>
+    <div class="card-body">
+      <div class="form-row">
+
+        <div class="w-100"></div>
+
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="moduloCliente" class="form-inline justify-content-center">MODULO CLIENTE</label>
+        </div>
+
+        <div class="col-12 col-md form-group">
+          <label class="switch">
+            <input type="checkbox" id="moduloCliente">
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <div class="w-100"></div>
+
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="moduloProveedor" class="form-inline justify-content-center">MODULO TRANSPORTISTA</label>
+        </div>
+
+        <div class="col-12 col-md form-group">
+          <label class="switch">
+            <input type="checkbox" id="moduloProveedor">
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <div class="w-100"></div>
+
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="moduloPersonal" class="form-inline justify-content-center">MODULO PERSONAL</label>
+        </div>
+
+        <div class="col-12 col-md form-group">
+          <label class="switch">
+            <input type="checkbox" id="moduloPersonal">
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <div class="w-100"></div>
+
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="moduloOperaciones" class="form-inline justify-content-center">MODULO OPERACIONES</label>
+        </div>
+
+        <div class="col-12 col-md form-group">
+          <label class="switch">
+            <input type="checkbox" id="moduloOperaciones">
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <div class="w-100"></div>
+
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="moduloContabilidad" class="form-inline justify-content-center">MODULO CONTABILIDAD</label>
+        </div>
+
+        <div class="col-12 col-md form-group">
+          <label class="switch">
+            <input type="checkbox" id="moduloContabilidad">
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <div class="w-100"></div>
+
+        <div class="col-12 col-md form-group">
+          <div class="form-inline justify-content-center">
+            <button type="button" onclick="guardarAccesos()" class="btn btn-guardar">
+              Guardar
+            </button>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</form>
+
+<div id="loader"></div>
+<!--ARCHIVOS JS DE LA VISTA-->
+<script src="Bootstrap/js/select2.min.js"></script>
+<link href="Bootstrap/css/select2.min.css" rel="stylesheet" />
+<script type="text/javascript" src="Modulos/ModClientes/VistaClientes.js"></script>
+<script type="text/javascript" src="Modulos/ModPersonal/VistaPersonal.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/validator/13.6.0/validator.min.js"></script>
+
+<script type="text/javascript">
+  cargarPerfil()
+  cargarListadoPersonal();
+  /*=============================================
+    - CARGAR LISTADO PERSONAL
+  =============================================*/
+
+  function cargarListadoPersonal() {
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Personal/Controlador_MostrarPersonal.php",
+      type: "GET",
+      dataType: "json",
+      error: function (error) {
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        mostrarListadoPersonal(datos);
+      },
+    });
+  }
+
+  /*=============================================
+    - MOSTRAR PERSONAL
+  =============================================*/
+
+  function mostrarListadoPersonal(datos) {
+    var tablaPersonal =
+      "<option value = 0 selected disabled> Elegir Personal</option>";
+    if (Array.isArray(datos)) {
+      const listadoPersonal = datos.filter( (item) => item.id_perfil !== 1);
+      for (const personal of listadoPersonal) {
+        tablaPersonal += `
+          <option value=${personal.id_personal}>
+            ${personal.nombres} ${personal.apellidos}
+          </option>
+        `;
+      }
+    }
+    $("#personal").html(tablaPersonal);
+    $("#personal").select2();
+  }
+
+  /*=============================================
+    MOSTRAR BUSCAR PERSONAL
+  =============================================*/
+  $("#personal").change(function () {
+    const idPersonal = $("#personal").val();
+    if (idPersonal !== 0) {
+      document.getElementById("buscarPersonalButton").classList.remove("disabled");
+    }
+  });
+
+  //--EVENTO CLICK >> LIMPIAR--
+  $("#reset").click(function () {
+    mostrarDatosPersonal();
+  });
+
+  /*=============================================
+    MOSTRAR LOADER
+  =============================================*/
+  function mostrarLoader() {
+    document.getElementById("loader").style.display = "block";
+    setTimeout(mostrarDatosPersonal, 1500);
+  }
+
+  /*=============================================
+    - CERRAR LOADER
+  =============================================*/
+  function cerrarLoader() {
+    document.getElementById("loader").style.display = "none";
+  }
+
+  /*=============================================
+    - CARGAR DATOS DEL PERSONAL
+  =============================================*/
+
+  async function cargarDatosPersonal($personal) {
+    return new Promise(function (resolve, reject) {
+      $.ajax({
+        url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Personal/Controlador_CargarPersonal.php",
+        type: "POST",
+        data: $personal,
+        dataType: "json",
+        success: function (datos) {
+          resolve(datos);
+        },
+        error: function (error) {
+          if (error.status == 401) {
+            Swal.fire({
+              icon: "error",
+              title: "Error del servidor",
+              text: "No se pudo establecer conexion con el servidor",
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error no identificado",
+              text: "Contactarse con su proveedor",
+            });
+          }
+          reject(error);
+        },
+      });
+    });
+  }
+
+  /*=============================================
+    - MOSTRAR DATOS DEL PERSONAL
+  =============================================*/
+
+  async function mostrarDatosPersonal() {
+    const personal = await cargarDatosPersonal({
+      _idPersonal: $("#personal").val(),
+    });
+    cerrarLoader();
+    document.getElementById("accesosPersonal").classList.remove("d-none");
+    document.getElementById("buscarPersonal").classList.add("d-none");
+    const perfil = await obtenerUsuarioPersonal({ _idPersonal: $("#personal").val() });
+    const accesos = await obtenerAccesosPersonal({ _idPersonal: $("#personal").val() });
+    $('#codigo').html(personal.id_personal)
+    $('#fechaRegistro').html(personal.fecha_registro)
+    $("#perfil option[value=" + perfil.id_perfil + "]").attr("selected", true);
+    $("#moduloCliente").prop('checked', accesos.clientes);
+    $("#moduloProveedor").prop('checked', accesos.proveedor);
+    $("#moduloPersonal").prop('checked', accesos.personal);
+    $("#moduloOperaciones").prop('checked', accesos.operaciones);
+    $("#moduloContabilidad").prop('checked', accesos.contabilidad);
+  }
+
+  /*=============================================
+    - CARGAR ACCESOS POR PERFIL
+  =============================================*/
+
+  function actualizarAccesos() {
+    const perfil = Number($('#perfil').val());
+    if (perfil === 1) {
+      $("#moduloCliente").prop('checked', true);
+      $("#moduloProveedor").prop('checked', true);
+      $("#moduloPersonal").prop('checked', true);
+      $("#moduloOperaciones").prop('checked', true);
+      $("#moduloContabilidad").prop('checked', true);
+    }
+
+    if (perfil === 2) {
+      $("#moduloCliente").prop('checked', true);
+      $("#moduloProveedor").prop('checked', true);
+      $("#moduloPersonal").prop('checked', true);
+      $("#moduloOperaciones").prop('checked', true);
+    }
+
+    if (perfil === 3) {
+      $("#moduloOperaciones").prop('checked', true);
+    }
+
+    if (perfil === 4) {
+      $("#moduloCliente").prop('checked', false);
+      $("#moduloProveedor").prop('checked', false);
+      $("#moduloPersonal").prop('checked', false);
+      $("#moduloOperaciones").prop('checked', true);
+      $("#moduloContabilidad").prop('checked', false);
+    }
+  }
+
+  /*=============================================
+    - GUARDAR ACCESOS DEL PERSONAL
+  =============================================*/
+
+  function guardarAccesos() {
+
+    const $accesos = {
+      _idPersonal: $('#personal').val(),
+      _clientes: $("#moduloCliente").is(':checked'),
+      _proveedor: $("#moduloProveedor").is(':checked'),
+      _personal: $("#moduloPersonal").is(':checked'),
+      _operaciones: $("#moduloOperaciones").is(':checked'),
+      _contabilidad: $("#moduloContabilidad").is(':checked'),
+    }
+
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Accesos/Controlador_ActualizarAccesos.php",
+      type: "POST",
+      data: $accesos,
+      dataType: "json",
+      error: function (error) {
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        actualizarUsuarioPerfil({
+          _idPersonal: $("#personal").val(),
+          _idPerfil: $('#perfil').val()
+        })
+      },
+    });
+  }
+
+  /*=============================================
+    - ACTUALIZAR USUARIO POR PERFIL
+  =============================================*/
+
+  function actualizarUsuarioPerfil($usuario) {
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Usuario/Controlador_ActualizarUsuarioPerfil.php",
+      type: "POST",
+      data: $usuario,
+      dataType: "json",
+      error: function (error) {
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        if (datos.response == 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Personal no actualizado",
+            text: datos.message,
+          });
+        } else {
+          Swal.fire({
+            icon: "success",
+            title: "Personal actualizado",
+            text: datos.message,
+          });
+        }
+      },
+    });
+  }
+
+</script>

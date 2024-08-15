@@ -1,0 +1,103 @@
+<!--DISEÑO GENERAL DE LA VISTA-->
+<section id="listado">
+  <!--TITULO DE LA VISTA-->
+  <h3 class="h3-responsive titulo font-weight-bold">LISTAR FACTURAS-TRANSPORTE</h3>
+
+  <!--CONTENIDO PRINCIPAL DE LA VISTA-->
+  <table id="tablaListado" class="table table-striped table-bordered" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+        <th>GUIA (ENKARGA)</th>
+        <th>GUIA (EMPRESA TRANSPORTE)</th>
+        <th>TIPO TRANSPORTE</th>
+        <th>RUC</th>
+        <th>RAZON SOCIAL</th>
+        <th>NUMERO FACTURA (EMPRESA TRANSPORTE)</th>
+        <th>ORIGEN</th>
+        <th>DESTINO</th>
+        <th>TOTAL</th>
+        <th>FECHA REGISTRO</th>
+        <th>ESTADO</th>
+      </tr>
+    </thead>
+    <tbody id="cuerpoTabla"></tbody>
+  </table>
+</section>
+
+<!--ARCHIVOS JS DE LA VISTA-->
+<script type="text/javascript" src="Modulos/ModContabilidad/VistaContabilidad.js"></script>
+<script type="text/javascript" src="Bootstrap/js/tablaDinamica.js"></script>
+<script type="text/javascript">
+
+  /*=============================================
+    - CARGAR FACTURAS - DOCUMENTO
+  =============================================*/
+
+  mostrarDatosFacturas()
+
+  /*=============================================
+    - MOSTRAR FACTURAS
+  =============================================*/
+
+  async function mostrarDatosFacturas() {
+    const datos = await cargarListadoGuiaTransporte();
+    var tablaFacturas = "";
+    if (Array.isArray(datos)) {
+      for (const factura of datos) {
+        let badgeClass = "";
+        if (factura.id_estado_guia_transporte == "1") {
+          badgeClass = "bg-warning";
+        } else if (factura.id_estado_guia_transporte == "2") {
+          badgeClass = "bg-success";
+        }
+        tablaFacturas += `
+        <tr >
+          <td>${factura.serie_guia} - ${factura.numero_guia}</td>
+          <td>${factura.nro_guia}</td>
+          <td>${factura.tipo_transporte}</td>
+          <td>${factura.ruc}</td>
+          <td>${factura.razon_social}</td>
+          <td>${factura.numero_factura}</td>
+          <td>${factura.origen}</td>
+          <td>${factura.destino}</td>
+          <td>S/ ${factura.total}</td>
+          <td>${factura.fecha_registro}</td>
+          <td>
+            <span class="badge ${badgeClass}">${factura.estado}</span>  
+          </td>
+        </tr>
+      `;
+      }
+      $("#cuerpoTabla").html(tablaFacturas);
+    } else {
+      $("#cuerpoTabla").html(tablaFacturas);
+    }
+
+    $("#tablaListado").DataTable({
+      dom: "Bfrtip",
+      lengthMenu: [
+        [10, 25, 50, -1],
+        ["VER 10 FILAS", "VER 25 FILAS", "VER 50 FILAS", "TODO"],
+      ],
+      order: [[9, 'desc']],
+      buttons: [
+        {
+          extend: "pageLength",
+          text: "VER 10 FILAS",
+        },
+        {
+          extend: "print",
+          title: "LISTADO FACTURA TRANSPORTE",
+          text: "IMPRIMIR",
+        },
+        {
+          extend: "pdfHtml5",
+          download: "open",
+          title: "LISTADO FACTURA TRANSPORTE",
+          text: "EXPORTAR PDF",
+        },
+      ],
+    });
+  }
+
+</script>

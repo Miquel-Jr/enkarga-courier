@@ -1,0 +1,296 @@
+<!--=================================
+        VISTA PRINCIPAL
+    ==================================-->
+
+<!--ESTILOS DE LA VISTA-->
+<link rel="stylesheet" href="Modulos/ModPrincipal/VistaPrincipal.css" />
+
+<div class="row">
+  <!--COLUMNA IZQUIERDA - CENTRAL-->
+  <div class="col-md-8 col-lg-9 col-xl-10 conten">
+    <!--SEGUIMIENTO DE ORDENES-->
+    <div class="row">
+      <!--RELOJ + SEGUIMIENTO DE ORDENES-->
+      <div class="col-xl-4">
+        <!--RELOJ-->
+        <div class="row my-3 justify-content-center">
+          <i class="fas fa-3x fa-spinner fa-spin"></i>
+          <div class="clock h1-responsive" onclick="clock();return false"></div>
+        </div>
+
+        <!--REGISTRO DE ORDENES-->
+        <div id="guiasDelDia" class="yellow my-auto py-3 lighten-3 px-4">
+          <h5 class="h5-responsive text-center font-weight-bold">
+            Guias del dia
+          </h5>
+        </div>
+      </div>
+
+      <!--GRAFICO DE SEGUIMIENTO-->
+      <div class="col-xl-8 py-4"><canvas id="lineChart"></canvas></div>
+    </div>
+
+    <!--FILTROS-->
+    <div class="row p-3">
+      <!--TRABAJADORES DE TURNO-->
+      <div id="facturasPendientes" class="col-xl-4 table-reponsive table-wrapper-scroll-y green lighten-3">
+        <h5 class="h5-responsive text-center font-weight-bold my-2">
+          Facturas pendientes
+        </h5>
+      </div>
+
+      <!--BUSQUEDAS BOTONES-->
+      <div class="col-xl-4">
+        <button id="P-NuevaOrden" type="button" onclick="ventanaGuiaCrear();return false"
+          class="btn btn-unique btn-block my-3">
+          Nueva Guia
+        </button>
+        <button id="P-CambiarEstadoOrden" type="button" onclick="ventanaGuiaActualizar();return false"
+          class="btn btn-unique btn-block my-3">
+          Cambiar Estado Guia
+        </button>
+        <button id="P-BuscarOrden" type="button" onclick="ventanaFacturaCrear();return false"
+          class="btn btn-unique btn-block my-3">
+          Crear Factura
+        </button>
+      </div>
+
+      <!--ULTIMOS CLIENTES-->
+      <div id="UClientes" class="col-xl-4 table-reponsive table-wrapper-scroll-y blue lighten-3 text-center">
+        <h5 class="h5-responsive text-center font-weight-bold my-2">
+          Ultimos Clientes
+        </h5>
+      </div>
+    </div>
+  </div>
+
+  <!--COLUMNA DERECHA "GUIAS PENDIENTES"-->
+  <div class="col-md-4 col-lg-3 col-xl-2 grey lighten-1 text-center opScroll">
+    <!--TITULO-->
+    <h5 class="h5-responsive text-center font-weight-bold mt-2">
+      Guías Pendientes
+    </h5>
+    <hr class="mt-2 mb-3" />
+
+    <!--CONTENIDO GUIAS PENDIENTES-->
+    <div id="GuiasPendientes">
+    </div>
+  </div>
+</div>
+
+<!-- MENSAJE -->
+<div class="toast" data-autohide="true" data-delay="9000">
+  <div class="toast-body"></div>
+</div>
+<!--ARCHIVOS JS DE LA VISTA-->
+<script type="text/javascript" src="Modulos/ModPrincipal/VistaPrincipal.js"></script>
+
+<script type="text/javascript">
+  cargarDatosClientes();
+  cargarDatosGuias();
+  cargarDatosGuiasHoy();
+  cargarDatosFacturasPendientes();
+
+  /*=============================================
+    - CARGAR CLIENTES
+  =============================================*/
+
+  function cargarDatosClientes() {
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Clientes/Controlador_MostrarClientes.php",
+      type: "GET",
+      dataType: "json",
+      error: function (error) {
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        mostrarDatosCliente(datos);
+      },
+    });
+  }
+
+  /*=============================================
+    - MOSTRAR CLIENTES
+  =============================================*/
+
+  function mostrarDatosCliente(datos) {
+    var tablaClientes = "";
+
+    if (Array.isArray(datos)) {
+      datos = datos.sort((a, b) => b.id_cliente - a.id_cliente);
+      const ultimosCliente = datos.slice(0, 5);
+
+      for (const cliente of ultimosCliente) {
+        tablaClientes += `
+        <h6 class="h6-responsive text-center my-2"> ${cliente.nombres} ${cliente.apellidos} -- ${cliente.tipo_documento}: ${cliente.numero_documento}</h6>
+      `;
+      }
+      $("#UClientes").append(tablaClientes);
+    } else {
+      $("#UClientes").append(tablaClientes);
+    }
+  }
+
+  /*=============================================
+    - CARGAR GUIAS PENDIENTES
+  =============================================*/
+
+  function cargarDatosGuias() {
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModGenerales/Controlador_Guia/Controlador_MostrarGuiasPendientes.php",
+      type: "GET",
+      dataType: "json",
+      error: function (error) {
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        mostrarDatosGuiasPendientes(datos);
+      },
+    });
+  }
+
+  /*=============================================
+    - MOSTRAR GUIAS PENDIENTES
+  =============================================*/
+
+  function mostrarDatosGuiasPendientes(datos) {
+    var tablaGuias = "";
+
+    if (Array.isArray(datos)) {
+      const guias = datos.sort((a, b) => b.fecha_registro - a.fecha_registro);
+
+      for (const guia of guias) {
+        tablaGuias += `
+          <div>
+            <div class="white font-weight-bold border-bottom">${guia.serie_guia} - ${guia.numero_guia}</div>
+            <div class="white mb-3">${guia.cliente}</div>
+          </div>
+        `;
+      }
+      $("#GuiasPendientes").append(tablaGuias);
+    } else {
+      $("#GuiasPendientes").append(tablaGuias);
+    }
+  }
+
+  /*=============================================
+    - CARGAR GUIAS HOY
+  =============================================*/
+
+  function cargarDatosGuiasHoy() {
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModPrincipal/Controlador_MostrarGuiasHoy.php",
+      type: "GET",
+      dataType: "json",
+      error: function (error) {
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        mostrarDatosGuiasHoy(datos);
+      },
+    });
+  }
+
+  /*=============================================
+    - MOSTRAR GUIAS HOY
+  =============================================*/
+
+  function mostrarDatosGuiasHoy(datos) {
+    var tablaGuias = "";
+    if (Array.isArray(datos)) {
+      for (const guia of datos) {
+        tablaGuias += `
+          <div>
+            <div class="text-center font-weight-bold border-bottom">${guia.serie_guia} - ${guia.numero_guia}</div>
+          </div>
+        `;
+      }
+      $("#guiasDelDia").append(tablaGuias);
+    } else {
+      $("#guiasDelDia").append(tablaGuias);
+    }
+  }
+
+  /*=============================================
+    - MOSTRAR FACTURAS PENDIENTES
+  =============================================*/
+
+  function cargarDatosFacturasPendientes() {
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModPrincipal/Controlador_MostrarFacturasPendientes.php",
+      type: "GET",
+      dataType: "json",
+      error: function (error) {
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        mostrarDatosFacturasPendientes(datos);
+      },
+    });
+  }
+
+  function mostrarDatosFacturasPendientes(datos) {
+    var tablaFactura = "";
+    if (Array.isArray(datos)) {
+      for (const factura of datos) {
+        tablaFactura += `
+          <div>
+            <div class="text-center font-weight-bold border-bottom">${factura.serie_factura} - ${factura.numero_factura}</div>
+          </div>
+        `;
+      }
+      $("#facturasPendientes").append(tablaFactura);
+    } else {
+      $("#facturasPendientes").append(tablaFactura);
+    }
+  }
+
+</script>

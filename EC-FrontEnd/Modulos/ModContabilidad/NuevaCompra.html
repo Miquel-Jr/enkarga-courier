@@ -1,0 +1,412 @@
+<!--DISEÑO GENERAL DE LA VISTA-->
+<!--DATOS GENERALES-->
+<div class="card">
+  <div class="card-body">
+    <div class="row justify-content-center">
+      <!--TITULO DE LA VISTA-->
+      <div class="col-12 col-md-8 text-center">
+        <h3 class="h3-responsive titulo font-weight-bold">
+          REGISTRO DE NUEVA COMPRA
+        </h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form id="busqueda" class="">
+  <!--DATOS INFORMATIVOS-->
+  <div class="card">
+    <h5 class="card-header h5">Busqueda</h5>
+    <div class="card-body">
+      <div class="form-row">
+        <!-- SERIE -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="serie">Serie</label>
+          <input required id="serie" onkeyup="obtenerMayuscula(this);" class="form-control" type="string"
+            aria-describedby="serieHelp" placeholder="Ingresar serie de la factura" />
+          <small id="serieHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!--NUMERO -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="numero">Numero</label>
+          <input required id="numero" onblur="autoCompletarCeros(this);" class="form-control" type="string"
+            maxlength="8" aria-describedby="numeroHelp" placeholder="Ingresar numero de factura" />
+          <small id="numeroHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <div class="w-100"></div>
+
+      </div>
+    </div>
+  </div>
+
+  <!--OPCIONES DEL FORMULARIO-->
+  <div class="form-inline justify-content-center">
+    <button type="button" id="buttonBusqueda" onclick="mostrarLoader();return false" class="btn btn-guardar disabled">
+      Verificar disponibilidad
+    </button>
+  </div>
+</form>
+
+<form id="mostrarDatos" class="d-none">
+  <!--DATOS FACTURA-->
+  <div class="card">
+    <h5 class="card-header h5">Datos Principales</h5>
+    <div class="card-body">
+      <div class="form-row">
+        <!-- SERIE -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="serieFactura">Serie</label>
+          <input required id="serieFactura" onkeyup="obtenerMayuscula(this);" class="form-control disabled"
+            type="string" aria-describedby="serieFacturaHelp" placeholder="Ingresar serie de la factura" />
+          <small id="serieFacturaHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!-- NUMERO -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="numeroFactura">Numero</label>
+          <input required id="numeroFactura" onblur="autoCompletarCeros(this);" class="form-control disabled"
+            type="string" maxlength="8" aria-describedby="numeroFacturaHelp" placeholder="Ingresar numero de factura" />
+          <small id="numeroFacturaHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!-- GUIA -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="guia">Guia</label>
+          <select required id="guia" class="form-control" aria-describedby="guiaHelp">
+          </select>
+          <small id="guiaHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <div class="w-100"></div>
+
+        <!-- FECHA VENCIMIENTO -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="fechaVencimiento">Fecha Vencimiento</label>
+          <input required id="fechaVencimiento" class="form-control " type="date"
+            aria-describedby="fechaVencimientoHelp" placeholder="Ingresar fecha de vencimiento" />
+          <small id="fechaVencimientoHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!-- TIPO DE CREDITO -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="tipoCredito">Tipo de Crédito</label>
+          <select required id="tipoCredito" class="form-control" aria-describedby="tipoCreditoHelp">
+            <option value="CREDITO">CREDITO</option>
+            <option value="CONTADO">CONTADO</option>
+          </select>
+          <small id="tipoCreditoHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!-- ORDEN DE SERVICIO -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="ordenServicio">Orden de servicio</label>
+          <input id="ordenServicio" class="form-control " type="number" aria-describedby="ordenServicioHelp"
+            placeholder="Ingresar orden de servicio" />
+          <small id="ordenServicioHelp" class="form-text text-muted">Campo opcional.</small>
+        </div>
+
+        <div class="w-100"></div>
+
+        <!-- BASE IMPONIBLE -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="baseImponible">Base Imponible</label>
+          <input required id="baseImponible" class="form-control " type="number" step="0.01"
+            aria-describedby="baseImponibleHelp" placeholder="Ingresar base imponible de la factura" />
+          <small id="ordenServicioHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+        <!-- IGV -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="igv">IGV (18%)</label>
+          <input required id="igv" class="form-control disabled" type="number" step="0.01" aria-describedby="igvHelp"
+            placeholder="Igv calculado" />
+          <small id="igvHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+        <!-- SUB TOTAL -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="subTotal">Sub total</label>
+          <input required id="subTotal" class="form-control " type="number" step="0.01" aria-describedby="subTotalHelp"
+            placeholder="Sub total calulado" />
+          <small id="subTotalHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <div class="w-100"></div>
+
+        <!-- OCPION DETRACCION -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="usoDetraccion">Uso de Detraccion</label>
+          <select required id="usoDetraccion" class="form-control" aria-describedby="usoDetraccionHelp">
+            <option value="NO" selected>NO</option>
+            <option value="SI">SI</option>
+          </select>
+          <small id="usoDetraccionHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!-- DETRACCION -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="detraccion">Detraccion (4%)</label>
+          <input required id="detraccion" class="form-control disabled" type="number" step="0.01"
+            aria-describedby="detraccionHelp" placeholder="Detraccion calculado" value="0.00" />
+          <small id="detraccionHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!-- TOTAL -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="totalFacturado">Total</label>
+          <input required id="totalFacturado" class="form-control disabled" type="number" step="0.01"
+            aria-describedby="totalFacturaHelp" placeholder="Total a cobrar calculado" />
+          <small id="totalFacturaHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <div class="w-100"></div>
+      </div>
+    </div>
+  </div>
+  <!--OPCIONES DEL FORMULARIO-->
+  <div id="opcionesFormulario" class="form-inline justify-content-center">
+    <button type="button" onclick="mostrarLoaderGuardar();return false" class="btn btn-guardar">
+      Guardar
+    </button>
+  </div>
+</form>
+
+<div id="loader"></div>
+<!--ARCHIVOS JS DE LA VISTA-->
+<script src="Bootstrap/js/select2.min.js"></script>
+<link href="Bootstrap/css/select2.min.css" rel="stylesheet" />
+<script type="text/javascript" src="Modulos/ModContabilidad/VistaContabilidad.js"></script>
+<script type="text/javascript" src="Bootstrap/js/tablaDinamica.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/validator/13.6.0/validator.min.js"></script>
+<script type="text/javascript">
+
+  document.querySelector("#fechaVencimiento").valueAsDate = new Date();
+
+  /*=============================================
+    - MOSTRAR BOTON DE BUSQUEDA
+  =============================================*/
+
+  $("#serie").change(function () {
+    const serie = $("#serie").val();
+    const numero = $("#numero").val();
+    if (serie.length !== 0 && numero.length !== 0) {
+      document.getElementById("buttonBusqueda").classList.remove("disabled");
+    }
+  });
+
+  $("#numero").change(function () {
+    const serie = $("#serie").val();
+    const numero = $("#numero").val();
+    if (serie.length !== 0 && numero.length !== 0) {
+      document.getElementById("buttonBusqueda").classList.remove("disabled");
+    }
+  });
+
+  $("#baseImponible").change(function () {
+    const baseImponible = $("#baseImponible").val();
+    if (baseImponible.length > 0) {
+      const igv = Number(baseImponible) * 0.18;
+      const subTotal = Number(baseImponible) * 1.18;
+      $("#baseImponible").val(Number(baseImponible).toFixed(2));
+      $("#igv").val(igv.toFixed(2));
+      $("#subTotal").val(subTotal.toFixed(2));
+      const usoDetraccion = $("#usoDetraccion").val();
+      if (usoDetraccion === "SI") {
+        const detraccion = Number(subTotal) * 0.04;
+        const totalFacturado = Number(subTotal) * 0.96;
+        $("#detraccion").val(detraccion.toFixed(2));
+        $("#totalFacturado").val(totalFacturado.toFixed(2));
+        $("#totalFacturado").val(subTotal.toFixed(2));
+      } else {
+        $("#detraccion").val("0.00");
+        $("#totalFacturado").val(subTotal.toFixed(2));
+      }
+    } else {
+      $("#baseImponible").val("0.00");
+      $("#igv").val("0.00");
+      $("#subTotal").val("0.00");
+      $("#detraccion").val("0.00");
+      $("#totalFacturado").val("0.00");
+    }
+  });
+
+  $("#subTotal").change(function () {
+    const subTotal = $("#subTotal").val();
+    if (subTotal.length > 0) {
+      const baseImponible = Number(subTotal) / 1.18;
+      const igv = Number(baseImponible) * 0.18;
+      $("#baseImponible").val(Number(baseImponible).toFixed(2));
+      $("#igv").val(igv.toFixed(2));
+      $("#subTotal").val(Number(subTotal).toFixed(2));
+      const usoDetraccion = $("#usoDetraccion").val();
+      if (usoDetraccion === "SI") {
+        const detraccion = Number(subTotal) * 0.04;
+        const totalFacturado = Number(subTotal) * 0.96;
+        $("#detraccion").val(detraccion.toFixed(2));
+        $("#totalFacturado").val(totalFacturado.toFixed(2));
+      } else {
+        $("#detraccion").val("0.00");
+        $("#totalFacturado").val(Number(subTotal).toFixed(2));
+      }
+    } else {
+      $("#baseImponible").val("0.00");
+      $("#igv").val("0.00");
+      $("#subTotal").val("0.00");
+      $("#detraccion").val("0.00");
+      $("#totalFacturado").val("0.00");
+    }
+  });
+
+  $("#usoDetraccion").change(function () {
+    const usoDetraccion = $("#usoDetraccion").val();
+    const subTotal = $("#subTotal").val();
+    if (usoDetraccion === "SI") {
+      if (subTotal.length > 0) {
+        const detraccion = Number(subTotal) * 0.04;
+        const totalFacturado = Number(subTotal) * 0.96;
+        $("#detraccion").val(detraccion.toFixed(2));
+        $("#totalFacturado").val(totalFacturado.toFixed(2));
+      }
+    } else {
+      if (subTotal.length > 0) {
+        $("#detraccion").val("0.00");
+        $("#totalFacturado").val(Number(subTotal).toFixed(2));
+      }
+    }
+  });
+
+
+  /*=============================================
+    - MOSTRAR LOADER
+  =============================================*/
+
+  function mostrarLoader() {
+    document.getElementById("loader").style.display = "block";
+    setTimeout(verificarDisponibilidad, 1500);
+  }
+
+  function mostrarLoaderGuardar() {
+    document.getElementById("loader").style.display = "block";
+    setTimeout(validarFormulario, 1500);
+  }
+
+  /*=============================================
+    - CERRAR LOADER
+  =============================================*/
+
+  function cerrarLoader() {
+    document.getElementById("loader").style.display = "none";
+  }
+
+  async function verificarDisponibilidad() {
+    const serie = $("#serie").val();
+    const numero = $("#numero").val();
+    const resultado = await cargarDisponibilidadFactura({
+      _serie: serie,
+      _numero: numero
+    });
+
+    cerrarLoader();
+    if (resultado.response === 0) {
+      document.getElementById("mostrarDatos").classList.remove("d-none");
+      document.getElementById("busqueda").classList.add("d-none");
+      $("#serieFactura").val($("#serie").val());
+      $("#numeroFactura").val($("#numero").val());
+      await mostrarGuiasSinFactura();
+
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "Factura encontrada",
+        text: "La factura ya se encuentra registrada en la base de datos"
+      });
+    }
+  }
+
+  async function mostrarGuiasSinFactura() {
+    const datos = await cargarGuiasSinFactura();
+    var tablaProducto =
+      "<option value = 0 selected disabled> Elegir Guia</option>";
+    if (Array.isArray(datos)) {
+      for (const guia of datos) {
+        tablaProducto += `
+          <option value=${guia.id_guia}>
+            ${guia.serie_guia} - ${guia.numero_guia}
+          </option>
+        `;
+      }
+    }
+    $("#guia").html(tablaProducto);
+  }
+
+  async function validarFormulario() {
+    const serie = $("#serieFactura").val();
+    const numero = $("#numeroFactura").val();
+    const idGuia = $("#guia").val() ?? 0;
+    const fechaVencimiento = $("#fechaVencimiento").val();
+    const tipoCredito = $("#tipoCredito").val();
+    const ordenServicio = $("#ordenServicio").val();
+    const baseImponible = $("#baseImponible").val();
+    const igv = $("#igv").val();
+    const subTotal = $("#subTotal").val();
+    const detraccion = $("#detraccion").val();
+    const totalFacturado = $("#totalFacturado").val();
+    const info = {
+      icon: "error",
+      title: "Campo Inválido",
+    };
+
+    if (idGuia === 0) {
+      info.text = "La guia debe ser seleccionada";
+    } else if (!validator.isLength(fechaVencimiento, { min: 8 })) {
+      info.text = "El campo fecha de vencimiento debe ser seleccionado";
+    } else if (!validator.isLength(baseImponible, { min: 1 })) {
+      info.text = "El campo base imponible no puede estar vacío";
+    } else if (!validator.isLength(igv, { min: 1 })) {
+      info.text = "El campo igv no puede estar vacío";
+    } else if (!validator.isLength(subTotal, { min: 1 })) {
+      info.text = "El campo subtotal no puede estar vacío";
+    } else if (Number(baseImponible) === 0) {
+      info.text = "La base imponible no puede ser 0.00";
+    }
+
+    if (info.text) {
+      cerrarLoader();
+      Swal.fire(info);
+      return false;
+    }
+
+    await registrarFactura({
+      _serie: serie,
+      _numero: numero,
+      _idGuia: idGuia,
+      _fechaVencimiento: fechaVencimiento,
+      _tipoCredito: tipoCredito,
+      _ordenServicio: ordenServicio,
+      _baseImponible: baseImponible,
+      _igv: igv,
+      _subtotal: subTotal,
+      _detraccion: detraccion,
+      _total: totalFacturado
+    });
+  }
+
+  async function registrarFactura($factura) {
+    const resultado = await registrarDatosFactura($factura);
+    cerrarLoader();
+    if (resultado.response === 0) {
+      Swal.fire({
+        icon: "error",
+        title: "No se registro la factura",
+        text: resultado.message
+      });
+    } else {
+      ventanaFacturaCrear();
+      Swal.fire({
+        icon: "success",
+        title: "Factura registrada",
+        text: resultado.message
+      });
+    }
+  }
+</script>

@@ -1,0 +1,155 @@
+<form id="buscarGuia" class="">
+  <div class="card">
+    <h5 class="card-header h5">Seguimiento Guia</h5>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="col-12 col-md-12 form-group text-center">
+          <label class="col-form-label font-weight-bold" for="guia">Guia</label>
+          <select class="form-control w-50 mx-auto selectpicker" data-live-search="true" id="guia"></select>
+          <small id="guiaHelp" class="form-text text-muted">Ejemplo: 001 - 00000012.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-inline justify-content-center">
+    <button type="button" onclick="mostrarLoader();return false" class="btn btn-guardar disabled" id="buscarGuiaButton">
+      Buscar
+    </button>
+  </div>
+</form>
+
+<form id="informacionGuia" class="d-none">
+  <div class="card">
+    <h5 class="card-header h5">Seguimiento Guia</h5>
+    <div class="card-body">
+      <table id="tablaDatos" class="table table-striped table-bordered" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th class="text-center" width="5%">CODIGO</th>
+            <th class="text-center" width="15%">GUIA</th>
+            <th class="text-center" width="25%">ACTIVIDAD</th>
+            <th class="text-center" width="25%">DETALLE ( VALOR ACTUAL ← VALOR ANTERIOR)</th>
+            <th class="text-center" width="15%">USUARIO REGISTRO</th>
+            <th class="text-center" width="15%">FECHA DE REGISTRO</th>
+          </tr>
+        </thead>
+        <tbody id="cuerpoTabla">
+        </tbody>
+      </table>
+    </div>
+  </div>
+</form>
+
+<div id="loader"></div>
+<!--ARCHIVOS JS DE LA VISTA-->
+<script src="Bootstrap/js/select2.min.js"></script>
+<link href="Bootstrap/css/select2.min.css" rel="stylesheet" />
+<script type="text/javascript" src="Modulos/ModGuia/VistaGuia.js"></script>
+<script type="text/javascript" src="Bootstrap/js/tablaDinamica.js"></script>
+
+<script type="text/javascript">
+
+  mostrarDatosListadoSeguimientoGuia();
+
+  /*=============================================
+    - MOSTRAR BOTON DE BUSQUEDA
+  =============================================*/
+
+  $("#guia").change(function () {
+    const guia = $("#guia").val();
+    if (guia.length !== 0) {
+      document.getElementById("buscarGuiaButton").classList.remove("disabled");
+    }
+  });
+
+  /*=============================================
+    - MOSTRAR LISTADO DE SEGUIMIENTO GUIA
+  =============================================*/
+
+  async function mostrarDatosListadoSeguimientoGuia() {
+    const datos = await cargarlistadoSeguimientoGuia();
+    var tablaGuia =
+      "<option value = 0 selected disabled> Elegir Guia</option>";
+    if (Array.isArray(datos)) {
+      for (const guia of datos) {
+        tablaGuia += `
+          <option value="${guia.numero_guia}"">
+            ${guia.numero_guia}
+          </option>
+        `;
+      }
+    }
+    $("#guia").html(tablaGuia);
+    $("#guia").select2();
+  }
+
+  /*=============================================
+    - MOSTRAR LOADER
+  =============================================*/
+
+  function mostrarLoader() {
+    document.getElementById("loader").style.display = "block";
+    setTimeout(mostrarDatosSeguimientoGuia, 1500);
+  }
+
+  /*=============================================
+    - CERRAR LOADER
+  =============================================*/
+
+  function cerrarLoader() {
+    document.getElementById("loader").style.display = "none";
+  }
+
+  async function mostrarDatosSeguimientoGuia() {
+    const datos = await cargarDatosSeguimientoGuia({
+      _numeroGuia: $("#guia").val()
+    })
+
+    var tablaDatos = "";
+    for (const seguimiento of datos) {
+      tablaDatos += `
+      <tr>
+        <td class="text-center" >${seguimiento.id_seguimiento_guia}</td>
+        <td class="text-center">${seguimiento.numero_guia}</td>
+        <td class="text-center">${seguimiento.actividad}</td>
+        <td class="text-center">${seguimiento.detalle}</td>
+        <td class="text-center">${seguimiento.usuario}</td>
+        <td class="text-center">${seguimiento.fecha_registro}</td>
+      </tr>
+      `;
+    }
+    $("#cuerpoTabla").html(tablaDatos);
+
+    document.getElementById("buscarGuia").classList.add("d-none");
+    document.getElementById("informacionGuia").classList.remove("d-none");
+    cerrarLoader();
+
+    $("#tablaDatos").DataTable({
+      dom: "Bfrtip",
+      order: [[5, 'desc']],
+      lengthMenu: [
+        [10, 25, 50, -1],
+        ["VER 10 FILAS", "VER 25 FILAS", "VER 50 FILAS", "TODO"],
+      ],
+      buttons: [
+        {
+          extend: "pageLength",
+          text: "VER 10 FILAS",
+        },
+        {
+          extend: "print",
+          title: "SEGUIMIENTO GUIA",
+          text: "IMPRIMIR",
+        },
+        {
+          extend: "pdfHtml5",
+          download: "open",
+          title: "SEGUIMIENTO GUIA",
+          text: "EXPORTAR PDF",
+        },
+      ],
+    });
+  }
+
+</script>

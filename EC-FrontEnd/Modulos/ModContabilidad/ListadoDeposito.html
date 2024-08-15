@@ -1,0 +1,122 @@
+<!--DISEÑO GENERAL DE LA VISTA-->
+<section id="listado">
+  <!--TITULO DE LA VISTA-->
+  <h3 class="h3-responsive titulo font-weight-bold">LISTAR DEPOSITOS</h3>
+
+  <!--CONTENIDO PRINCIPAL DE LA VISTA-->
+  <table id="tablaListado" class="table table-striped table-bordered" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+        <th>FACTURA</th>
+        <th>FECHA DEPOSITO</th>
+        <th>ENTIDAD BANCARIA</th>
+        <th>FORMA DE PAGO</th>
+        <th>NUMERO CENTRO</th>
+        <th>NUMERO OPERACION</th>
+        <th>FECHA REGISTRO</th>
+      </tr>
+    </thead>
+    <tbody id="cuerpoTabla"></tbody>
+  </table>
+</section>
+
+<!--ARCHIVOS JS DE LA VISTA-->
+<script type="text/javascript" src="Modulos/ModContabilidad/VistaContabilidad.js"></script>
+<script type="text/javascript" src="Bootstrap/js/tablaDinamica.js"></script>
+<script type="text/javascript">
+
+  /*=============================================
+    - CARGAR FACTURAS DEPOSITO - DOCUMENTO
+  =============================================*/
+
+  mostrarDatosFacturasDeposito()
+
+  /*=============================================
+    - MOSTRAR FACTURAS DEPOSITO
+  =============================================*/
+
+  async function mostrarDatosFacturasDeposito() {
+    const datos = await cargarListadoFacturasDeposito();
+    var tablaFacturas = "";
+    if (Array.isArray(datos)) {
+      for (const factura of datos) {
+        tablaFacturas += `
+        <tr onclick="opcionesEliminarDeposito('${factura.id_factura_deposito}', '${factura.id_factura}', '${factura.id_estado_factura}')" >
+          <td>${factura.serie_factura} - ${factura.numero_factura}</td>
+          <td>${factura.fecha_deposito}</td>
+          <td>${factura.entidad_bancaria}</td>
+          <td>${factura.forma_pago}</td>
+          <td>${factura.numero_centro}</td>
+          <td>${factura.numero_operacion}</td>
+          <td>${factura.fecha_registro}</td>
+        </tr>
+      `;
+      }
+      $("#cuerpoTabla").html(tablaFacturas);
+    } else {
+      $("#cuerpoTabla").html(tablaFacturas);
+    }
+
+    $("#tablaListado").DataTable({
+      dom: "Bfrtip",
+      lengthMenu: [
+        [10, 25, 50, -1],
+        ["VER 10 FILAS", "VER 25 FILAS", "VER 50 FILAS", "TODO"],
+      ],
+      order: [[6, 'desc']],
+      buttons: [
+        {
+          extend: "pageLength",
+          text: "VER 10 FILAS",
+        },
+        {
+          extend: "print",
+          title: "LISTADO DEPOSITO",
+          text: "IMPRIMIR",
+        },
+        {
+          extend: "pdfHtml5",
+          download: "open",
+          title: "LISTADO DEPOSITO",
+          text: "EXPORTAR PDF",
+        },
+      ],
+    });
+  }
+
+  /*=============================================
+    - OPCIONES ELIMINAR DEPOSITO
+  =============================================*/
+
+  async function opcionesEliminarDeposito(id_factura_deposito, id_factura, id_estado_factura) {
+    if (id_estado_factura != 3) {
+      Swal.fire({
+        title: "¿Deseas eliminar este deposito? Al eliminar este registro se actualizará a pendiente de pago",
+        showCancelButton: true,
+        confirmButtonText: "Eliminar registro",
+        confirmButtonColor: "#d33",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+  
+          const datos = await actualizarEstadoFactura({
+            _idFactura: id_factura,
+            _idEstadoFactura: 1
+          });
+  
+          await eliminarFacturaDeposito({
+            _idFacturaDeposito: id_factura_deposito
+          });
+  
+          ventanaDepositoListar();
+  
+          Swal.fire({
+            icon: "success",
+            title: "Deposito eliminado",
+            text: "El deposito se eliminó correctamente",
+          });
+  
+        }
+      });
+    }
+  }
+</script>
