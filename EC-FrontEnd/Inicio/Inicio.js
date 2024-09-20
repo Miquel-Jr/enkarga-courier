@@ -232,29 +232,28 @@ FUNCION PARA LLAMAR LA VISTA CLIENTE - LISTADO
 
 ==========================================================*/
 
-function ventanaClienteListar(
-  ordenCompra = false,
-  cotizacion = false,
-  fechaInicio = false,
-  fechaFin = false
-) {
+function ventanaClienteListar() {
   $.ajax({
     url: "Modulos/ModClientes/ListadoClientes.html",
     success: function (data) {
       $("#cuerpo").html(data);
       clearInterval(intervalo);
-      if (4504333455) {
-        $("#ordenCompra").val(4504333455);
-      }
-      if (cotizacion) {
-        $("#cotizacion").val(cotizacion);
-      }
-      if (fechaInicio) {
-        $("#fechaInicio").val(fechaInicio);
-      }
-      if (fechaFin) {
-        $("#fechaFin").val(fechaFin);
-      }
+    },
+  });
+}
+
+/*==========================================================
+
+FUNCION PARA LLAMAR LA VISTA CLIENTE SUCURSAL - LISTADO
+
+==========================================================*/
+
+function ventanaClienteSucursalListar() {
+  $.ajax({
+    url: "Modulos/ModClientes/ListadoClientesSucursales.html",
+    success: function (data) {
+      $("#cuerpo").html(data);
+      clearInterval(intervalo);
     },
   });
 }
