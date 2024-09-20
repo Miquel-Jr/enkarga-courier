@@ -87,6 +87,23 @@ class Model_Clientes
   }
 
   /*===========================================
+    - CONSULTA: MOSTRAR CLIENTE SUCURSALES
+  ===========================================*/
+
+  public function mostrarClientesSucursales()
+  {
+
+    //FUNCION CON LA CONSULTA A REALIZAR
+    $sql = "SELECT cs.*, d.descripcion distrito, p.descripcion provincia, de.descripcion departamento
+    FROM cliente_sucursal cs
+    INNER JOIN distrito d ON d.id_distrito = cs.id_distrito
+    INNER JOIN provincia p ON p.id_provincia = d.id_provincia
+    INNER JOIN departamento de ON de.id_departamento = d.id_departamento";
+    $this->_conexion->ejecutar_sentencia($sql);
+    return $this->_conexion->retorna_select();
+  }
+
+  /*===========================================
     - CONSULTA: MOSTRAR CLIENTES ACTIVOS 
   ===========================================*/
 

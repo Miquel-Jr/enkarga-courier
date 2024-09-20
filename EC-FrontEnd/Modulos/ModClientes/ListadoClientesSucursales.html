@@ -1,0 +1,78 @@
+<!--DISEÑO GENERAL DE LA VISTA-->
+<section id="listado">
+  <!--TITULO DE LA VISTA-->
+  <h3 class="h3-responsive titulo font-weight-bold">LISTAR CLIENTES SUCURSALES</h3>
+
+  <!--CONTENIDO PRINCIPAL DE LA VISTA-->
+  <table id="tablaListado" class="table table-striped table-bordered" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+        <th>COD</th>
+        <th>RUC</th>
+        <th>RAZON SOCIAL</th>
+        <th>DISTRITO</th>
+        <th>PROVINCIA</th>
+        <th>DEPARTAMENTO</th>
+        <th>DIRECCION</th>
+      </tr>
+    </thead>
+    <tbody id="cuerpoTabla"></tbody>
+  </table>
+</section>
+
+<!--ARCHIVOS JS DE LA VISTA-->
+<script type="text/javascript" src="Modulos/ModClientes/VistaClientes.js"></script>
+<script type="text/javascript" src="Bootstrap/js/tablaDinamica.js"></script>
+<script type="text/javascript">
+
+  mostrarClientesSucursales();
+  async function mostrarClientesSucursales() {
+    let datos = await cargarDatosListadoClientesSucursales();
+    var tablaClientes = "";
+    if (Array.isArray(datos)) {
+      for (const cliente of datos) {
+        tablaClientes += `
+        <tr>
+          <td>${cliente.id_cliente_sucursal}</td>
+          <td>${cliente.ruc}</td>
+          <td>${cliente.razon_social}</td>
+          <td>${cliente.distrito}</td>
+          <td>${cliente.provincia}</td>
+          <td>${cliente.departamento}</td>
+          <td>${cliente.direccion}</td>
+        </tr>
+      `;
+      }
+      $("#cuerpoTabla").html(tablaClientes);
+    } else {
+      datos = [];
+      $("#cuerpoTabla").html(tablaClientes);
+    }
+
+    const table = $("#tablaListado").DataTable({
+      dom: "Bfrtip",
+      lengthMenu: [
+        [10, 25, 50, -1],
+        ["VER 10 FILAS", "VER 25 FILAS", "VER 50 FILAS", "TODO"],
+      ],
+      buttons: [
+        {
+          extend: "pageLength",
+          text: "VER 10 FILAS",
+        },
+        {
+          extend: "print",
+          title: "LISTADO CLIENTE",
+          text: "IMPRIMIR",
+        },
+        {
+          extend: "pdfHtml5",
+          download: "open",
+          title: "LISTADO CLIENTE",
+          text: "EXPORTAR PDF",
+        },
+      ],
+    });
+  }
+
+</script>
