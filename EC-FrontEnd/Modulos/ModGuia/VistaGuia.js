@@ -442,35 +442,6 @@ async function cargarDatosDistritoId($distrito) {
   });
 }
 
-async function cargarDatosEmpresa() {
-  return new Promise(function (resolve, reject) {
-    $.ajax({
-      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Empresa/Controlador_ObtenerEmpresa.php",
-      type: "GET",
-      dataType: "json",
-      success: function (datos) {
-        resolve(datos);
-      },
-      error: function (error) {
-        if (error.status == 401) {
-          Swal.fire({
-            icon: "error",
-            title: "Error del servidor",
-            text: "No se pudo establecer conexion con el servidor",
-          });
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Error no identificado",
-            text: "Contactarse con su proveedor",
-          });
-        }
-        reject(error);
-      },
-    });
-  });
-}
-
 async function cargarDatosProductosActivos() {
   return new Promise(function (resolve, reject) {
     $.ajax({
