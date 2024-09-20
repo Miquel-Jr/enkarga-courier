@@ -52,6 +52,7 @@
           <th>USUARIO</th>
           <th>FECHA REGISTRO</th>
           <th>ESTADO</th>
+          <th>DOCUMENTO</th>
         </tr>
       </thead>
       <tbody id="cuerpoTabla"></tbody>
@@ -153,6 +154,11 @@
           <td>${guia.fecha_registro}</td>
           <td class='editable no-sort'>
             <span class="badge ${badgeClass}">${guia.estado}</span>  
+          </td>
+          <td>
+            <a onclick="generatePDF(${guia.id_guia})" download title="Descargar PDF">
+              <i class="fas fa-download"></i>
+            </a>
           </td>
         </tr>
       `;
@@ -323,6 +329,12 @@
     });
 
     cerrarLoader();
+  }
+
+  function generatePDF(idGuia) {
+    setTimeout(() => {
+      window.location = "../EC-BackEnd/Controlador/ModGenerales/Controlador_Guia/Controlador_GenerarGuia.php?id=" + idGuia;
+    }, 1000)
   }
 
 </script>

@@ -195,4 +195,16 @@ class Model_Clientes
     $this->_conexion->ejecutar_sentencia($sql, $idsArray);
     return $this->_conexion->retorna_select();
   }
+
+  /*===========================================
+    CONSULTA: CARGAR CLIENTE SUCURSAL
+  ===========================================*/
+
+  function cargarClienteSucursal($idClienteSucursal)
+  {
+    //FUNCION CON LA CONSULTA A REALIZAR
+    $sql = "SELECT * FROM cliente_sucursal WHERE id_cliente_sucursal = $idClienteSucursal";
+    $this->_conexion->ejecutar_sentencia($sql);
+    return $this->_conexion->retornar_array();
+  }
 }

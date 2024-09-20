@@ -30,7 +30,11 @@ class Model_Empresa
   {
 
     //FUNCION CON LA CONSULTA A REALIZAR
-    $sql = "SELECT * FROM configuracion_empresa ";
+    $sql = "SELECT ce.*, d.descripcion distrito, p.descripcion provincia, de.descripcion departamento
+    FROM configuracion_empresa ce
+    INNER JOIN distrito d ON d.id_distrito = ce.id_distrito
+    INNER JOIN provincia p ON p.id_provincia = d.id_provincia
+    INNER JOIN departamento de ON de.id_departamento = d.id_departamento";
     $this->_conexion->ejecutar_sentencia($sql);
     return $this->_conexion->retornar_array();
   }
