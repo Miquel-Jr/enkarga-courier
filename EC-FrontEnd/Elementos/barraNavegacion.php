@@ -85,8 +85,6 @@
           <!--======= LISTAR PROVEEDOR =======-->
           <a id="LPROVEEDOR" onclick="ventanaProveedorListar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Listar transportista</a>
 
-          <!--======= ACTUALIZAR PROVEEDOR  =======-->
-          <a id="APROVEEDOR" onclick="ventanaProveedorActualizar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Actualizar transportista</a>
         <?php
         };
         if ($_SESSION["personal"]) {

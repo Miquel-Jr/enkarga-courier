@@ -308,22 +308,6 @@ function ventanaProveedorListar() {
 
 /*==========================================================
 
-FUNCION PARA LLAMAR LA VISTA PROVEEDOR - ACTUALIZAR
-
-==========================================================*/
-
-function ventanaProveedorActualizar() {
-  $.ajax({
-    url: "Modulos/ModProveedor/ActualizarProveedor.html",
-    success: function (data) {
-      $("#cuerpo").html(data);
-      clearInterval(intervalo);
-    },
-  });
-}
-
-/*==========================================================
-
 FUNCION PARA LLAMAR LA VISTA PERSONAL - NUEVO
 
 ==========================================================*/
