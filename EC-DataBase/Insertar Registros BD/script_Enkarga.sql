@@ -63,7 +63,6 @@ CREATE TABLE `cliente` (
   `correo` varchar(100) DEFAULT NULL COMMENT 'Correo del cliente',
   `tipo_documento` int(11) NOT NULL COMMENT 'Tipo de documento del cliente',
   `numero_documento` varchar(20) NOT NULL COMMENT 'Numero de documento del cliente',
-  `fecha_nacimiento` date DEFAULT NULL COMMENT 'Fecha de nacimiento del cliente',
   `id_distrito` varchar(10) NOT NULL COMMENT 'Distrito del Cliente',
   `direccion` varchar(250) DEFAULT NULL COMMENT 'Direccion del cliente',
   `ruc` int(20) DEFAULT NULL COMMENT 'Ruc del cliente',
@@ -78,7 +77,7 @@ CREATE TABLE `cliente` (
 -- Volcado de datos para la tabla `cliente`
 --
 
-INSERT INTO `cliente` (`id_cliente`, `nombres`, `apellidos`, `correo`, `tipo_documento`, `numero_documento`, `fecha_nacimiento`, `id_distrito`, `direccion`, `ruc`, `razon_social`, `telefono`, `celular`, `id_estado`, `fecha_registro`) VALUES(1, 'MARIA', 'ALVAREZ TORRES', '', 1, '08070605', '1993-01-30', '130102', '', 2147483647, 'SEGURO SOCIAL DE SALUD ', NULL, NULL, 1, '2024-06-24 11:26:09');
+INSERT INTO `cliente` (`id_cliente`, `nombres`, `apellidos`, `correo`, `tipo_documento`, `numero_documento`, `id_distrito`, `direccion`, `ruc`, `razon_social`, `telefono`, `celular`, `id_estado`, `fecha_registro`) VALUES(1, 'MARIA', 'ALVAREZ TORRES', '', 1, '08070605', '130102', '', 2147483647, 'SEGURO SOCIAL DE SALUD ', NULL, NULL, 1, '2024-06-24 11:26:09');
 
 -- --------------------------------------------------------
 
@@ -2403,7 +2402,6 @@ CREATE TABLE `personal` (
   `apellidos` varchar(100) NOT NULL COMMENT 'Apellidos del personal',
   `tipo_documento` int(11) NOT NULL COMMENT 'Tipo documento del personal',
   `numero_documento` varchar(20) NOT NULL COMMENT 'Numero documento del personal',
-  `fecha_nacimiento` date NOT NULL COMMENT 'Fecha de nacimiento del personal',
   `correo` varchar(100) DEFAULT NULL COMMENT 'Correo del personal',
   `id_distrito` varchar(10) NOT NULL COMMENT 'Id distrito del personal',
   `direccion` varchar(100) NOT NULL COMMENT 'Direccion del personal',
@@ -2417,8 +2415,8 @@ CREATE TABLE `personal` (
 -- Volcado de datos para la tabla `personal`
 --
 
-INSERT INTO `personal` (`id_personal`, `nombres`, `apellidos`, `tipo_documento`, `numero_documento`, `fecha_nacimiento`, `correo`, `id_distrito`, `direccion`, `telefono`, `celular`, `fecha_registro`, `id_estado`) VALUES(1, 'MIGUEL', 'RAMIREZ', 1, '78451245', '1978-03-01', 'miguel@gmail.com', '150116', 'Av Sta rosa de quilmes 102', NULL, NULL, '2024-03-17 00:55:22', 1);
-INSERT INTO `personal` (`id_personal`, `nombres`, `apellidos`, `tipo_documento`, `numero_documento`, `fecha_nacimiento`, `correo`, `id_distrito`, `direccion`, `telefono`, `celular`, `fecha_registro`, `id_estado`) VALUES(4, 'JOSE ALBERTO', 'CACERES MENDIOLA', 1, '12121212', '1997-02-21', '', '130102', '', NULL, NULL, '2024-06-24 11:22:09', 1);
+INSERT INTO `personal` (`id_personal`, `nombres`, `apellidos`, `tipo_documento`, `numero_documento`, `correo`, `id_distrito`, `direccion`, `telefono`, `celular`, `fecha_registro`, `id_estado`) VALUES(1, 'MIGUEL', 'RAMIREZ', 1, '78451245', 'miguel@gmail.com', '150116', 'Av Sta rosa de quilmes 102', NULL, NULL, '2024-03-17 00:55:22', 1);
+INSERT INTO `personal` (`id_personal`, `nombres`, `apellidos`, `tipo_documento`, `numero_documento`, `correo`, `id_distrito`, `direccion`, `telefono`, `celular`, `fecha_registro`, `id_estado`) VALUES(4, 'JOSE ALBERTO', 'CACERES MENDIOLA', 1, '12121212', '', '130102', '', NULL, NULL, '2024-06-24 11:22:09', 1);
 
 -- --------------------------------------------------------
 

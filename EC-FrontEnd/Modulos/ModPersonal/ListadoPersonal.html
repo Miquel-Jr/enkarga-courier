@@ -1,3 +1,23 @@
+<style>
+  .input-with-icon {
+    position: relative;
+  }
+
+  .input-with-icon input {
+    padding-right: 40px;
+    /* Ajusta el espaciado para el ícono del ojo */
+  }
+
+  .input-with-icon .password-toggle-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    /* Ajusta la posición horizontal */
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+</style>
+
 <!--DISEÑO GENERAL DE LA VISTA-->
 <section id="listado">
   <!--TITULO DE LA VISTA-->
@@ -15,7 +35,7 @@
         <th>PERFIL</th>
         <th>USUARIO</th>
         <th>ESTADO</th>
-        <th>INFO</th>
+        <th>ACCION</th>
       </tr>
     </thead>
     <tbody id="cuerpoTabla"></tbody>
@@ -30,6 +50,7 @@
         <h5 class="modal-title white-text font-weight-bold">
           Informacion del Personal
         </h5>
+        <span id="codigo" class="badge badge-light badge-pill white-text font-weight-bold"></span>
         <button id="closeModal" type="button" class="close white-text font-weight-bold" data-dismiss="modal"
           aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -38,93 +59,146 @@
       <div class="modal-body">
 
         <div class="form-row">
-
+          <!-- NOMBRES -->
           <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold">USUARIO:</label>
-            <span class="col-form-label" id="usuario"></span>
+            <label class="col-form-label font-weight-bold" for="nombres">Nombres</label>
+            <input required id="nombres" onkeyup="obtenerMayuscula(this);" class="form-control" type="string"
+              aria-describedby="nombresHelp" placeholder="Ingresar nombres del personal" />
+            <small id="nombresHelp" class="form-text text-muted">Campo obligatorio.</small>
           </div>
 
+          <!--APELLIDOS -->
           <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold">PERFIL:</label>
-            <span class="col-form-label" id="perfil"></span>
-          </div>
-
-          <div class="w-100"></div>
-
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold">NOMBRES:</label>
-            <span class="col-form-label" id="nombres"></span>
-          </div>
-
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold">APELLIDOS:</label>
-            <span class="col-form-label" id="apellidos"></span>
+            <label class="col-form-label font-weight-bold" for="apellidos">Apellidos</label>
+            <input required id="apellidos" onkeyup="obtenerMayuscula(this);" class="form-control" type="string"
+              aria-describedby="apellidosHelp" placeholder="Ingresar apellidos del personal" />
+            <small id="apellidosHelp" class="form-text text-muted">Campo obligatorio.</small>
           </div>
 
           <div class="w-100"></div>
 
+          <!--TIPO DE DOCUMENTO -->
           <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold">TIPO DOCUMENTO:</label>
-            <span class="col-form-label" id="tipoDocumento"></span>
+            <label class="col-form-label font-weight-bold" for="tipoDocumento">Tipo de documento</label>
+            <select required id="tipoDocumento" class="form-control" aria-describedby="tipoDocumentoHelp"></select>
+            <small id="tipoDocumentoHelp" class="form-text text-muted">Campo obligatorio.</small>
           </div>
 
+          <!--NUMERO DE DOCUMENTO  -->
           <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold">NRO DOCUMENTO:</label>
-            <span class="col-form-label" id="nroDocumento"></span>
-          </div>
-
-          <div class="w-100"></div>
-
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold">CORREO:</label>
-            <span class="col-form-label" id="correo"></span>
-          </div>
-
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold">FECHA NACIMIENTO:</label>
-            <span class="col-form-label" id="fechaNacimiento"></span>
+            <label class="col-form-label font-weight-bold" for="numeroDocumento">Nro de Documento</label>
+            <input required id="numeroDocumento" onkeyup="obtenerMayuscula(this);" class="form-control" type="string"
+              aria-describedby="numeroDocumentoHelp" placeholder="Ingresar numero de documento" min="1"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              maxlength="20" />
+            <small id="numeroDocumentoHelp" class="form-text text-muted">Campo obligatorio.</small>
           </div>
 
           <div class="w-100"></div>
 
+          <!--CORREO  -->
           <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold">DEPARTAMENTO:</label>
-            <span class="col-form-label" id="departamento"></span>
-          </div>
-
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold">PROVINCIA:</label>
-            <span class="col-form-label" id="provincia"></span>
-          </div>
-
-          <div class="w-100"></div>
-
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold">DISTRITO:</label>
-            <span class="col-form-label" id="distrito"></span>
-          </div>
-
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold">DIRECCION:</label>
-            <span class="col-form-label" id="direccion"></span>
+            <label class="col-form-label font-weight-bold" for="correo">Correo</label>
+            <input id="correo" class="form-control" type="string" aria-describedby="correoHelp"
+              placeholder="Ingresar correo del personal" />
+            <small id="correoHelp" class="form-text text-muted">Campo opcional.</small>
           </div>
 
           <div class="w-100"></div>
 
+          <!-- DEPARTAMENTO -->
           <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold">TELEFONO:</label>
-            <span class="col-form-label" id="telefono"></span>
+            <label class="col-form-label font-weight-bold" for="departamento">Departamento</label>
+            <select required id="departamento" onchange="cargarProvincia(this.value);" class="form-control"
+              aria-describedby="departamentoHelp"></select>
+            <small id="departamentoHelp" class="form-text text-muted">Campo obligatorio.</small>
           </div>
 
+          <!-- PROVINCIA -->
           <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold">CELULAR:</label>
-            <span class="col-form-label" id="celular"></span>
+            <label class="col-form-label font-weight-bold" for="provincia">Provincia</label>
+            <select required id="provincia" onchange="cargarDistrito(this.value);" class="form-control"
+              aria-describedby="provinciaHelp"></select>
+            <small id="provinciaHelp" class="form-text text-muted">Campo obligatorio.</small>
           </div>
+
+          <div class="w-100"></div>
+
+          <!-- DISTRITO -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="distrito">Distrito</label>
+            <select required id="distrito" class="form-control" aria-describedby="distritoHelp"></select>
+            <small id="distritoHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <!--DIRECCION DEL PERSONAL-->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="direccion">Direccion del personal</label>
+            <input id="direccion" class="form-control" type="string" aria-describedby="direccionHelp"
+              placeholder="Ingresar direccion del personal" />
+            <small id="direccionHelp" class="form-text text-muted">Campo opcional.</small>
+          </div>
+
+
+          <div class="w-100"></div>
+
+          <!-- CELULAR -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="celular">Celular</label>
+            <input id="celular" class="form-control" type="string" aria-describedby="celularHelp"
+              placeholder="Ingresar celular del personal" />
+            <small id="celularHelp" class="form-text text-muted">Campo opcional.</small>
+          </div>
+
+          <!-- TELEFONO -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="telefono">Telefono</label>
+            <input id="telefono" class="form-control" type="string" aria-describedby="telefonoHelp"
+              placeholder="Ingresar telefono del personal" />
+            <small id="telefonoHelp" class="form-text text-muted">Campo opcional.</small>
+          </div>
+
+          <div class="w-100"></div>
+
+          <!--ESTADO -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="estado">Estado</label>
+            <select required id="estado" class="form-control"></select>
+          </div>
+
+
+          <div class="w-100"></div>
+
+          <!-- USUARIO -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="usuario">Usuario</label>
+            <input required id="usuario" onkeyup="obtenerMinuscula(this);" class="form-control" type="string"
+              aria-describedby="usuarioHelp" placeholder="Ingrese usuario del personal" />
+            <small id="usuarioHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <!--PASSSWORD -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="clave">Password</label>
+            <div class="input-with-icon">
+              <input required id="clave" onkeyup="obtenerMinuscula(this);" class="form-control" type="password"
+                aria-describedby="claveHelp" placeholder="Ingrese password del usuario" autocomplete="new-password" />
+              <span class="password-toggle-icon" onclick="visualizarPassword()"><i class="fas fa-eye"></i></span>
+            </div>
+            <small id="claveHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <div class="w-100"></div>
 
         </div>
 
       </div>
+
       <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="actualizarPersonal"
+          onclick="mostrarLoaderActualizar(); return false">
+          Actualizar
+        </button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">
           Cerrar
         </button>
@@ -132,12 +206,37 @@
     </div>
   </div>
 </div>
+
+<div id="loader"></div>
+
 <!--ARCHIVOS JS DE LA VISTA-->
+<script src="Bootstrap/js/select2.min.js"></script>
+<link href="Bootstrap/css/select2.min.css" rel="stylesheet" />
 <script type="text/javascript" src="Modulos/ModClientes/VistaClientes.js"></script>
 <script type="text/javascript" src="Modulos/ModPersonal/VistaPersonal.js"></script>
 <script type="text/javascript" src="Bootstrap/js/tablaDinamica.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/validator/13.6.0/validator.min.js"></script>
 <script type="text/javascript">
   cargarDatos();
+  cargarEstados();
+  cargarEstadosUsuario();
+  cargarTipoDocumentos();
+
+  /*=============================================
+    - MOSTRAR LOADER - ACTUALIZAR
+  =============================================*/
+
+  function mostrarLoaderActualizar() {
+    document.getElementById("loader").style.display = "block";
+    setTimeout(validarCampos, 1500);
+  }
+
+  /*=============================================
+    - CERRAR LOADER
+  =============================================*/
+  function cerrarLoader() {
+    document.getElementById("loader").style.display = "none";
+  }
 
   /*=============================================
     - CARGAR PERSONAL
@@ -173,53 +272,67 @@
     - MOSTRAR PERSONAL
   =============================================*/
 
-  function mostrarDatosPersonal(datos) {
-    var tablaPersonal = "";
-    if (Array.isArray(datos)) {
-      for (const personal of datos) {
-        tablaPersonal += `
-        <tr>
-          <td>${personal.id_personal}</td>
-          <td>${personal.nombres}</td>
-          <td>${personal.apellidos}</td>
-          <td>${personal.tipo_documento}</td>
-          <td>${personal.numero_documento}</td>
-          <td>${personal.perfil}</td>
-          <td>${personal.usuario}</td>
-          <td>${personal.estado}</td>
-          <td><button class="btn btn-primary" onclick="mostrarModal(${personal.id_personal});return false" >Ver</button></td>
-        </tr>
-      `;
-      }
-      $("#cuerpoTabla").html(tablaPersonal);
-    } else {
-      $("#cuerpoTabla").html(tablaPersonal);
-    }
+  // variable para mantener la instancia de DataTable
+  var tablaPersonal = null;
 
-    $("#tablaListado").DataTable({
-      dom: "Bfrtip",
-      lengthMenu: [
-        [10, 25, 50, -1],
-        ["VER 10 FILAS", "VER 25 FILAS", "VER 50 FILAS", "TODO"],
-      ],
-      buttons: [
-        {
-          extend: "pageLength",
-          text: "VER 10 FILAS",
-        },
-        {
-          extend: "print",
-          title: "LISTADO PERSONAL",
-          text: "IMPRIMIR",
-        },
-        {
-          extend: "pdfHtml5",
-          download: "open",
-          title: "LISTADO PERSONAL",
-          text: "EXPORTAR PDF",
-        },
-      ],
-    });
+  function mostrarDatosPersonal(datos) {
+
+    const filas = Array.isArray(datos)
+      ? datos.map((personal) => [
+        personal.id_personal,
+        personal.nombres,
+        personal.apellidos,
+        personal.tipo_documento,
+        personal.numero_documento,
+        personal.perfil,
+        personal.usuario,
+        personal.estado,
+        ` <button class="btn btn-sm btn-primary" onclick="ventanaPersonalEditar(${personal.id_personal})"><i class="fas fa-edit"></i></button>`,
+      ])
+      : [];
+
+    if (!tablaPersonal) {
+      tablaPersonal = $("#tablaListado").DataTable({
+        data: filas,
+        columns: [
+          { title: "COD" },
+          { title: "NOMBRES" },
+          { title: "APELLIDOS" },
+          { title: "TIPO DOCUMENTO" },
+          { title: "NRO DOCUMENTO" },
+          { title: "PERFIL" },
+          { title: "USUARIO" },
+          { title: "ESTADO" },
+          { title: "ACCION", orderable: false, searchable: false },
+        ],
+        dom: "Bfrtip",
+        lengthMenu: [
+          [10, 25, 50, -1],
+          ["VER 10 FILAS", "VER 25 FILAS", "VER 50 FILAS", "TODO"],
+        ],
+        buttons: [
+          {
+            extend: "pageLength",
+            text: "VER 10 FILAS",
+          },
+          {
+            extend: "print",
+            title: "LISTADO TRANSPORTISTA",
+            text: "IMPRIMIR",
+          },
+          {
+            extend: "pdfHtml5",
+            download: "open",
+            title: "LISTADO TRANSPORTISTA",
+            text: "EXPORTAR PDF",
+          },
+        ],
+      });
+    } else {
+      tablaPersonal.clear();
+      tablaPersonal.rows.add(filas);
+      tablaPersonal.draw();
+    }
   }
 
   /*=============================================
@@ -260,7 +373,7 @@
       - MOSTRAR MODAL PERSONAL
     =============================================*/
 
-  async function mostrarModal(idPersonal) {
+  async function ventanaPersonalEditar(idPersonal) {
     const modalPersonal = new bootstrap.Modal(
       document.getElementById("infoPersonal")
     );
@@ -273,42 +386,252 @@
 
     const tipoDocumentoPersonal = tipoDocumento.find(item => item.tipo_documento === datos.tipo_documento);
 
-    const distrito = await obtenerDistritoId({
-      _idDistrito: datos.id_distrito
-    });
-
-    const provincia = await obtenerProvinciaId({
-      _idProvincia: distrito.id_provincia
-    });
-
     const usuario = await obtenerUsuarioPersonal({
       _idPersonal: idPersonal
     })
 
-    const departamentos = await obtenerDepartamento();
-
     const perfiles = await obtenerPerfil();
-    
+
     const perfilUsuario = perfiles.find((item) => item.id_perfil === usuario.id_perfil);
-    const departamento = departamentos.find((item) => item.id_departamento === distrito.id_departamento)
 
-    $("#nombres").html(datos.nombres);
-    $("#apellidos").html(datos.apellidos);
-    $("#tipoDocumento").html(tipoDocumentoPersonal.descripcion);
-    $("#nroDocumento").html(datos.numero_documento);
-    $("#correo").html(datos.correo);
-    $("#distrito").html(distrito.descripcion);
-    $("#provincia").html(provincia.descripcion);
-    $("#departamento").html(departamento.descripcion);
-    $("#direccion").html(datos.direccion);
-    $("#fechaNacimiento").html(datos.fecha_nacimiento);
-    $("#ruc").html(datos.ruc);
-    $("#razonSocial").html(datos.razon_social);
-    $("#telefono").html(datos.telefono);
-    $("#celular").html(datos.celular);
-    $("#usuario").html(usuario.usuario);
-    $("#perfil").html(perfilUsuario.perfil);
+    await cargarDepartamento(datos.id_departamento);
+    await cargarProvincia(datos.id_departamento, datos.id_provincia);
+    await cargarDistrito(datos.id_provincia, datos.id_distrito);
 
+    $("#codigo").html(datos.id_personal);
+    $("#nombres").val(datos.nombres);
+    $("#apellidos").val(datos.apellidos);
+    $("#tipoDocumento").val(tipoDocumentoPersonal.tipo_documento);
+    $("#numeroDocumento").val(datos.numero_documento);
+    $("#correo").val(datos.correo);
+    $("#direccion").val(datos.direccion);
+    $("#ruc").val(datos.ruc);
+    $("#razonSocial").val(datos.razon_social);
+    $("#telefono").val(datos.telefono);
+    $("#celular").val(datos.celular);
+    $("#estado").val(datos.id_estado);
+    $("#usuario").val(usuario.usuario);
+    $("#clave").val(usuario.clave);
     modalPersonal.show();
   }
+
+  /*=============================================
+    - VALIDAR FORMULARIO
+  =============================================*/
+
+  function validarCampos() {
+    const idPersonal = $("#codigo").html();
+    const nombres = $("#nombres").val().trim();
+    const apellidos = $("#apellidos").val().trim();
+    const tipoDocumento = $("#tipoDocumento").val();
+    const numeroDocumento = $("#numeroDocumento").val();
+    const correo = $("#correo").val();
+    const distrito = $("#distrito").val();
+    const direccion = $("#direccion").val();
+    const celular = $("#celular").val();
+    const telefono = $("#telefono").val();
+    const estado = $("#estado").val();
+    const usuario = $("#usuario").val().trim();
+    const clave = $("#clave").val().trim();
+
+    const info = {
+      icon: "error",
+      title: "Campo Inválido",
+    };
+
+    if (!validator.isLength(nombres, { min: 4 })) {
+      info.text = "El campo nombres debe tener 4 caracteres como minimo";
+    } else if (!validator.isLength(apellidos, { min: 4 })) {
+      info.text = "El campo apellido debe tener 4 caracteres como minimo";
+    } else if (!validator.isLength(numeroDocumento, { min: 8 })) {
+      info.text =
+        "El campo numero documento debe tener 8 caracteres como minimo";
+    } else if (correo && !validator.isEmail(correo)) {
+      info.text = "El campo correo debe ser un correo válido";
+    } else if (direccion && !validator.isLength(direccion, { min: 6 })) {
+      info.text = "El campo direccion debe tener 6 caracteres como minimo";
+    } else if (!distrito || !validator.isLength(distrito, { min: 1 })) {
+      info.text = "El campo distrito es obligatorio";
+    } else if (
+      celular &&
+      !validator.isLength(celular, { min: 1 }) &&
+      !validator.isNumeric(celular)
+    ) {
+      info.text = "El campo celular debe ser numérico";
+    } else if (
+      telefono &&
+      !validator.isLength(telefono, { min: 1 }) &&
+      !validator.isNumeric(telefono)
+    ) {
+      info.text = "El campo telefono debe ser numérico";
+    } else if (!validator.isLength(usuario, { min: 4 })) {
+      info.text = "El campo usuario debe tener 4 caracteres como minimo";
+    } else if (!validator.isLength(clave, { min: 6 })) {
+      info.text = "El campo password debe tener 6 caracteres como minimo";
+    }
+
+    if (info.text) {
+      cerrarLoader();
+      Swal.fire(info);
+      return false;
+    }
+
+    validarPersonal({
+      _idPersonal: Number(idPersonal),
+      _nombres: nombres,
+      _apellidos: apellidos,
+      _tipoDocumento: tipoDocumento,
+      _numeroDocumento: numeroDocumento,
+      _correo: correo,
+      _distrito: distrito,
+      _direccion: direccion,
+      _celular: celular,
+      _telefono: telefono,
+      _idEstado: estado,
+      _usuario: usuario,
+      _clave: clave,
+    });
+  }
+
+  /*=============================================
+    - VALIDAR PERSONAL
+  =============================================*/
+
+  function validarPersonal($personal) {
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Personal/Controlador_ValidarPersonal.php",
+      type: "POST",
+      data: $personal,
+      dataType: "json",
+      error: function (error) {
+        cerrarLoader();
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        if (datos.response == 0) {
+          actualizarPersonal($personal);
+        } else {
+          cerrarLoader();
+          if (datos.id_personal === $personal._idPersonal) {
+            actualizarUsuarioPortal({
+              _idPersonal: $personal._idPersonal,
+              _usuario: $personal._usuario,
+              _clave: $personal._clave,
+              _idEstado: $personal._idEstado
+            });
+            actualizarPersonal($personal);
+          } else {
+            Swal.fire({
+              icon: "warning",
+              title: "Personal encontrado",
+              text: `El numero de documento existe con el nombre de: ${datos.nombres} ${datos.apellidos}`,
+            });
+          }
+        }
+      },
+    });
+  }
+
+  /*=============================================
+    - ACTUALIZAR USUARIO PORTAL
+  =============================================*/
+
+  function actualizarUsuarioPortal($usuario) {
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Usuario/Controlador_ActualizarUsuario.php",
+      type: "POST",
+      data: $usuario,
+      dataType: "json",
+      error: function (error) {
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+    });
+  }
+
+
+  /*=============================================
+    - ACTUALIZAR PERSONAL
+  =============================================*/
+
+  function actualizarPersonal($personal) {
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Personal/Controlador_ActualizarPersonal.php",
+      type: "POST",
+      data: $personal,
+      dataType: "json",
+      error: function (error) {
+        cerrarLoader();
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        cerrarLoader();
+        if (datos.response == 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Personal no actualizado",
+            text: datos.message,
+          });
+        } else {
+          Swal.fire({
+            icon: "success",
+            title: "Personal actualizado",
+            text: datos.message,
+          });
+          cargarDatos();
+        }
+        $("#closeModal").click();
+      },
+    });
+  }
+
+
+  /*=============================================
+    - VISUALIZAR PASSWORD
+  =============================================*/
+
+  function visualizarPassword() {
+    var x = document.getElementById("clave");
+    if (x.type === "password") {
+      x.type = "text";
+    } else {
+      x.type = "password";
+    }
+  }
+
 </script>

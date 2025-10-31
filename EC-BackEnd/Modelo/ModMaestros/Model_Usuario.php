@@ -37,10 +37,10 @@ class Model_Usuario
     - CONSULTA: ACTUALIZAR USUARIO PERSONAL
   ===========================================*/
 
-  function actualizarUsuario($idPersonal, $usuario, $clave, $idPerfil, $idEstado)
+  function actualizarUsuario($idPersonal, $usuario, $clave, $idEstado)
   {
-    $sql = "UPDATE usuario SET usuario = ?, clave = ?, id_perfil = ?, id_estado = ? WHERE id_personal = ?";
-    $params = array($usuario, $clave, $idPerfil, $idEstado, $idPersonal);
+    $sql = "UPDATE usuario SET usuario = ?, clave = ?, id_estado = ? WHERE id_personal = ?";
+    $params = array($usuario, $clave, $idEstado, $idPersonal);
     $this->_conexion->ejecutar_sentencia($sql, $params);
     return $this->_conexion->insert_registro();
   }

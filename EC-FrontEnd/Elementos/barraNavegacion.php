@@ -51,6 +51,7 @@
 
 
         <?php
+
         if ($_SESSION["clientes"]) {
         ?>
           <!--===========================
@@ -87,11 +88,12 @@
 
         <?php
         };
-        if ($_SESSION["personal"]) {
+        if ($_SESSION["personal"] && ($_SESSION['id_perfil'] == 1 || $_SESSION['id_perfil'] == 2)) {
         ?>
           <!--===========================
             MODULO RECURSOS HUMANOS
           ============================-->
+
           <a id="PERSONAL" class="list-group-item list-group-item-action black white-text font-weight-bold" data-toggle="list" role="tab" style="cursor: default;"><i class="fas fa-lg fa-user white-text mr-2"></i>Personal</a>
 
           <!--======= NUEVO USUARIO  =======-->
@@ -105,6 +107,19 @@
 
           <!--======= ACCESOS =======-->
           <a id="ACCESOS" onclick="ventanaAccesosPersonal();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Accesos</a>
+        <?php
+        };
+        if ($_SESSION["personal"] && ($_SESSION['id_perfil'] == 3 || $_SESSION['id_perfil'] == 4)) {
+        ?>
+          <!--===========================
+            MODULO RECURSOS HUMANOS
+          ============================-->
+
+          <a id="PERSONAL" class="list-group-item list-group-item-action black white-text font-weight-bold" data-toggle="list" role="tab" style="cursor: default;"><i class="fas fa-lg fa-user white-text mr-2"></i>Personal</a>
+
+          <!--======= ACTUALIZAR USUARIOS  =======-->
+          <a id="USUARIO" onclick="ventanaPersonalActualizar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Actualizar Personal</a>
+
         <?php
         };
         if ($_SESSION["operaciones"]) {

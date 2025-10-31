@@ -7,6 +7,7 @@ if (isset($_POST['datos'])) {
   $datos = $_POST['datos'];
 
   // Almacenar los datos en la variable de sesión de PHP
+  $_SESSION['id_perfil'] = $datos["id_perfil"];
   $_SESSION['clientes'] = $datos["clientes"];
   $_SESSION['proveedor'] = $datos["proveedor"];
   $_SESSION['personal'] = $datos["personal"];

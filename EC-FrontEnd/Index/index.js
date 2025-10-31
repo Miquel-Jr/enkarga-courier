@@ -180,7 +180,7 @@ function obtenerAccesos(id_personal) {
       }
     },
     success: function (datos) {
-      if(datos.response === 0) {
+      if (datos.response === 0) {
         Swal.fire({
           icon: "error",
           title: "Permisos",
@@ -188,7 +188,8 @@ function obtenerAccesos(id_personal) {
         });
         sessionStorage.clear();
       } else {
-        cargarAccesos(datos);
+        const id_perfil = sessionStorage.id_perfil;
+        cargarAccesos({ ...datos, id_perfil });
         sessionStorage.setItem("accesos", JSON.stringify(datos));
       }
     },
