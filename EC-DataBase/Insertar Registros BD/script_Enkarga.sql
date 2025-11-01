@@ -2731,6 +2731,7 @@ CREATE TABLE `tipo_documento` (
 INSERT INTO `tipo_documento` (`tipo_documento`, `descripcion`, `id_estado`) VALUES(1, 'DNI', 1);
 INSERT INTO `tipo_documento` (`tipo_documento`, `descripcion`, `id_estado`) VALUES(2, 'CE', 1);
 INSERT INTO `tipo_documento` (`tipo_documento`, `descripcion`, `id_estado`) VALUES(3, 'PASAPORTE', 1);
+INSERT INTO `tipo_documento` (`tipo_documento`, `descripcion`, `id_estado`) VALUES(4, 'RUC', 1);
 
 -- --------------------------------------------------------
 

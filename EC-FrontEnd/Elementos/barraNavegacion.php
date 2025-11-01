@@ -68,9 +68,6 @@
           <!--======= LISTAR CLIENTE-SUCURSALES =======-->
           <a id="LCLIENTE" onclick="ventanaClienteSucursalListar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Listar cliente sucursal</a>
 
-          <!--======= ACTUALIZAR CLIENTE  =======-->
-          <a id="ACLIENTE" onclick="ventanaClienteActualizar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Actualizar cliente</a>
-
         <?php
         };
         if ($_SESSION["proveedor"]) {
