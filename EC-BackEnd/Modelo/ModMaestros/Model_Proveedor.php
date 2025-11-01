@@ -62,7 +62,10 @@ class Model_Proveedor
   public function mostrarProveedor($idProveedor)
   {
     //FUNCION CON LA CONSULTA A REALIZAR
-    $sql = "SELECT * FROM proveedor WHERE id_proveedor = ?";
+    $sql = "SELECT p.*, pr.id_provincia, pr.id_departamento FROM proveedor p 
+    INNER JOIN distrito d ON d.id_distrito = p.id_distrito
+    INNER JOIN provincia pr ON pr.id_provincia = d.id_provincia
+    WHERE p.id_proveedor = ?";
     $params = array($idProveedor);
     $this->_conexion->ejecutar_sentencia($sql, $params);
     return $this->_conexion->retornar_array();
