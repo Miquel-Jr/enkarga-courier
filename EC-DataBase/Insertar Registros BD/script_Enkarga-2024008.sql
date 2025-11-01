@@ -2524,7 +2524,6 @@ CREATE TABLE `personal` (
   `apellidos` varchar(100) NOT NULL COMMENT 'Apellidos del personal',
   `tipo_documento` int(11) NOT NULL COMMENT 'Tipo documento del personal',
   `numero_documento` varchar(20) NOT NULL COMMENT 'Numero documento del personal',
-  `fecha_nacimiento` date NOT NULL COMMENT 'Fecha de nacimiento del personal',
   `correo` varchar(100) DEFAULT NULL COMMENT 'Correo del personal',
   `id_distrito` varchar(10) NOT NULL COMMENT 'Id distrito del personal',
   `direccion` varchar(100) NOT NULL COMMENT 'Direccion del personal',
@@ -2553,9 +2552,9 @@ TRUNCATE TABLE `personal`;
 -- Volcado de datos para la tabla `personal`
 --
 
-INSERT INTO `personal` (`id_personal`, `nombres`, `apellidos`, `tipo_documento`, `numero_documento`, `fecha_nacimiento`, `correo`, `id_distrito`, `direccion`, `telefono`, `celular`, `fecha_registro`, `id_estado`) VALUES
-(1, 'MIGUEL', 'RAMIREZ', 1, '78451245', '1978-03-01', 'miguel@gmail.com', '150116', 'Av Sta rosa de quilmes 102', NULL, NULL, '2024-03-17 00:55:22', 1),
-(4, 'JOSE ALBERTO', 'CACERES MENDIOLA', 1, '12121212', '1997-02-21', '', '130102', '', NULL, NULL, '2024-06-24 11:22:09', 1);
+INSERT INTO `personal` (`id_personal`, `nombres`, `apellidos`, `tipo_documento`, `numero_documento`, `correo`, `id_distrito`, `direccion`, `telefono`, `celular`, `fecha_registro`, `id_estado`) VALUES
+(1, 'MIGUEL', 'RAMIREZ', 1, '78451245', 'miguel@gmail.com', '150116', 'Av Sta rosa de quilmes 102', NULL, NULL, '2024-03-17 00:55:22', 1),
+(4, 'JOSE ALBERTO', 'CACERES MENDIOLA', 1, '12121212', '', '130102', '', NULL, NULL, '2024-06-24 11:22:09', 1);
 
 -- --------------------------------------------------------
 

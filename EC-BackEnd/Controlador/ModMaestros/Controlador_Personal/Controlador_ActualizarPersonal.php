@@ -20,7 +20,6 @@ if (isset($_POST['_idPersonal'])) {
   $tipoDocumento = $_POST['_tipoDocumento'];
   $numeroDocumento = $_POST['_numeroDocumento'];
   $correo = $_POST['_correo'];
-  $fechaNacimiento = $_POST['_fechaNacimiento'];
   $idDistrito = $_POST['_distrito'];
   $direccion = $_POST['_direccion'];
   
@@ -31,7 +30,7 @@ if (isset($_POST['_idPersonal'])) {
 
   //MENSAJE A MOSTRAR SI ENCUENTRA RESULTADOS
 
-  if ($Model_Personal->actualizarPersonal($idPersonal, $nombres, $apellidos, $correo, $fechaNacimiento, $idDistrito, $tipoDocumento, $numeroDocumento, $direccion, $telefono, $celular, $idEstado)) {
+  if ($Model_Personal->actualizarPersonal($idPersonal, $nombres, $apellidos, $correo, $idDistrito, $tipoDocumento, $numeroDocumento, $direccion, $telefono, $celular, $idEstado)) {
     $msg = array(
       "response" => 1,
       "message" => "Actualizacion correcta"

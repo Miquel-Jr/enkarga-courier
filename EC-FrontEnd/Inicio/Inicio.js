@@ -46,6 +46,7 @@ function validarPerfiles() {
     ventanaPrincipal();
   } else {
     const accesos = JSON.parse(sessionStorage.accesos);
+    const idPerfil = sessionStorage.id_perfil;
     var sessionLog = false;
     Object.keys(accesos).map((item) => {
       if (item === "clientes" && accesos[item] == "1" && !sessionLog) {
@@ -56,7 +57,11 @@ function validarPerfiles() {
         ventanaProveedorListar();
       } else if (item === "personal" && accesos[item] == "1" && !sessionLog) {
         sessionLog = true;
-        ventanaPersonalListar();
+        if (idPerfil === "3" || idPerfil === "4") {
+          ventanaPersonalActualizar();
+        } else {
+          ventanaPersonalListar();
+        }
       } else if (
         item === "operaciones" &&
         accesos[item] == "1" &&

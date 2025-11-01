@@ -17,12 +17,11 @@ if (isset($_POST['_idPersonal'])) {
   $idPersonal = $_POST['_idPersonal'];
   $usuario = $_POST['_usuario'];
   $clave = $_POST['_clave'];
-  $idPerfil = $_POST['_idPerfil'];
   $idEstado = $_POST['_idEstado'];
 
   //MENSAJE A MOSTRAR SI ENCUENTRA RESULTADOS
 
-  if ($Model_Usuario->actualizarUsuario($idPersonal, $usuario, $clave, $idPerfil, $idEstado)) {
+  if ($Model_Usuario->actualizarUsuario($idPersonal, $usuario, $clave, $idEstado)) {
     $msg = array(
       "response" => 1,
       "message" => "Actualizacion correcta"

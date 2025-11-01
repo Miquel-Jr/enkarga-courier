@@ -61,7 +61,10 @@ class Model_Personal
 
   function cargarPersonal($idPersonal)
   {
-    $sql = "SELECT * FROM personal WHERE id_personal = $idPersonal";
+    $sql = "SELECT p.*, pr.id_provincia, pr.id_departamento FROM personal p 
+    INNER JOIN distrito d ON d.id_distrito = p.id_distrito
+    INNER JOIN provincia pr ON pr.id_provincia = d.id_provincia
+    WHERE id_personal = $idPersonal";
     $this->_conexion->ejecutar_sentencia($sql);
     return $this->_conexion->retornar_array();
   }
@@ -81,14 +84,14 @@ class Model_Personal
     - CONSULTA: REGISTRAR PERSONAL
   ===========================================*/
 
-  public function registrarPersonal($nombres, $apellidos, $correo, $fechaNacimiento, $idDistrito, $tipoDocumento, $numeroDocumento, $direccion, $telefono, $celular)
+  public function registrarPersonal($nombres, $apellidos, $correo, $idDistrito, $tipoDocumento, $numeroDocumento, $direccion, $telefono, $celular)
   {
 
     // Preparar la consulta SQL con sentencia preparada
-    $sql = "INSERT INTO `personal` (`id_personal`, `nombres`, `apellidos`, `correo`, `fecha_nacimiento`, `id_distrito`, `tipo_documento`, `numero_documento`, `direccion`, `telefono`, `celular`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO `personal` (`id_personal`, `nombres`, `apellidos`, `correo`, `id_distrito`, `tipo_documento`, `numero_documento`, `direccion`, `telefono`, `celular`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     // Ejecutar la consulta con los parámetros
-    $params = array($nombres, $apellidos, $correo, $fechaNacimiento, $idDistrito, $tipoDocumento, $numeroDocumento, $direccion, $telefono, $celular);
+    $params = array($nombres, $apellidos, $correo, $idDistrito, $tipoDocumento, $numeroDocumento, $direccion, $telefono, $celular);
     $this->_conexion->ejecutar_sentencia($sql, $params);
     return $this->_conexion->insert_id();
   }
@@ -97,12 +100,12 @@ class Model_Personal
     - CONSULTA: ACTUALIZAR PERSONAL 
   ===========================================*/
 
-  public function actualizarPersonal($idPersonal, $nombres, $apellidos, $correo, $fechaNacimiento, $idDistrito, $tipoDocumento, $numeroDocumento, $direccion, $telefono, $celular, $idEstado)
+  public function actualizarPersonal($idPersonal, $nombres, $apellidos, $correo, $idDistrito, $tipoDocumento, $numeroDocumento, $direccion, $telefono, $celular, $idEstado)
   {
 
     //FUNCION CON LA CONSULTA A REALIZAR
-    $sql = "UPDATE personal SET nombres = ?, apellidos = ?, correo = ?, fecha_nacimiento = ?, id_distrito = ?, tipo_documento = ?, numero_documento = ?, direccion = ?, telefono = ?, celular = ?, id_estado = ?  WHERE id_personal = ?";
-    $params = array($nombres, $apellidos, $correo, $fechaNacimiento, $idDistrito, $tipoDocumento, $numeroDocumento, $direccion, $telefono, $celular, $idEstado, $idPersonal);
+    $sql = "UPDATE personal SET nombres = ?, apellidos = ?, correo = ?, id_distrito = ?, tipo_documento = ?, numero_documento = ?, direccion = ?, telefono = ?, celular = ?, id_estado = ?  WHERE id_personal = ?";
+    $params = array($nombres, $apellidos, $correo, $idDistrito, $tipoDocumento, $numeroDocumento, $direccion, $telefono, $celular, $idEstado, $idPersonal);
     $this->_conexion->ejecutar_sentencia($sql, $params);
     return $this->_conexion->insert_registro();
   }

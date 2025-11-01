@@ -64,14 +64,6 @@
           <small id="correoHelp" class="form-text text-muted">Campo opcional.</small>
         </div>
 
-        <!-- FECHA NACIMIENTO  -->
-        <div class="col-12 col-md form-group">
-          <label class="col-form-label font-weight-bold" for="fechaNacimiento">Fecha Nacimiento</label>
-          <input required id="fechaNacimiento" class="form-control" type="date" aria-describedby="fechaNacimientoHelp"
-            placeholder="Ingresar fecha nacimiento del personal" />
-          <small id="fechaNacimientoHelp" class="form-text text-muted">Campo obligatorio.</small>
-        </div>
-
         <div class="w-100"></div>
 
         <!-- DEPARTAMENTO -->
@@ -176,7 +168,6 @@
     const tipoDocumento = $("#tipoDocumento").val();
     const numeroDocumento = $("#numeroDocumento").val();
     const correo = $("#correo").val();
-    const fechaNacimiento = $("#fechaNacimiento").val();
     const distrito = $("#distrito").val();
     const direccion = $("#direccion").val();
     const celular = $("#celular").val();
@@ -196,8 +187,6 @@
         "El campo numero documento debe tener 8 caracteres como minimo";
     } else if (correo && !validator.isEmail(correo)) {
       info.text = "El campo correo debe ser un correo válido";
-    } else if (!validator.isLength(fechaNacimiento, { min: 8 })) {
-      info.text = "El campo fecha nacimiento es obligatorio";
     } else if (direccion && !validator.isLength(direccion, { min: 6 })) {
       info.text = "El campo direccion debe tener 6 caracteres como minimo";
     } else if (!distrito || !validator.isLength(distrito, { min: 1 })) {
@@ -228,7 +217,6 @@
       _tipoDocumento: tipoDocumento,
       _numeroDocumento: numeroDocumento,
       _correo: correo,
-      _fechaNacimiento: fechaNacimiento,
       _distrito: distrito,
       _direccion: direccion,
       _celular: celular,
