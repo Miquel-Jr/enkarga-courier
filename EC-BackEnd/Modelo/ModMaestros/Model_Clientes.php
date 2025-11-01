@@ -198,6 +198,20 @@ class Model_Clientes
   }
 
   /*===========================================
+    - CONSULTA: ELIMINAR SUCURSAL ID
+  ===========================================*/
+
+  public function eliminarSucursalId($idSucursal)
+  {
+
+    //FUNCION CON LA CONSULTA A REALIZAR
+    $sql = "DELETE FROM cliente_sucursal WHERE id_cliente_sucursal = ?";
+    $params = array($idSucursal);
+    $this->_conexion->ejecutar_sentencia($sql, $params);
+    return $this->_conexion->insert_registro();
+  }
+
+  /*===========================================
     CONSULTA: LISTADO CLIENTE SUCURSALES
   ===========================================*/
 

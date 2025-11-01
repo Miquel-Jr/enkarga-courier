@@ -13,122 +13,539 @@
         <th>TIPO DOCUMENTO</th>
         <th>NRO DOCUMENTO</th>
         <th>ESTADO</th>
+        <th>ACCION</th>
       </tr>
     </thead>
     <tbody id="cuerpoTabla"></tbody>
   </table>
 </section>
 
+<div class="modal fade" id="infoCliente" role="dialog" aria-labelledby="infoClienteLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header principal">
+        <h5 class="modal-title white-text font-weight-bold">
+          Informacion del Cliente
+        </h5>
+        <span id="codigo" class="badge badge-light badge-pill white-text font-weight-bold"></span>
+        <button id="closeModal" type="button" class="close white-text font-weight-bold" data-dismiss="modal"
+          aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="form-row">
+
+          <!-- NOMBRES -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="nombres">Nombres</label>
+            <input required id="nombres" onkeyup="obtenerMayuscula(this);" class="form-control" type="string"
+              aria-describedby="nombresHelp" placeholder="Ingresar nombres del cliente" />
+            <small id="nombresHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <!--APELLIDOS -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="apellidos">Apellidos</label>
+            <input required id="apellidos" onkeyup="obtenerMayuscula(this);" class="form-control" type="string"
+              aria-describedby="apellidosHelp" placeholder="Ingresar apellidos del cliente" />
+            <small id="apellidosHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <div class="w-100"></div>
+
+          <!--TIPO DE DOCUMENTO -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="tipoDocumento">Tipo de documento</label>
+            <select required id="tipoDocumento" class="form-control" aria-describedby="tipoDocumentoHelp"></select>
+            <small id="tipoDocumentoHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <!--NUMERO DE DOCUMENTO  -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="numeroDocumento">Nro de Documento</label>
+            <input required id="numeroDocumento" onkeyup="obtenerMayuscula(this);" class="form-control" type="string"
+              aria-describedby="numeroDocumentoHelp" placeholder="Ingresar numero de documento" min="1"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              maxlength="20" />
+            <small id="numeroDocumentoHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <div class="w-100"></div>
+
+          <!--CORREO  -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="correo">Correo</label>
+            <input id="correo" class="form-control" type="string" aria-describedby="correoHelp"
+              placeholder="Ingresar correo del cliente" />
+            <small id="correoHelp" class="form-text text-muted">Campo opcional.</small>
+          </div>
+
+          <!-- TELEFONO -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="telefono">Telefono</label>
+            <input id="telefono" class="form-control" type="string" aria-describedby="telefonoHelp"
+              placeholder="Ingresar telefono del cliente" />
+            <small id="telefonoHelp" class="form-text text-muted">Campo opcional.</small>
+          </div>
+
+          <!-- CELULAR -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="celular">Celular</label>
+            <input id="celular" class="form-control" type="string" aria-describedby="celularHelp"
+              placeholder="Ingresar celular del cliente" />
+            <small id="celularHelp" class="form-text text-muted">Campo opcional.</small>
+          </div>
+
+          <div class="w-100"></div>
+
+          <!--ESTADO -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="estado">Estado</label>
+            <select required id="estado" class="form-control"></select>
+          </div>
+
+          <div class="w-100"></div>
+
+        </div>
+
+        <!--DATOS -->
+        <div class="card">
+          <h5 class="card-header h5 principal white-text">Cliente - Sucursal</h5>
+          <div class="card-body">
+            <div class="form-row">
+
+              <!-- DEPARTAMENTO -->
+              <div class="col-12 col-md form-group">
+                <label class="col-form-label font-weight-bold" for="departamento">Departamento</label>
+                <select required id="departamento" onchange="cargarProvincia(this.value);return false"
+                  class="form-control" aria-describedby="departamentoHelp"></select>
+                <small id="departamentoHelp" class="form-text text-muted">Campo obligatorio.</small>
+              </div>
+
+              <!-- PROVINCIA -->
+              <div class="col-12 col-md form-group">
+                <label class="col-form-label font-weight-bold" for="provincia">Provincia</label>
+                <select required id="provincia" onchange="cargarDistrito(this.value);return false" class="form-control"
+                  aria-describedby="provinciaHelp"></select>
+                <small id="provinciaHelp" class="form-text text-muted">Campo obligatorio.</small>
+              </div>
+
+              <!-- DISTRITO -->
+              <div class="col-12 col-md form-group">
+                <label class="col-form-label font-weight-bold" for="distrito">Distrito</label>
+                <select required id="distrito" class="form-control" aria-describedby="distritoHelp"></select>
+                <small id="distritoHelp" class="form-text text-muted">Campo obligatorio.</small>
+              </div>
+
+              <div class="w-100"></div>
+
+              <!--DIRECCION SUCURSAL-->
+              <div class="col-12 col-md form-group">
+                <label class="col-form-label font-weight-bold" for="direccion">Direccion</label>
+                <input required id="direccion" class="form-control" type="string" aria-describedby="direccionHelp"
+                  placeholder="Ingresar direccion de la sucursal" onchange="mostrarRegistroSucursal()" />
+                <small id="direccionHelp" class="form-text text-muted">Campo obligatorio.</small>
+              </div>
+
+              <div class="col-12 col-md form-group">
+                <label class="col-form-label font-weight-bold" for="ruc">Ruc</label>
+                <input required class="form-control" id="ruc" type="number" min="1"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  maxlength="11" onchange="mostrarRegistroSucursal()" placeholder="Ingresar ruc de la sucursal"
+                  aria-describedby="rucHelp">
+                <small id="rucHelp" class="form-text text-muted">Campo obligatorio.</small>
+              </div>
+
+              <div class="col-12 col-md form-group">
+                <label class="col-form-label font-weight-bold" for="razonSocial">Razon Social</label>
+                <input required class="form-control" id="razonSocial" type="text" onchange="mostrarRegistroSucursal()"
+                  placeholder="Ingresar razon social de la sucursal" aria-describedby="razonSocialHelp">
+                <small id="razonSocialHelp" class="form-text text-muted">Campo obligatorio.</small>
+              </div>
+
+              <div class="col-12 text-right mb-3">
+                <button id="registrarSucursal" onclick="registrarNuevoSucursal();return false"
+                  class="btn btn-default">Agregar</button>
+              </div>
+              <div class="col-12">
+
+                <table id="tablaSucursales" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                  <thead>
+                    <tr>
+                      <th class='th-sm' width="15%">DISTRITO</th>
+                      <th class='th-sm' width="40%">DIRECCION</th>
+                      <th class='th-sm' width="20%">RUC</th>
+                      <th class='th-sm' width="20%">RAZON SOCIAL</th>
+                      <th class='th-sm' width="5%">ACCION</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cuerpoTablaSucursales">
+                    <tr>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="w-100"></div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="actualizarCliente"
+          onclick="mostrarLoaderActualizar(); return false">
+          Actualizar
+        </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="loader"></div>
+
 <!--ARCHIVOS JS DE LA VISTA-->
+<script src="Bootstrap/js/select2.min.js"></script>
+<link href="Bootstrap/css/select2.min.css" rel="stylesheet" />
 <script type="text/javascript" src="Modulos/ModClientes/VistaClientes.js"></script>
 <script type="text/javascript" src="Bootstrap/js/tablaDinamica.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/validator/13.6.0/validator.min.js"></script>
 <script type="text/javascript">
 
   mostrarDatosCliente();
+  cargarTipoDocumentos();
+  cargarEstados();
+
+  /*=============================================
+    - MOSTRAR LOADER
+  =============================================*/
+  function mostrarLoader() {
+    document.getElementById("loader").style.display = "block";
+    setTimeout(mostrarDatosCliente, 1500);
+  }
+
+  function mostrarLoaderActualizar() {
+    document.getElementById("loader").style.display = "block";
+    setTimeout(validarCampos, 1500);
+  }
+
+  /*=============================================
+    - CERRAR LOADER
+  =============================================*/
+  function cerrarLoader() {
+    document.getElementById("loader").style.display = "none";
+  }
 
   /*=============================================
     - MOSTRAR CLIENTES
   =============================================*/
 
+  var tablaClientes = null;
+  var tablaSucursales = null;
+
   async function mostrarDatosCliente() {
 
-    let datos = await cargarDatosListadoClientes();
-    var tablaClientes = "";
-    if (Array.isArray(datos)) {
-      for (const cliente of datos) {
-        tablaClientes += `
-        <tr>
-          <td>${cliente.id_cliente}</td>
-          <td>${cliente.nombres}</td>
-          <td>${cliente.apellidos}</td>
-          <td>${cliente.tipo_documento}</td>
-          <td>${cliente.numero_documento}</td>
-          <td class="editable no-sort">${cliente.estado}</td>
-        </tr>
-      `;
-      }
-      $("#cuerpoTabla").html(tablaClientes);
+    const datos = await cargarDatosListadoClientes();
+
+    const filas = Array.isArray(datos)
+      ? datos.map((cliente) => [
+        cliente.id_cliente,
+        cliente.nombres,
+        cliente.apellidos,
+        cliente.tipo_documento,
+        cliente.numero_documento,
+        cliente.estado,
+        ` <button class="btn btn-sm btn-primary" onclick="ventanaClienteEditar(${cliente.id_cliente})"><i class="fas fa-edit"></i></button>`,
+      ])
+      : [];
+
+    if (!tablaClientes) {
+      tablaClientes = $('#tablaListado').DataTable({
+        data: filas,
+        columns: [
+          { title: "COD" },
+          { title: "NOMBRES" },
+          { title: "APELLIDOS" },
+          { title: "TIPO DOCUMENTO" },
+          { title: "NRO DOCUMENTO" },
+          { title: "ESTADO" },
+          { title: "ACCION" },
+        ],
+      });
     } else {
-      datos = [];
-      $("#cuerpoTabla").html(tablaClientes);
+      tablaClientes.clear();
+      tablaClientes.rows.add(filas);
+      tablaClientes.draw();
     }
+  }
 
-    const table = $("#tablaListado").DataTable({
-      dom: "Bfrtip",
-      lengthMenu: [
-        [10, 25, 50, -1],
-        ["VER 10 FILAS", "VER 25 FILAS", "VER 50 FILAS", "TODO"],
-      ],
-      buttons: [
-        {
-          extend: "pageLength",
-          text: "VER 10 FILAS",
-        },
-        {
-          extend: "print",
-          title: "LISTADO CLIENTE",
-          text: "IMPRIMIR",
-        },
-        {
-          extend: "pdfHtml5",
-          download: "open",
-          title: "LISTADO CLIENTE",
-          text: "EXPORTAR PDF",
-        },
-      ],
+  /*=============================================
+    - MOSTRAR MODAL CLIENTE
+  =============================================*/
+
+  async function ventanaClienteEditar(idCliente) {
+    const modalCliente = new bootstrap.Modal(
+      document.getElementById("infoCliente")
+    );
+
+    await cargarDepartamento();
+    await cargarProvincia(false);
+    await cargarDistrito(false);
+
+    const datos = await cargarDatosCliente({
+      _idCliente: idCliente,
     });
 
-    // Función para convertir td a select
-    function convertTdToSelect(td) {
-      var cellData = td.text();
-      var selectHtml = `
-        <select class="form-control">
-          <option value="1" ${cellData === 'ACTIVO' ? 'selected' : ''}>ACTIVO</option>
-          <option value="2" ${cellData === 'INACTIVO' ? 'selected' : ''}>INACTIVO</option>
-        </select>
-      `;
-      td.html(selectHtml);
-    }
+    // Cargar datos del cliente
+    $("#codigo").html(datos.id_cliente);
+    $("#fechaRegistro").html(datos.fecha_registro);
+    $("#nombres").val(datos.nombres);
+    $("#apellidos").val(datos.apellidos);
+    $(`#tipoDocumento option[value=${datos.tipo_documento}]`).attr("selected", true);
+    $("#numeroDocumento").val(datos.numero_documento);
+    $("#correo").val(datos.correo);
+    $("#telefono").val(datos.telefono);
+    $("#celular").val(datos.celular);
+    $("#estado").val(datos.id_estado);
+    await mostrarSucursales(idCliente);
+    modalCliente.show();
+  }
 
-    // Evento para convertir td a select al pasar el mouse
-    $('#tablaListado tbody').on('mouseenter', 'td.editable', function () {
-      if ($(this).find('select').length === 0) {
-        convertTdToSelect($(this));
+  /*=============================================
+    - MOSTRAR SUCURSALES
+  =============================================*/
+
+  async function mostrarSucursales(idCliente) {
+    const listadoSucursales = await mostradoListadoSucursal({
+      _idCliente: idCliente
+    });
+
+    const filasSucursales = Array.isArray(listadoSucursales) ? listadoSucursales.map(sucursal => [
+      sucursal.distrito,
+      sucursal.direccion,
+      sucursal.ruc,
+      sucursal.razon_social,
+      `<button class="btn btn-sm btn-danger" onclick="eliminarSucursal(${sucursal.id_cliente_sucursal}, ${sucursal.id_cliente})"><i class="fas fa-trash"></i></button>`
+    ])
+      : [];
+    if (!tablaSucursales) {
+      tablaSucursales = $('#tablaSucursales').DataTable({
+        data: filasSucursales,
+        columns: [
+          { title: "DISTRITO" },
+          { title: "DIRECCION" },
+          { title: "RUC" },
+          { title: "RAZON SOCIAL" },
+          { title: "ACCION" }
+        ],
+      });
+    } else {
+      tablaSucursales.clear();
+      tablaSucursales.rows.add(filasSucursales);
+      tablaSucursales.draw();
+    }
+  }
+
+  /*=============================================
+    - ELIMINAR SUCURSAL
+  =============================================*/
+
+  async function eliminarSucursal(idSucursal, idCliente) {
+
+    const result = await Swal.fire({
+      title: '¿Está seguro?',
+      text: "¡No podrá revertir esta acción!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    });
+
+    if (result.isConfirmed) {
+      const deleteItem = await eliminarSucursalId({
+        _idSucursal: idSucursal
+      });
+
+      if (deleteItem.response === 1) {
+        Swal.fire(
+          '¡Eliminado!',
+          deleteItem.message,
+          'success'
+        );
+      } else {
+        Swal.fire(
+          'Error',
+          deleteItem.message,
+          'error'
+        );
       }
-    });
+      await mostrarSucursales(idCliente);
 
-    $('#tablaListado tbody').on('mouseleave', 'td.editable', async function () {
-      if ($(this).find('select').length > 0) {
-        const selectedValue = Number($(this).find('select').val());
-        const selectedText = $(this).find('select option:selected').text();
-        const row = $(this).closest('tr');
-        const index = row.index();
-        const id = row.find('td:first').text();
-        if (selectedValue !== datos[index].id_estado) {
-          const resultado = await actualizarEstadoCliente({
-            _idCliente: id,
-            _idEstado: selectedValue
-          });
+    }
+  }
 
-          if (resultado.response === 0) {
-            Swal.fire({
-              icon: "error",
-              title: "Cliente no actualizado",
-              text: resultado.message
-            });
-          } else {
-            Swal.fire({
-              icon: "success",
-              title: "Estado cliente registrado",
-              text: resultado.message
-            });
-            ventanaClienteListar();
-          }
-        } else {
-          $(this).html(selectedText);
+  /*=============================================
+    - REGITRAR NUEVA SUCURSAL
+  =============================================*/
+
+  async function registrarNuevoSucursal() {
+    const idCliente = $("#codigo").html();
+    const idDepartamento = $("#departamento").val();
+    const idProvincia = $("#provincia").val();
+    const idDistrito = $("#distrito").val();
+    const direccion = $("#direccion").val();
+    const ruc = $("#ruc").val();
+    const razonSocial = $("#razonSocial").val();
+
+    const registroSucursal = await registrarListadoSucursalCliente({
+      _idCliente: idCliente,
+      _sucursales: [
+        {
+          ruc,
+          razonSocial: razonSocial,
+          direccion,
+          idDistrito
         }
-      }
+      ]
+    });
+
+    if (registroSucursal.response === 1) {
+      Swal.fire(
+        '¡Registrado!',
+        registroSucursal.message,
+        'success'
+      );
+      $("#direccion").val("");
+      $("#ruc").val("");
+      $("#razonSocial").val("");
+      await mostrarSucursales(idCliente);
+    } else {
+      Swal.fire(
+        'Error',
+        registroSucursal.message,
+        'error'
+      );
+    }
+  }
+
+  /*=============================================
+    - MOSTRAR/OCULTAR REGISTRO SUCURSAL
+  =============================================*/
+
+  function mostrarRegistroSucursal() {
+    const departamento = $("#departamento").val();
+    const provincia = $("#provincia").val();
+    const distrito = $("#distrito").val();
+    const direccion = $("#direccion").val();
+    const ruc = $("#ruc").val();
+    const razonSocial = $("#razonSocial").val();
+    if (departamento && provincia && distrito && direccion && ruc && razonSocial) {
+      document.getElementById("registrarSucursal").classList.remove("disabled");
+    } else {
+      document.getElementById("registrarSucursal").classList.add("disabled");
+    }
+  }
+
+
+  /*=============================================
+    - VALIDAR FORMULARIO
+  =============================================*/
+
+  async function validarCampos() {
+    const idCliente = $("#codigo").html();
+    const nombres = $("#nombres").val().trim();
+    const apellidos = $("#apellidos").val().trim();
+    const tipoDocumento = $("#tipoDocumento").val();
+    const numeroDocumento = $("#numeroDocumento").val();
+    const correo = $("#correo").val();
+    const celular = $("#celular").val();
+    const telefono = $("#telefono").val();
+    const estado = $("#estado").val();
+
+    const info = {
+      icon: "error",
+      title: "Campo Inválido",
+    };
+
+    if (!validator.isLength(nombres, { min: 1 })) {
+      info.text = "El campo nombres no debe estar vacio";
+    } else if (!validator.isLength(apellidos, { min: 1 })) {
+      info.text = "El campo apellido no debe estar vacio";
+    } else if (!validator.isLength(numeroDocumento, { min: 8 })) {
+      info.text =
+        "El campo numero documento debe tener 8 caracteres como minimo";
+    } else if (correo && !validator.isEmail(correo)) {
+      info.text = "El campo correo debe ser un correo válido";
+    } else if (
+      celular &&
+      !validator.isLength(celular, { min: 1 }) &&
+      !validator.isNumeric(celular)
+    ) {
+      info.text = "El campo celular debe ser numérico";
+    } else if (
+      telefono &&
+      !validator.isLength(telefono, { min: 1 }) &&
+      !validator.isNumeric(telefono)
+    ) {
+      info.text = "El campo telefono debe ser numérico";
+    }
+
+    if (info.text) {
+      cerrarLoader();
+      Swal.fire(info);
+      return false;
+    }
+
+    actualizarDatosCliente({
+      _idCliente: Number(idCliente),
+      _nombres: nombres,
+      _apellidos: apellidos,
+      _tipoDocumento: tipoDocumento,
+      _numeroDocumento: numeroDocumento,
+      _correo: correo,
+      _telefono: telefono,
+      _celular: celular,
+      _idEstado: estado
     });
   }
 
+  /*=============================================
+    - ACTUALIZAR CLIENTE
+  =============================================*/
+
+  async function actualizarDatosCliente($cliente) {
+    const vCliente = await validarCliente($cliente);
+
+    if (vCliente.response !== 0) {
+
+      if (vCliente.id_cliente !== $cliente._idCliente) {
+        cerrarLoader();
+        Swal.fire({
+          icon: "warning",
+          title: "Cliente encontrado",
+          text: `El numero de documento existe con el nombre de: ${vCliente.nombres} ${vCliente.apellidos}`,
+        });
+        return false;
+      }
+    }
+
+    await actualizarCliente($cliente);
+
+    cerrarLoader();
+    Swal.fire({
+      icon: "success",
+      title: "Cliente actualizado",
+      text: `El cliente se actualizó corrrectamente`,
+    });
+    $("#closeModal").click();
+    await mostrarDatosCliente();
+  }
 </script>

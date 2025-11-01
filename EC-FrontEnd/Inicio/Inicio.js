@@ -265,22 +265,6 @@ function ventanaClienteSucursalListar() {
 
 /*==========================================================
 
-FUNCION PARA LLAMAR LA VISTA CLIENTE - ACTUALIZAR
-
-==========================================================*/
-
-function ventanaClienteActualizar() {
-  $.ajax({
-    url: "Modulos/ModClientes/ActualizarClientes.html",
-    success: function (data) {
-      $("#cuerpo").html(data);
-      clearInterval(intervalo);
-    },
-  });
-}
-
-/*==========================================================
-
 FUNCION PARA LLAMAR LA VISTA PROVEEDOR - NUEVO
 
 ==========================================================*/
