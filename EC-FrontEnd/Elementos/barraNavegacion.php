@@ -132,9 +132,6 @@
           <!--======= LISTAR GUIA =======-->
           <a id="LGUIA" onclick="ventanaGuiaListar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Listar Guia</a>
 
-          <!--======= ACTUALIZAR GUIA =======-->
-          <a id="AGUIA" onclick="ventanaGuiaActualizar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Actualizar Guia</a>
-
           <!--======= SEGUIMIENTO GUIA =======-->
           <a id="SGUIA" onclick="ventanaGuiaSeguimiento();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Seguimiento Guia</a>
 

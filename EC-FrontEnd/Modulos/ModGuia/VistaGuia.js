@@ -1158,4 +1158,31 @@ async function cargarProveedoresActivos() {
   });
 }
 
-
+async function cargarListadoPersonalFiltro() {
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Personal/Controlador_MostrarPersonal.php",
+      type: "GET",
+      dataType: "json",
+      success: function (datos) {
+        resolve(datos);
+      },
+      error: function (error) {
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+        reject(error);
+      },
+    });
+  });
+}

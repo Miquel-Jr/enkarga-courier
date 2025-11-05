@@ -27,10 +27,11 @@ if (isset($_POST['_idGuia'])) {
   $largoGuia = $_POST['_largoGuia'];
   $anchoGuia = $_POST['_anchoGuia'];
   $altoGuia = $_POST['_altoGuia'];
+  $idEstadoGuia = $_POST['_idEstadoGuia'];
 
   //MENSAJE A MOSTRAR SI ENCUENTRA RESULTADOS
 
-  $consulta = $Model_Guia->actualizarDatosGuia($serie, $numero, $fechaEmision, $idTransportista, $idCliente, $ordenCompra, $cotizacion, $remitente, $direccionRemitente, $destinatario, $direccionDestinatario, $largoGuia, $anchoGuia, $altoGuia, $idGuia);
+  $consulta = $Model_Guia->actualizarDatosGuia($serie, $numero, $fechaEmision, $idTransportista, $idCliente, $ordenCompra, $cotizacion, $remitente, $direccionRemitente, $destinatario, $direccionDestinatario, $largoGuia, $anchoGuia, $altoGuia, $idEstadoGuia ,$idGuia);
   if ($consulta) {
     $msg = array(
       "response" => 1,

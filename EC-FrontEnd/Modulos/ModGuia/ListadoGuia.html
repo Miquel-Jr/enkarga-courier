@@ -75,166 +75,455 @@
       </div>
       <div class="modal-body">
 
-        <div class="form-row">
-          <!-- SERIE -->
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold" for="serieGuia">Serie</label>
-            <input required id="serieGuia" onkeyup="obtenerMayuscula(this);" class="form-control disabled" type="string"
-              aria-describedby="serieHelp" placeholder="Ingresar serie de la guia" />
-            <small id="serieHelp" class="form-text text-muted">Campo obligatorio.</small>
+        <!-- ESTADOS GUIA -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="estadosGuia">Estado Guia</label>
+          <select class="form-control mx-auto selectpicker" data-live-search="true" id="estadosGuia">
+            <option value="" selected>Seleccionar</option>
+          </select>
+          <small id="estadosGuiaHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!-- Convertido a pestañas: Guia | Detalles | Transporte -->
+        <div>
+          <ul class="nav nav-tabs" id="guiaTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <a class="nav-link active" id="tab-guia-tab" data-bs-toggle="tab" data-toggle="tab" href="#tab-guia"
+                role="tab" aria-controls="tab-guia" aria-selected="true">Guia</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="tab-detalles-guia-tab" data-bs-toggle="tab" data-toggle="tab"
+                href="#tab-detalles-guia" role="tab" aria-controls="tab-detalles-guia" aria-selected="false">Detalles -
+                Guia</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="tab-transporte-tab" data-bs-toggle="tab" data-toggle="tab" href="#tab-transporte"
+                role="tab" aria-controls="tab-transporte" aria-selected="false">Transporte</a>
+            </li>
+          </ul>
+
+          <div class="tab-content mt-3" id="guiaTabsContent">
+            <div class="tab-pane fade show active" id="tab-guia" role="tabpanel" aria-labelledby="tab-guia-tab">
+              <div class="form-row">
+                <!-- SERIE -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="serieGuia">Serie</label>
+                  <input required id="serieGuia" onkeyup="obtenerMayuscula(this);" class="form-control disabled"
+                    type="string" aria-describedby="serieHelp" placeholder="Ingresar serie de la guia" />
+                  <small id="serieHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- NUMERO -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="numeroGuia">Numero</label>
+                  <input required id="numeroGuia" onblur="autoCompletarCeros(this);" class="form-control disabled"
+                    type="string" maxlength="8" aria-describedby="numeroHelp"
+                    placeholder="Ingresar numero de la guia" />
+                  <small id="numeroHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- FECHA EMISION -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="fechaEmision">Fecha Emision</label>
+                  <input required id="fechaEmision" class="form-control" type="date" aria-describedby="fechaEmisionHelp"
+                    placeholder="Ingresar fecha de emision de la guia" />
+                  <small id="fechaEmisionHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- TRANSPORTISTA -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="transportista">Personal - Transportista</label>
+                  <select required id="transportista" class="form-control" aria-describedby="transportistaHelp">
+                    <option value="" selected>Seleccionar</option>
+                  </select>
+                  <small id="transportistaHelp" class="form-text text-muted">Campo opcional.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+                <!-- CLIENTE -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="cliente">Cliente</label>
+                  <select required id="cliente" class="form-control" aria-describedby="clienteHelp">
+                    <option value="" selected>Seleccionar</option>
+                  </select>
+                  <small id="clienteHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- ORDEN COMPRA -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="ordenCompra">Orden de compra</label>
+                  <input id="ordenCompra" class="form-control " type="string" aria-describedby="ordenCompraHelp"
+                    placeholder="Ingresar orden de compra de la guia" />
+                  <small id="ordenCompraHelp" class="form-text text-muted">Campo opcional.</small>
+                </div>
+
+                <!-- COTIZACION -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="cotizacion">Cotizacion</label>
+                  <input id="cotizacion" class="form-control " type="string" aria-describedby="cotizacionHelp"
+                    placeholder="Ingresar codigo de cotizacion de la guia" />
+                  <small id="cotizacionHelp" class="form-text text-muted">Campo opcional.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+                <!-- REMITENTE -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="remitente">Remitente</label>
+                  <select required id="remitente" onchange="mostrarRemitente(this.value)" class="form-control"
+                    aria-describedby="remitenteHelp">
+                    <option value="" selected>Seleccionar</option>
+                  </select>
+                  <small id="remitenteHelp" class="form-text text-muted">Campo opcional.</small>
+                </div>
+
+                <!-- RAZON SOCIAL - REMITENTE -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="razonSocialRemitente">Razon Social -
+                    Remitente</label>
+                  <input required id="razonSocialRemitente" class="form-control disabled" type="string"
+                    aria-describedby="razonSocialRemitenteHelp" placeholder="Ingresar razon social - remitente" />
+                  <small id="razonSocialRemitenteHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- RUC - REMITENTE -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="rucRemitente">RUC - Remitente</label>
+                  <input required id="rucRemitente" class="form-control disabled" type="string"
+                    aria-describedby="rucRemitenteHelp" placeholder="Ingresar ruc - remitente" />
+                  <small id="rucRemitenteHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+                <!-- DIRECCION DE PARTIDA -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="direccionRemitente">Direccion Partida -
+                    Remitente</label>
+                  <input required id="direccionRemitente" onkeyup="obtenerMayuscula(this);" class="form-control"
+                    type="string" aria-describedby="direccionRemitenteHelp"
+                    placeholder="Ingresar direccion de partida" />
+                  <small id="direccionRemitenteHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+                <!-- DESTINATARIO -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="destinatario">Destinatario</label>
+                  <select required id="destinatario" onchange="mostrarDestinatario(this.value)" class="form-control"
+                    aria-describedby="destinatarioHelp">
+                    <option value="" selected>Seleccionar</option>
+                  </select>
+                  <small id="destinatarioHelp" class="form-text text-muted">Campo opcional.</small>
+                </div>
+
+                <!-- RAZON SOCIAL - DESTINATARIO -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="razonSocialDestinatario">Razon Social -
+                    Destinatario</label>
+                  <input required id="razonSocialDestinatario" class="form-control disabled" type="string"
+                    aria-describedby="razonSocialDestinatarioHelp" placeholder="Ingresar razon social - destinatario" />
+                  <small id="razonSocialDestinatarioHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- RUC - DESTINATARIO -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="rucDestinatario">RUC - Destinatario</label>
+                  <input required id="rucDestinatario" class="form-control disabled" type="string"
+                    aria-describedby="rucDestinatarioHelp" placeholder="Ingresar ruc - destinatario" />
+                  <small id="rucDestinatarioHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+                <!-- DIRECCION DESTINATARIO -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="direccionDestinatario">Direccion de Llegada -
+                    Destinatario</label>
+                  <input required id="direccionDestinatario" onkeyup="obtenerMayuscula(this);" class="form-control"
+                    type="string" aria-describedby="direccionDestinatarioHelp"
+                    placeholder="Ingresar direccion de llegada" />
+                  <small id="direccionDestinatarioHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="mostrarLoaderActualizarGuia(); return false">
+                  Actualizar
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                  Cerrar
+                </button>
+              </div>
+
+            </div>
+
+            <div class="tab-pane fade" id="tab-detalles-guia" role="tabpanel" aria-labelledby="tab-detalles-guia-tab">
+              <div class="form-row">
+                <!-- ROW: INPUTS DE ITEM + BOTON AGREGAR -->
+                <div class="col-12">
+                  <div class="form-row align-items-center">
+                    <div class="col-md-4">
+                      <label class="col-form-label font-weight-bold" for="descripcionItem">Descripcion</label>
+                      <input required id="descripcionItem" onkeyup="obtenerMayuscula(this);" class="form-control"
+                        type="string" onchange="mostrarOpcionRegistrarGuiaDetalle();"
+                        aria-describedby="descripcionItemHelp" placeholder="Ejm: Medicinas" />
+                      <small id="descripcionItemHelp" class="form-text text-muted">Campo obligatorio.</small>
+                    </div>
+                    <div class="col-md-2">
+                      <label class="col-form-label font-weight-bold" for="cantidadItem">Cantidad</label>
+                      <input required id="cantidadItem" class="form-control" type="number"
+                        aria-describedby="cantidadItemHelp" onchange="mostrarOpcionRegistrarGuiaDetalle();"
+                        placeholder="Ejm: 1" />
+                      <small id="cantidadItemHelp" class="form-text text-muted">Campo obligatorio.</small>
+                    </div>
+                    <div class="col-md-2">
+                      <label class="col-form-label font-weight-bold" for="unidadItem">Unidad</label>
+                      <input required id="unidadItem" onkeyup="obtenerMayuscula(this);" class="form-control"
+                        type="string" onchange="mostrarOpcionRegistrarGuiaDetalle();" aria-describedby="unidadItemHelp"
+                        placeholder="Ejm: CAJA" />
+                      <small id="unidadItemHelp" class="form-text text-muted">Campo obligatorio.</small>
+                    </div>
+                    <div class="col-md-2">
+                      <label class="col-form-label font-weight-bold" for="pesoItem">Peso</label>
+                      <input required id="pesoItem" onkeyup="obtenerMayuscula(this);" class="form-control" type="text"
+                        onchange="mostrarOpcionRegistrarGuiaDetalle();" aria-describedby="pesoItemHelp"
+                        placeholder="Ejm: 2 Kgrs." />
+                      <small id="pesoItemHelp" class="form-text text-muted">Campo obligatorio.</small>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-center justify-content-center">
+                      <button type="button" id="btnAgregarDetalle" onclick="registrarListadoGuiaDetalle();return false"
+                        class="btn btn-secondary guiaDetalle btn-sm" title="Agregar detalle"
+                        aria-label="Agregar detalle">
+                        <i class="fas fa-plus" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="w-100 mt-3"></div>
+                <!-- RESUMEN GUIA DETALLE -->
+                <div class="col-12 p-0">
+                  <table id="tablaDetalles" class="table table-striped table-bordered w-100" cellspacing="0"
+                    style="width:100% !important;">
+                    <thead>
+                      <tr>
+                        <th class='th-sm' width="60%">DESCRIPCION</th>
+                        <th class='th-sm' width="10%">UNIDAD</th>
+                        <th class='th-sm' width="10%">CANTIDAD</th>
+                        <th class='th-sm' width="10%">PESO</th>
+                        <th class='th-sm' width="10%">ACCION</th>
+                      </tr>
+                    </thead>
+                    <tbody id="cuerpoTablaDetalles">
+                    </tbody>
+                  </table>
+                </div>
+                <div class="w-100 mt-3"></div>
+                <!-- DIMENSIONES -->
+                <div class="col-12 mt-3">
+                  <div class="form-row">
+                    <div class="col-md-4">
+                      <label class="col-form-label font-weight-bold" for="largoGuia">Largo (cm)</label>
+                      <input id="largoGuia" class="form-control" type="number" min="0" />
+                    </div>
+                    <div class="col-md-4">
+                      <label class="col-form-label font-weight-bold" for="anchoGuia">Ancho (cm)</label>
+                      <input id="anchoGuia" class="form-control" type="number" min="0" />
+                    </div>
+                    <div class="col-md-4">
+                      <label class="col-form-label font-weight-bold" for="altoGuia">Alto (cm)</label>
+                      <input id="altoGuia" class="form-control" type="number" min="0" />
+                    </div>
+                  </div>
+                </div>
+                <div class="w-100"></div>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="mostrarLoaderActualizarGuia(); return false">
+                  Actualizar
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                  Cerrar
+                </button>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="tab-transporte" role="tabpanel" aria-labelledby="tab-transporte-tab">
+              <div class="form-row">
+
+                <input type="hidden" id="codigoGuiaTransporte" value="0">
+
+                <!-- EMPRESA TRANSPORTE -->
+
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="proveedores">Empresa Transporte</label>
+                  <select required id="proveedores" class="form-control" aria-describedby="proveedoresHelp">
+                  </select>
+                  <small id="proveedoresHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- FECHA EMISION -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="fechaDespacho">Fecha Despacho</label>
+                  <input required id="fechaDespacho" class="form-control" type="date"
+                    aria-describedby="fechaDespachoHelp" placeholder="Ingresar fecha de despacho" />
+                  <small id="fechaDespachoHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+                <!-- NRO GUIA TRANSPORTE -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="nroGuiaTransporte">Nro Guia Transporte</label>
+                  <input id="nroGuiaTransporte" class="form-control " type="string"
+                    aria-describedby="nroGuiaTransporteHelp" placeholder="Ingresar numero guia transporte" />
+                  <small id="nroGuiaTransporteHelp" class="form-text text-muted">Campo opcional.</small>
+                </div>
+
+                <!-- NRO FACTURA TRANSPORTE -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="nroFacturaTransporte">Nro Factura
+                    Transporte</label>
+                  <input id="nroFacturaTransporte" class="form-control " type="string"
+                    aria-describedby="nroFacturaTransporteHelp" placeholder="Ingresar numero factura transporte" />
+                  <small id="nroFacturaTransporteelp" class="form-text text-muted">Campo opcional.</small>
+                </div>
+
+                <!-- ESTADO FACTURA -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="estadoGuiaTransporte">Estado Factura</label>
+                  <select required id="estadoGuiaTransporte" class="form-control"
+                    aria-describedby="estadoGuiaTransporteHelp">
+                  </select>
+                  <small id="estadoGuiaTransporteHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+                <!-- ORIGEN -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="origenTransporte">Origen</label>
+                  <input required id="origenTransporte" onkeyup="obtenerMayuscula(this);" class="form-control"
+                    type="string" aria-describedby="origenTransporteHelp" placeholder="Ingresar origen transporte">
+                  <small id="origenTransporteHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- DESTINO -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="destinoTransporte">Destino</label>
+                  <input required id="destinoTransporte" onkeyup="obtenerMayuscula(this);" class="form-control"
+                    type="string" aria-describedby="destinoTransporteHelp" placeholder="Ingresar origen transporte">
+                  <small id="destinoTransporteHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- REPARTO -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="repartoTransporte">Reparto</label>
+                  <select required id="repartoTransporte" class="form-control" aria-describedby="repartoTransporteHelp">
+                    <option value="NO" selected>NO</option>
+                    <option value="SI">SI</option>
+                  </select>
+                  <small id="repartoTransporteHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+                <!-- DESCRIPCION TRANSPORTE-->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="descripcionTransporte">Descripcion</label>
+                  <textarea required id="descripcionTransporte" onkeyup="obtenerMayuscula(this);" class="form-control "
+                    type="string" aria-describedby="descripcionTransporteHelp"
+                    placeholder="Ingresar descripcion"></textarea>
+                  <small id="descripcionTransporteHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- CANTIDAD BULTO TRANSPORTE-->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="cantidadBultoTransporte">Cantidad Bulto</label>
+                  <input required id="cantidadBultoTransporte" class="form-control " type="number"
+                    aria-describedby="cantidadBultoTransporteHelp" placeholder="Ingresar cantidad bulto transporte" />
+                  <small id="cantidadBultoTransporteHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+                <!-- OBSERVACIONES TRANSPORTE-->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="observacionesTransporte">Observaciones</label>
+                  <textarea required id="observacionesTransporte" onkeyup="obtenerMayuscula(this);"
+                    class="form-control " type="string" aria-describedby="observacionesTransporteHelp"
+                    placeholder="Ingresar observaciones"></textarea>
+                  <small id="observacionesTransporteHelp" class="form-text text-muted">Campo opcional.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+                <!-- SUBTOTAL TRANSPORTE-->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="subtotalTransporte">Subtotal</label>
+                  <input required id="subtotalTransporte" class="form-control " type="number" step="0.01"
+                    aria-describedby="subtotalTransporteHelp" placeholder="Ingresar subtotal guia transporte" />
+                  <small id="subtotalTransporteHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- IGV TRANSPORTE -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="igvTransporte">IGV</label>
+                  <input required id="igvTransporte" class="form-control disabled" type="number" step="0.01"
+                    aria-describedby="igvTransporteHelp" placeholder="Ingresar igv guia transporte" />
+                  <small id="igvTransporteHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- TOTAL TRANSPORTE -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="totalTransporte">Total</label>
+                  <input required id="totalTransporte" class="form-control " type="number" step="0.01"
+                    aria-describedby="totalTransporteHelp" placeholder="Ingresar total guia transporte" />
+                  <small id="totalTransporteHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+                <!-- TIPO TRANSPORTE -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="tipoTransporte">Tipo Transporte</label>
+                  <select required id="tipoTransporte" class="form-control" aria-describedby="tipoTransporteHelp">
+                    <option value="AEREO" selected>AEREO</option>
+                    <option value="TERRESTRE">TERRESTRE</option>
+                    <option value="EXPRESO">EXPRESO</option>
+                  </select>
+                  <small id="tipoTransporteHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+              </div>
+
+              <div class="form-inline justify-content-center">
+                <button id="registrarTransporte" type="button" onclick="validarFormularioTransporte();return false"
+                  class="btn btn-primary d-none">
+                  Registrar
+                </button>
+              </div>
+              <div class="form-inline justify-content-center">
+                <button id="actualizarTransporte" type="button"
+                  onclick="validarFormularioTransporteActualizar();return false" class="btn btn-secondary d-none">
+                  Actualizar
+                </button>
+              </div>
+            </div>
+
           </div>
-
-          <!-- NUMERO -->
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold" for="numeroGuia">Numero</label>
-            <input required id="numeroGuia" onblur="autoCompletarCeros(this);" class="form-control disabled"
-              type="string" maxlength="8" aria-describedby="numeroHelp" placeholder="Ingresar numero de la guia" />
-            <small id="numeroHelp" class="form-text text-muted">Campo obligatorio.</small>
-          </div>
-
-          <!-- FECHA EMISION -->
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold" for="fechaEmision">Fecha Emision</label>
-            <input required id="fechaEmision" class="form-control" type="date" aria-describedby="fechaEmisionHelp"
-              placeholder="Ingresar fecha de emision de la guia" />
-            <small id="fechaEmisionHelp" class="form-text text-muted">Campo obligatorio.</small>
-          </div>
-
-          <!-- TRANSPORTISTA -->
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold" for="transportista">Personal - Transportista</label>
-            <select required id="transportista" class="form-control" aria-describedby="transportistaHelp">
-            </select>
-            <small id="transportistaHelp" class="form-text text-muted">Campo opcional.</small>
-          </div>
-
-          <div class="w-100"></div>
-
-          <!-- CLIENTE -->
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold" for="cliente">Cliente</label>
-            <select required id="cliente" class="form-control" aria-describedby="clienteHelp">
-            </select>
-            <small id="clienteHelp" class="form-text text-muted">Campo obligatorio.</small>
-          </div>
-
-          <!-- ORDEN COMPRA -->
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold" for="ordenCompra">Orden de compra</label>
-            <input id="ordenCompra" class="form-control " type="string" aria-describedby="ordenCompraHelp"
-              placeholder="Ingresar orden de compra de la guia" />
-            <small id="ordenCompraHelp" class="form-text text-muted">Campo opcional.</small>
-          </div>
-
-          <!-- COTIZACION -->
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold" for="cotizacion">Cotizacion</label>
-            <input id="cotizacion" class="form-control " type="string" aria-describedby="cotizacionHelp"
-              placeholder="Ingresar codigo de cotizacion de la guia" />
-            <small id="cotizacionHelp" class="form-text text-muted">Campo opcional.</small>
-          </div>
-
-          <div class="w-100"></div>
-
-          <!-- REMITENTE -->
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold" for="remitente">Remitente</label>
-            <select required id="remitente" onchange="mostrarRemitente(this.value)" class="form-control"
-              aria-describedby="remitenteHelp">
-              <option disabled selected>Elegir Cliente</option>
-            </select>
-            <small id="remitenteHelp" class="form-text text-muted">Campo opcional.</small>
-          </div>
-
-          <!-- RAZON SOCIAL - REMITENTO -->
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold" for="razonSocialRemitente">Razon Social - Remitente</label>
-            <input required id="razonSocialRemitente" class="form-control disabled" type="string"
-              aria-describedby="razonSocialRemitenteHelp" placeholder="Ingresar razon social - remitente" />
-            <small id="razonSocialRemitenteHelp" class="form-text text-muted">Campo obligatorio.</small>
-          </div>
-
-          <!-- RUC - REMITENTO -->
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold" for="rucRemitente">RUC - Remitente</label>
-            <input required id="rucRemitente" class="form-control disabled" type="string"
-              aria-describedby="rucRemitenteHelp" placeholder="Ingresar ruc - remitente" />
-            <small id="rucRemitenteHelp" class="form-text text-muted">Campo obligatorio.</small>
-          </div>
-
-          <div class="w-100"></div>
-
-          <!-- DIRECCION DE PARTIDO -->
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold" for="direccionRemitente">Direccion Partida -
-              Remitente</label>
-            <input required id="direccionRemitente" onkeyup="obtenerMayuscula(this);" class="form-control" type="string"
-              aria-describedby="direccionRemitenteHelp" placeholder="Ingresar direccion de partida" />
-            <small id="direccionRemitenteHelp" class="form-text text-muted">Campo obligatorio.</small>
-          </div>
-
-          <div class="w-100"></div>
-
-          <!-- DESTINATARIO -->
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold" for="destinatario">Destinatario</label>
-            <select required id="destinatario" onchange="mostrarDestinatario(this.value)" class="form-control"
-              aria-describedby="destinatarioHelp">
-              <option disabled selected>Elegir Cliente</option>
-            </select>
-            <small id="destinatarioHelp" class="form-text text-muted">Campo opcional.</small>
-          </div>
-
-          <!-- RAZON SOCIAL - DESTINATARIO -->
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold" for="razonSocialDestinatario">Razon Social -
-              Destinatario</label>
-            <input required id="razonSocialDestinatario" class="form-control disabled" type="string"
-              aria-describedby="razonSocialDestinatarioHelp" placeholder="Ingresar razon social - destinatario" />
-            <small id=" razonSocialDestinatarioHelp" class="form-text text-muted">Campo obligatorio.</small>
-          </div>
-
-          <!-- RUC - DESTINATARIO -->
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold" for="rucDestinatario">RUC - Destinatario</label>
-            <input required id="rucDestinatario" class="form-control disabled" type="string"
-              aria-describedby="rucDestinatarioHelp" placeholder="Ingresar ruc - destinatario" />
-            <small id="rucDestinatarioHelp" class="form-text text-muted">Campo obligatorio.</small>
-          </div>
-
-          <div class="w-100"></div>
-
-          <!-- DIRECCION DESTINATARIO -->
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold" for="direccionDestinatario">Direccion de Llegada -
-              Destinatario</label>
-            <input required id="direccionDestinatario" onkeyup="obtenerMayuscula(this);" class="form-control"
-              type="string" aria-describedby="direccionDestinatarioHelp" placeholder="Ingresar direccion de llegada" />
-            <small id="direccionDestinatarioHelp" class="form-text text-muted">Campo obligatorio.</small>
-          </div>
-
-          <div class="w-100"></div>
-
-          <!-- ESTADOS GUIA -->
-          <div class="col-12 col-md form-group">
-            <label class="col-form-label font-weight-bold" for="estadosGuia">Estado Guia</label>
-            <select class="form-control mx-auto selectpicker" data-live-search="true" id="estadosGuia"></select>
-            <small id="estadosGuiaHelp" class="form-text text-muted">Campo obligatorio.</small>
-          </div>
-
         </div>
 
       </div>
 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="actualizarPersonal"
-          onclick="mostrarLoaderActualizar(); return false">
-          Actualizar
-        </button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-          Cerrar
-        </button>
-      </div>
     </div>
   </div>
 </div>
@@ -254,10 +543,42 @@
   =============================================*/
 
   $(document).ready(function () {
-    cargarListadoPrevio();
+    mostrarDatosGuia();
     mostrarListadoClientes();
     mostrarListadoTransportistas();
     mostrarListadoEstadosGuia();
+    mostrarListadoProveedoresActivos();
+    mostrarListadoEstadosGuiaTransporte();
+  });
+
+  $("#subtotalTransporte").change(function () {
+    const subtotalTransporte = $("#subtotalTransporte").val();
+    if (subtotalTransporte.length !== 0) {
+      const igvTransporte = Number(subtotalTransporte) * 0.18;
+      const totalTransporte = Number(subtotalTransporte) * 1.18;
+      $("#subtotalTransporte").val(Number(subtotalTransporte).toFixed(2));
+      $("#igvTransporte").val(igvTransporte.toFixed(2));
+      $("#totalTransporte").val(totalTransporte.toFixed(2));
+    } else {
+      $("#subtotalTransporte").val("0.00");
+      $("#igvTransporte").val("0.00");
+      $("#totalTransporte").val("0.00");
+    }
+  });
+
+  $("#totalTransporte").change(function () {
+    const totalTransporte = $("#totalTransporte").val();
+    if (totalTransporte.length !== 0) {
+      const subtotalTransporte = Number(totalTransporte) / 1.18;
+      const igvTransporte = Number(subtotalTransporte) * 0.18;
+      $("#subtotalTransporte").val(subtotalTransporte.toFixed(2));
+      $("#igvTransporte").val(igvTransporte.toFixed(2));
+      $("#totalTransporte").val(Number(totalTransporte).toFixed(2));
+    } else {
+      $("#subtotalTransporte").val("0.00");
+      $("#igvTransporte").val("0.00");
+      $("#totalTransporte").val("0.00");
+    }
   });
 
   /*=============================================
@@ -374,13 +695,7 @@
             extend: "print",
             title: "LISTADO GUIA",
             text: "IMPRIMIR",
-          },
-          {
-            extend: "pdfHtml5",
-            download: "open",
-            title: "LISTADO GUIA",
-            text: "EXPORTAR PDF",
-          },
+          }
         ],
       });
     } else {
@@ -472,7 +787,6 @@
     $("#transportista").select2();
   }
 
-
   /*=============================================
     - MOSTRAR LISTADO DE ESTADOS GUIA
   =============================================*/
@@ -490,6 +804,39 @@
     $("#estadosGuia").html(tablaEstados);
     $("#estadosGuia").select2();
   }
+
+  /*=============================================
+    - MOSTRAR LISTADO - ESTADOS GUIA TRANSPORTE
+  =============================================*/
+
+  async function mostrarListadoEstadosGuiaTransporte() {
+    const datos = await cargarEstadosGuiaTransporte();
+    var tablaEstados = "";
+    for (const estados of datos) {
+      tablaEstados += `
+        <option value='${estados.id_estado_guia_transporte}'>${estados.descripcion}</option>
+      `;
+    }
+    $("#estadoGuiaTransporte").html(tablaEstados);
+    $("#estadoGuiaTransporte").select2();
+  }
+
+  /*=============================================
+    - MOSTRAR LISTADO DE PROVEEDORES
+  =============================================*/
+
+  async function mostrarListadoProveedoresActivos() {
+    const datos = await cargarProveedoresActivos();
+    var tablaProveedores = "<option value='0' selected disabled> Elegir Proveedor</option>";
+    for (const proveedor of datos) {
+      tablaProveedores += `
+        <option value='${proveedor.id_proveedor}'>${proveedor.ruc} - ${proveedor.razon_social}</option>
+      `;
+    }
+    $("#proveedores").html(tablaProveedores);
+    $("#proveedores").select2();
+  }
+
   /*=============================================
     - MOSTRAR DATOS SUCURSALES - REMITENTE
   =============================================*/
@@ -525,6 +872,453 @@
   }
 
   /*=============================================
+    - MOSTRAR GUIA TRANSPORTE
+  =============================================*/
+
+  async function mostrarDatosGuiaTransporte(idGuia) {
+    const datos = await cargarDatosGuiaTransporteIdGuia({
+      _idGuia: idGuia
+    });
+    if (datos.response === 0) {
+      document.querySelector("#fechaDespacho").valueAsDate = new Date();
+      document.getElementById("actualizarTransporte").classList.add("d-none");
+      document.getElementById("registrarTransporte").classList.remove("d-none");
+    } else {
+      $("#codigoGuiaTransporte").val(datos.id_guia_transporte);
+      $("#proveedores").val(datos.id_proveedor).trigger('change');
+      $("#fechaDespacho").val(datos.fecha_despacho);
+      $("#nroGuiaTransporte").val(datos.numero_guia);
+      $("#nroFacturaTransporte").val(datos.numero_factura);
+      $("#estadoGuiaTransporte").val(datos.id_estado_guia_transporte);
+      $("#origenTransporte").val(datos.origen);
+      $("#destinoTransporte").val(datos.destino);
+      $("#repartoTransporte").val(datos.reparto);
+      $("#descripcionTransporte").val(datos.descripcion);
+      $("#cantidadBultoTransporte").val(datos.cantidad_bulto);
+      $("#observacionesTransporte").val(datos.observaciones);
+      $("#subtotalTransporte").val(datos.subtotal);
+      $("#igvTransporte").val(datos.igv);
+      $("#totalTransporte").val(datos.total);
+      $("#tipoTransporte").val(datos.tipo_transporte);
+      document.getElementById("actualizarTransporte").classList.remove("d-none");
+      document.getElementById("registrarTransporte").classList.add("d-none");
+    }
+  }
+
+  /*=============================================
+    - MOSTRAR GUIA DETALLE
+  =============================================*/
+
+  var tablaDetalles = null;
+
+  async function mostrarListadoGuiaDetalle(idGuia) {
+    const datos = await cargarGuiaDetalleIdGuia({
+      _idGuia: idGuia
+    });
+    const filas = Array.isArray(datos)
+      ? datos.map((detalle) => [
+        detalle.descripcion,
+        detalle.unidad,
+        detalle.cantidad,
+        detalle.peso,
+        `<button class="btn btn-sm btn-danger" onclick="eliminarDetalleGuia(${detalle.id_guia_detalle}, '${idGuia}');return false"><i class="fas fa-trash-alt"></i></button>`
+      ]) : [];
+
+    if (!tablaDetalles) {
+      tablaDetalles = $("#tablaDetalles").DataTable({
+        data: filas,
+        columns: [
+          { title: "DESCRIPCION" },
+          { title: "UNIDAD" },
+          { title: "CANTIDAD" },
+          { title: "PESO" },
+          { title: "ACCION", orderable: false, searchable: false },
+        ],
+        dom: "Bfrtip",
+        lengthMenu: [
+          [10, 25, 50, -1],
+          ["VER 10 FILAS", "VER 25 FILAS", "VER 50 FILAS", "TODO"],
+        ],
+        buttons: [
+          {
+            extend: "pageLength",
+            text: "VER 10 FILAS",
+          },
+        ],
+      });
+    } else {
+      tablaDetalles.clear();
+      tablaDetalles.rows.add(filas);
+      tablaDetalles.draw();
+    }
+
+  }
+
+  /*=============================================
+    - REGISTRAR GUIA DETALLE
+  =============================================*/
+
+  async function registrarListadoGuiaDetalle() {
+    const idGuia = $("#codigo").html();
+    const descripcionItem = $("#descripcionItem").val();
+    const cantidadItem = $("#cantidadItem").val();
+    const unidadItem = $("#unidadItem").val();
+    const pesoItem = $("#pesoItem").val();
+    if (descripcionItem && cantidadItem && unidadItem && pesoItem) {
+      const datos = await registrarGuiaDetalle({
+        _idGuia: idGuia,
+        _descripcion: descripcionItem,
+        _cantidad: cantidadItem,
+        _unidad: unidadItem,
+        _peso: pesoItem
+      });
+      Swal.fire({
+        icon: "success",
+        title: "Guia Detalle",
+        text: datos.message
+      });
+      await mostrarListadoGuiaDetalle(idGuia);
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "Guia Detalle",
+        text: "Hay campos pendientes de llenado"
+      });
+    }
+  }
+
+  /*=============================================
+    - ELIMINAR DETALLE GUIA
+  =============================================*/
+
+  async function eliminarDetalleGuia(idGuiaDetalle, idGuia) {
+    const datos = await eliminarGuiaDetalle({
+      _idGuiaDetalle: idGuiaDetalle
+    });
+    Swal.fire({
+      icon: "success",
+      title: "Guia Detalle",
+      text: datos.message
+    });
+    await mostrarListadoGuiaDetalle(idGuia);
+  }
+
+  /*=============================================
+    - MOSTRAR BOTON DE REGISTRO DE DETALLE
+  =============================================*/
+
+  function mostrarOpcionRegistrarGuiaDetalle() {
+    const descripcionItem = $("#descripcionItem").val();
+    const cantidadItem = $("#cantidadItem").val();
+    const unidadItem = $("#unidadItem").val();
+    const pesoItem = $("#pesoItem").val();
+
+    if (descripcionItem.length > 0 && cantidadItem.length > 0 && unidadItem.length > 0 && pesoItem.length > 0) {
+      const elements = document.querySelectorAll('.guiaDetalle');
+      elements.forEach(element => {
+        element.classList.remove('disabled');
+      });
+    } else {
+      const elements = document.querySelectorAll('.guiaDetalle');
+      elements.forEach(element => {
+        element.classList.add('disabled');
+      });
+    }
+  }
+
+  /*=============================================
+    - MOSTRAR LOADER - ACTUALIZAR GUIA
+  =============================================*/
+
+  function mostrarLoaderActualizarGuia() {
+    document.getElementById("loader").style.display = "block";
+    setTimeout(validarCampos, 1500);
+  }
+
+  /*=============================================
+    - VALIDAR CAMPOS - ACTUALIZAR GUIA
+  =============================================*/
+
+  async function validarCampos() {
+    const idGuia = $("#codigo").html();
+    const serieGuia = $("#serieGuia").val();
+    const numeroGuia = $("#numeroGuia").val();
+    const fechaEmision = $("#fechaEmision").val();
+    const transportista = $("#transportista").val();
+    const cliente = $("#cliente").val();
+    const ordenCompra = $("#ordenCompra").val();
+    const cotizacion = $("#cotizacion").val();
+    const remitente = $("#remitente").val();
+    const direccionRemitente = $("#direccionRemitente").val();
+    const destinatario = $("#destinatario").val();
+    const direccionDestinatario = $("#direccionDestinatario").val();
+    const idEstadoGuia = $("#estadosGuia").val();
+
+    const largoGuia = $("#largoGuia").val();
+    const anchoGuia = $("#anchoGuia").val();
+    const altoGuia = $("#altoGuia").val();
+
+    const info = {
+      icon: "error",
+      title: "Campo Inválido",
+    };
+
+    if (!fechaEmision) {
+      info.text = "El campo fecha de emision debe ser seleccionado";
+    } else if (cliente <= 0) {
+      info.text = "El campo cliente debe ser seleccionado";
+    } else if (!remitente) {
+      info.text = "El campo remitente debe ser seleccionado";
+    } else if (!validator.isLength(direccionRemitente, { min: 1 })) {
+      info.text = "El campo direccion remitente no puede ir vacio";
+    } else if (!destinatario) {
+      info.text = "El campo destinatario debe ser seleccionado";
+    } else if (!validator.isLength(direccionDestinatario, { min: 1 })) {
+      info.text = "El campo direccion destinatario no puede ir vacio";
+    }
+
+    if (info.text) {
+      cerrarLoader();
+      Swal.fire(info);
+      return false;
+    }
+
+    await actualizarGuiaFormulario({
+      _idGuia: idGuia,
+      _serieGuia: serieGuia,
+      _numeroGuia: numeroGuia,
+      _fechaEmision: fechaEmision,
+      _idTransportista: transportista,
+      _idCliente: cliente,
+      _ordenCompra: ordenCompra,
+      _cotizacion: cotizacion,
+      _remitente: remitente,
+      _direccionRemitente: direccionRemitente,
+      _destinatario: destinatario,
+      _direccionDestinatario: direccionDestinatario,
+      _largoGuia: largoGuia,
+      _anchoGuia: anchoGuia,
+      _altoGuia: altoGuia,
+      _idEstadoGuia: idEstadoGuia
+    })
+  }
+
+  /*=============================================
+    - ACTUALIZAR GUIA
+  =============================================*/
+
+  async function actualizarGuiaFormulario($guia) {
+
+    const valoresActuales = await cargarDatosGuiaId({
+      _idGuia: $guia["_idGuia"]
+    });
+
+    const $seguimiento = {
+      _idGuia: $guia["_idGuia"],
+      _numeroGuia: $guia["_serieGuia"] + " - " + $guia["_numeroGuia"],
+      _actividad: "",
+      _detalle: "",
+      _idPersonal: sessionStorage.id_personal
+    }
+
+    if ($guia["_fechaEmision"] !== valoresActuales.fecha_emision) {
+      $seguimiento._actividad = "Se actualizó la fecha de emision de la guia";
+      $seguimiento._detalle = `${$guia["_fechaEmision"]} ← ${valoresActuales.fecha_emision}`;
+      await registrarSeguimientoGuia($seguimiento);
+    }
+    if ($guia["_idTransportista"] != valoresActuales.id_transportista) {
+      $seguimiento._actividad = "Se actualizó el personal de entrega de la guia";
+      let transportista = "-"
+      if ($guia["_idTransportista"] !== "0") {
+        transportista = $('#transportista option:selected').text().trim()
+      }
+      $seguimiento._detalle = `${transportista} ← ${valoresActuales.transportista}`;
+      await registrarSeguimientoGuia($seguimiento);
+    }
+    if ($guia["_idCliente"] != valoresActuales.id_cliente) {
+      $seguimiento._actividad = "Se actualizó el cliente principal de la guia";
+      $seguimiento._detalle = `${$('#cliente option:selected').text().trim()} ← ${valoresActuales.cliente}`;
+      await registrarSeguimientoGuia($seguimiento);
+    }
+    if ($guia["_ordenCompra"] !== valoresActuales.orden_compra) {
+      $seguimiento._actividad = "Se actualizó la orden de compra de la guia";
+      $seguimiento._detalle = `${$guia["_ordenCompra"]} ← ${valoresActuales.orden_compra}`;
+      await registrarSeguimientoGuia($seguimiento);
+    }
+    if ($guia["_cotizacion"] !== valoresActuales.codigo_cotizacion) {
+      $seguimiento._actividad = "Se actualizó el codigo de cotizacion de la guia";
+      $seguimiento._detalle = `${$guia["_cotizacion"]} ← ${valoresActuales.codigo_cotizacion}`;
+      await registrarSeguimientoGuia($seguimiento);
+    }
+    if ($guia["_remitente"] != valoresActuales.id_sucursal_remitente) {
+      $seguimiento._actividad = "Se actualizó el remitente de la guia";
+      const historialRemitenteNuevo = listadoSucursales.find(item => item.id_cliente_sucursal === Number($guia["_remitente"]));
+      const historialRemitenteActual = listadoSucursales.find(item => item.id_cliente_sucursal === Number(valoresActuales.id_sucursal_remitente));
+      $seguimiento._detalle = `${historialRemitenteNuevo.razon_social} ← ${historialRemitenteActual.razon_social}`;
+      await registrarSeguimientoGuia($seguimiento);
+    }
+    if ($guia["_direccionRemitente"] !== valoresActuales.direccion_remitente) {
+      $seguimiento._actividad = "Se actualizó la direccion remitente de la guia";
+      $seguimiento._detalle = `${$guia["_direccionRemitente"]} ← ${valoresActuales.direccion_remitente}`;
+      await registrarSeguimientoGuia($seguimiento);
+    }
+    if ($guia["_destinatario"] != valoresActuales.id_sucursal_destinatario) {
+      $seguimiento._actividad = "Se actualizó el destinatario de salida de la guia";
+      const historialDestinatarioNuevo = listadoSucursales.find(item => item.id_cliente_sucursal === Number($guia["_destinatario"]));
+      const historialDestinatarioActual = listadoSucursales.find(item => item.id_cliente_sucursal === Number(valoresActuales.id_sucursal_destinatario));
+      $seguimiento._detalle = `${historialDestinatarioNuevo.razon_social} ← ${historialDestinatarioActual.razon_social}`;
+      await registrarSeguimientoGuia($seguimiento);
+    }
+    if ($guia["_direccionDestinatario"] !== valoresActuales.direccion_destinatario) {
+      $seguimiento._actividad = "Se actualizó la direccion remitente de la guia";
+      $seguimiento._detalle = `${$guia["_direccionDestinatario"]} ← ${valoresActuales.direccion_destinatario}`;
+      await registrarSeguimientoGuia($seguimiento);
+    }
+    if ($guia["_largoGuia"] !== valoresActuales.largo_guia) {
+      $seguimiento._actividad = "Se actualizó el largo de la guia";
+      $seguimiento._detalle = `${$guia["_largoGuia"]} ← ${valoresActuales.largo_guia}`;
+      await registrarSeguimientoGuia($seguimiento);
+    }
+    if ($guia["_anchoGuia"] !== valoresActuales.ancho_guia) {
+      $seguimiento._actividad = "Se actualizó el ancho de la guia";
+      $seguimiento._detalle = `${$guia["_anchoGuia"]} ← ${valoresActuales.ancho_guia}`;
+      await registrarSeguimientoGuia($seguimiento);
+    }
+    if ($guia["_altoGuia"] !== valoresActuales.alto_guia) {
+      $seguimiento._actividad = "Se actualizó el alto de la guia";
+      $seguimiento._detalle = `${$guia["_altoGuia"]} ←  ${valoresActuales.alto_guia}`;
+      await registrarSeguimientoGuia($seguimiento);
+    }
+
+    if (Number($("#estadosGuia").val()) !== Number(valoresActuales.id_estado_guia)) {
+      const listadoEstados = await cargarEstadosGuia();
+      const dataEstadoInicial = listadoEstados.find(item => item.id_estado_guia === valoresActuales.id_estado_guia)
+      const dataEstadoActual = listadoEstados.find(item => item.id_estado_guia === Number($("#estadosGuia").val()))
+      const detalleSeguimiento = `${dataEstadoActual.descripcion} ← ${dataEstadoInicial.descripcion}`;
+      await registrarSeguimientoGuia({
+        _idGuia: $guia["_idGuia"],
+        _numeroGuia: $guia["_serieGuia"] + " - " + $guia["_numeroGuia"],
+        _actividad: "Se actualizó el estado por el personal logueado",
+        _detalle: detalleSeguimiento,
+        _idPersonal: sessionStorage.id_personal
+      });
+    }
+
+
+    const datos = await actualizarDatosGuia($guia);
+    cerrarLoader();
+    Swal.fire({
+      icon: "success",
+      title: "Guia actualizada",
+      text: datos.message,
+    });
+
+    await mostrarDatosGuia();
+  }
+
+  /*=============================================
+    - REGISTRAR TRANSPORTE GUIA
+  =============================================*/
+
+  async function validarFormularioTransporte() {
+
+    const idGuia = $("#codigo").html();
+    const proveedor = $("#proveedores").val();
+    const fechaDespacho = $("#fechaDespacho").val();
+    const nroGuiaTransporte = $("#nroGuiaTransporte").val();
+    const nroFacturaTransporte = $("#nroFacturaTransporte").val();
+    const estadoGuiaTransporte = $("#estadoGuiaTransporte").val();
+    const origenTransporte = $("#origenTransporte").val();
+    const destinoTransporte = $("#destinoTransporte").val();
+    const repartoTransporte = $("#repartoTransporte").val();
+    const descripcionTransporte = $("#descripcionTransporte").val();
+    const cantidadBultoTransporte = $("#cantidadBultoTransporte").val();
+    const observacionesTransporte = $("#observacionesTransporte").val();
+    const subtotalTransporte = $("#subtotalTransporte").val();
+    const igvTransporte = $("#igvTransporte").val();
+    const totalTransporte = $("#totalTransporte").val();
+    const tipoTransporte = $("#tipoTransporte").val();
+
+    await registrarDatosGuiaTransporte({
+      _idGuia: idGuia,
+      _idProveedor: proveedor,
+      _fechaDespacho: fechaDespacho,
+      _numeroGuia: nroGuiaTransporte,
+      _numeroFactura: nroFacturaTransporte,
+      _idEstadoGuiaTransporte: estadoGuiaTransporte,
+      _origen: origenTransporte,
+      _destino: destinoTransporte,
+      _reparto: repartoTransporte,
+      _descripcion: descripcionTransporte,
+      _cantidadBulto: cantidadBultoTransporte,
+      _observaciones: observacionesTransporte,
+      _subtotal: subtotalTransporte,
+      _igv: igvTransporte,
+      _total: totalTransporte,
+      _tipoTransporte: tipoTransporte
+    });
+
+    Swal.fire({
+      icon: "success",
+      title: "Guia Transporte",
+      text: "El transporte de la guia fue registrada correctamente",
+    });
+    await mostrarDatosGuiaTransporte(idGuia);
+  }
+
+  /*=============================================
+    - ACTUALIZAR TRANSPORTE GUIA
+  =============================================*/
+
+  async function validarFormularioTransporteActualizar() {
+    const idGuia = $("#codigo").html();
+    const idGuiaTransporte = $("#codigoGuiaTransporte").val();
+    const proveedor = $("#proveedores").val();
+    const fechaDespacho = $("#fechaDespacho").val();
+    const nroGuiaTransporte = $("#nroGuiaTransporte").val();
+    const nroFacturaTransporte = $("#nroFacturaTransporte").val();
+    const estadoGuiaTransporte = $("#estadoGuiaTransporte").val();
+    const origenTransporte = $("#origenTransporte").val();
+    const destinoTransporte = $("#destinoTransporte").val();
+    const repartoTransporte = $("#repartoTransporte").val();
+    const descripcionTransporte = $("#descripcionTransporte").val();
+    const cantidadBultoTransporte = $("#cantidadBultoTransporte").val();
+    const observacionesTransporte = $("#observacionesTransporte").val();
+    const subtotalTransporte = $("#subtotalTransporte").val();
+    const igvTransporte = $("#igvTransporte").val();
+    const totalTransporte = $("#totalTransporte").val();
+    const tipoTransporte = $("#tipoTransporte").val();
+
+    await actualizarDatosGuiaTransporte({
+      _idGuiaTransporte: idGuiaTransporte,
+      _idGuia: idGuia,
+      _idProveedor: proveedor,
+      _fechaDespacho: fechaDespacho,
+      _numeroGuia: nroGuiaTransporte,
+      _numeroFactura: nroFacturaTransporte,
+      _idEstadoGuiaTransporte: estadoGuiaTransporte,
+      _origen: origenTransporte,
+      _destino: destinoTransporte,
+      _reparto: repartoTransporte,
+      _descripcion: descripcionTransporte,
+      _cantidadBulto: cantidadBultoTransporte,
+      _observaciones: observacionesTransporte,
+      _subtotal: subtotalTransporte,
+      _igv: igvTransporte,
+      _total: totalTransporte,
+      _tipoTransporte: tipoTransporte
+    });
+
+    Swal.fire({
+      icon: "success",
+      title: "Guia Transporte",
+      text: "El transporte de la guia fue actualizado correctamente",
+    });
+    await mostrarDatosGuiaTransporte(idGuia);
+
+  }
+
+  /*=============================================
     - GENERAR PDF GUIA
   =============================================*/
 
@@ -534,6 +1328,9 @@
     }, 1000)
   }
 
+  /*=============================================
+    - MOSTRAR VENTANA EDITAR GUIA
+  =============================================*/
 
   async function ventanaGuiaEditar(idGuia) {
 
@@ -546,6 +1343,8 @@
     });
 
     await mostrarSucursalesCliente(datos.id_cliente);
+    await mostrarListadoGuiaDetalle(idGuia);
+    await mostrarDatosGuiaTransporte(idGuia);
 
     $("#codigo").html(`${datos.id_guia}`);
     $("#estadosGuia").val(datos.id_estado_guia);
