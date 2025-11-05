@@ -473,22 +473,6 @@ function ventanaGuiaListar() {
 
 /*==========================================================
 
-FUNCION PARA LLAMAR LA VISTA GUIA - ACTUALIZAR
-
-==========================================================*/
-
-function ventanaGuiaActualizar() {
-  $.ajax({
-    url: "Modulos/ModGuia/ActualizarGuia.html",
-    success: function (data) {
-      $("#cuerpo").html(data);
-      clearInterval(intervalo);
-    },
-  });
-}
-
-/*==========================================================
-
 FUNCION PARA LLAMAR LA VISTA GUIA - SEGUIMIENTO
 
 ==========================================================*/

@@ -131,6 +131,7 @@ CREATE TABLE `cliente_sucursal` (
 DROP TABLE IF EXISTS `configuracion_empresa`;
 CREATE TABLE `configuracion_empresa` (
   `ruc` varchar(20) NOT NULL,
+  `razon_social` varchar(100) NOT NULL,
   `direccion` text NOT NULL,
   `id_distrito` varchar(10) NOT NULL,
   `referencia` varchar(100) NOT NULL,
@@ -155,8 +156,8 @@ TRUNCATE TABLE `configuracion_empresa`;
 -- Volcado de datos para la tabla `configuracion_empresa`
 --
 
-INSERT INTO `configuracion_empresa` (`ruc`, `direccion`, `id_distrito`, `referencia`, `telefax`, `celular`, `correo_institucional`, `correo_personal`) VALUES
-('20563622319', 'Av. Elias Aguire Mz. 11V Lt.2', '150143', 'Tablada de Lurin', '01-2671930', '920030179', 'enkarga@gmail.com', 'roxana.operaciones@hotmail.com');
+INSERT INTO `configuracion_empresa` (`ruc`,`razon_social`, `direccion`, `id_distrito`, `referencia`, `telefax`, `celular`, `correo_institucional`, `correo_personal`) VALUES
+('20563622319', 'ENKARGA COURIER SAC', 'Av. Elias Aguire Mz. 11V Lt.2', '150143', 'Tablada de Lurin', '01-2671930', '920030179', 'enkarga@gmail.com', 'roxana.operaciones@hotmail.com');
 
 -- --------------------------------------------------------
 
@@ -2874,7 +2875,7 @@ TRUNCATE TABLE `tipo_documento`;
 INSERT INTO `tipo_documento` (`tipo_documento`, `descripcion`, `id_estado`) VALUES
 (1, 'DNI', 1),
 (2, 'CE', 1),
-(3, 'PASAPORTE', 1);
+(3, 'PASAPORTE', 1),
 (4, 'RUC', 1);
 
 -- --------------------------------------------------------
