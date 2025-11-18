@@ -7,16 +7,16 @@
 
     <div class="form-row justify-content-center ">
       <div class="form-group col-md-3">
-        <label class="col-form-label font-weight-bold" for="ordenCompra">Orden Compra</label>
-        <input id="ordenCompra" class="form-control" type="text" aria-describedby="ordenCompraHelp"
+        <label class="col-form-label font-weight-bold" for="ordenCompraFiltro">Orden Compra</label>
+        <input id="ordenCompraFiltro" class="form-control" type="text" aria-describedby="ordenCompraFiltroHelp"
           placeholder="Ingresar Orden Compra" />
-        <small id="ordenCompraHelp" class="form-text text-muted">Ejemplo: 98798797</small>
+        <small id="ordenCompraFiltroHelp" class="form-text text-muted">Ejemplo: 98798797</small>
       </div>
       <div class="form-group col-md-3">
-        <label class="col-form-label font-weight-bold" for="cotizacion">Cotizacion</label>
-        <input id="cotizacion" class="form-control" type="text" aria-describedby="cotizacionHelp"
+        <label class="col-form-label font-weight-bold" for="cotizacionFiltro">Cotizacion</label>
+        <input id="cotizacionFiltro" class="form-control" type="text" aria-describedby="cotizacionFiltroHelp"
           placeholder="Ingresar Cotizacion" />
-        <small id="cotizacionHelp" class="form-text text-muted">Ejemplo: COT.001-2024</small>
+        <small id="cotizacionFiltroHelp" class="form-text text-muted">Ejemplo: COT.001-2024</small>
       </div>
       <div class="form-group col-md-3">
         <label class="col-form-label font-weight-bold" for="fechaInicio">Fecha Inicio</label>
@@ -608,8 +608,8 @@
   =============================================*/
 
   function limpiarFiltros() {
-    $("#ordenCompra").val("");
-    $("#cotizacion").val("");
+    $("#ordenCompraFiltro").val("");
+    $("#cotizacionFiltro").val("");
     $("#fechaInicio").val("");
     $("#fechaFin").val("");
   }
@@ -621,8 +621,8 @@
   var tablaGuia = null;
 
   async function mostrarDatosGuia() {
-    const ordenCompra = $("#ordenCompra").val();
-    const cotizacion = $("#cotizacion").val();
+    const ordenCompra = $("#ordenCompraFiltro").val();
+    const cotizacion = $("#cotizacionFiltro").val();
     const fechaInicio = $("#fechaInicio").val();
     const fechaFin = $("#fechaFin").val();
     var datos = await cargarListadoGuia({
@@ -889,7 +889,7 @@
       $("#fechaDespacho").val(datos.fecha_despacho);
       $("#nroGuiaTransporte").val(datos.numero_guia);
       $("#nroFacturaTransporte").val(datos.numero_factura);
-      $("#estadoGuiaTransporte").val(datos.id_estado_guia_transporte);
+      $("#estadoGuiaTransporte").val(datos.id_estado_guia_transporte).trigger('change');
       $("#origenTransporte").val(datos.origen);
       $("#destinoTransporte").val(datos.destino);
       $("#repartoTransporte").val(datos.reparto);
@@ -1204,7 +1204,6 @@
       });
     }
 
-
     const datos = await actualizarDatosGuia($guia);
     cerrarLoader();
     Swal.fire({
@@ -1214,6 +1213,42 @@
     });
 
     await mostrarDatosGuia();
+    $("#closeModal").click();
+  }
+
+  /*=============================================
+    - ACTUALIZAR SOLO ESTAD GUIA
+  =============================================*/
+
+  async function actualizarEstadoGuia() {
+
+    const idGuia = $("#codigo").html();
+    const serieGuia = $("#serieGuia").val();
+    const numeroGuia = $("#numeroGuia").val();
+    const idEstadoGuia = $("#estadosGuia").val();
+
+    const valoresActuales = await cargarDatosGuiaId({
+      _idGuia: idGuia
+    });
+
+    if (Number(idEstadoGuia) !== Number(valoresActuales.id_estado_guia)) {
+      const listadoEstados = await cargarEstadosGuia();
+      const dataEstadoInicial = listadoEstados.find(item => item.id_estado_guia === valoresActuales.id_estado_guia)
+      const dataEstadoActual = listadoEstados.find(item => item.id_estado_guia === Number(idEstadoGuia))
+      const detalleSeguimiento = `${dataEstadoActual.descripcion} ← ${dataEstadoInicial.descripcion}`;
+      await registrarSeguimientoGuia({
+        _idGuia: idGuia,
+        _numeroGuia: serieGuia + " - " + numeroGuia,
+        _actividad: "Se actualizó el estado por el personal logueado",
+        _detalle: detalleSeguimiento,
+        _idPersonal: sessionStorage.id_personal
+      });
+    }
+    await actualizarEstadoIdGuia({
+      _idGuia: idGuia,
+      _idEstadoGuia: idEstadoGuia
+    });
+
   }
 
   /*=============================================
@@ -1258,12 +1293,16 @@
       _tipoTransporte: tipoTransporte
     });
 
+    await actualizarEstadoGuia();
+
     Swal.fire({
       icon: "success",
       title: "Guia Transporte",
       text: "El transporte de la guia fue registrada correctamente",
     });
     await mostrarDatosGuiaTransporte(idGuia);
+    await mostrarDatosGuia();
+
   }
 
   /*=============================================
@@ -1309,12 +1348,15 @@
       _tipoTransporte: tipoTransporte
     });
 
+    await actualizarEstadoGuia();
+
     Swal.fire({
       icon: "success",
       title: "Guia Transporte",
       text: "El transporte de la guia fue actualizado correctamente",
     });
-    await mostrarDatosGuiaTransporte(idGuia);
+    await mostrarDatosGuia();
+    $("#closeModal").click();
 
   }
 

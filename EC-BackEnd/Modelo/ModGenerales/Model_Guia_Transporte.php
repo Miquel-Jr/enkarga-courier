@@ -74,18 +74,20 @@ class Model_Guia_Transporte
     CONSULTA: CARGAR LISTADO GUIA TRANSPORTE
   ===========================================*/
 
-  function cargarListadoGuiaTransporte()
+  function cargarListadoGuiaTransporte($fechaInicio, $fechaFin)
   {
     // Preparar la consulta SQL con sentencia preparada
-    $sql = "SELECT g.serie_guia, g.numero_guia, gt.numero_guia nro_guia,  gt.tipo_transporte, p.ruc, p.razon_social, gt.numero_factura,
+    $sql = "SELECT gt.id_guia_transporte, g.id_guia, g.serie_guia, g.numero_guia, gt.numero_guia nro_guia,  gt.tipo_transporte, p.ruc, p.razon_social, gt.numero_factura,
     gt.origen, gt.destino, gt.total, gt.fecha_registro, egt.id_estado_guia_transporte ,egt.descripcion estado
     FROM guia_transporte gt
     INNER JOIN guia g ON g.id_guia = gt.id_guia
     INNER JOIN proveedor p ON p.id_proveedor = gt.id_proveedor
-    INNER JOIN estado_guia_transporte egt ON egt.id_estado_guia_transporte = gt.id_estado_guia_transporte ";
+    INNER JOIN estado_guia_transporte egt ON egt.id_estado_guia_transporte = gt.id_estado_guia_transporte
+    WHERE gt.fecha_registro BETWEEN ? AND ? ORDER BY gt.fecha_registro DESC";
 
     // Ejecutar la consulta con los parámetros
-    $this->_conexion->ejecutar_sentencia($sql);
+    $params = array($fechaInicio, $fechaFin);
+    $this->_conexion->ejecutar_sentencia($sql, $params);
     return $this->_conexion->retorna_select();
   }
 }

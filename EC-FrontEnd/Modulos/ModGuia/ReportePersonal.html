@@ -61,11 +61,18 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script type="text/javascript">
 
-  const now = new Date();
-  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-  document.querySelector("#fechaInicio").valueAsDate = firstDay;
-  document.querySelector("#fechaFin").valueAsDate = now;
-  validarFiltroBusqueda();
+  /*=============================================
+    - CARGAR REPORTE - DOCUMENTO
+  =============================================*/
+
+  $(document).ready(function () {
+    const now = new Date();
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+    document.querySelector("#fechaInicio").valueAsDate = firstDay;
+    document.querySelector("#fechaFin").valueAsDate = now;
+    validarFiltroBusqueda();
+
+  });
 
   async function validarFiltroBusqueda() {
 
