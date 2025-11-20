@@ -40,16 +40,18 @@ class Model_Deposito
     CONSULTA: LISTADO FACTURA DEPOSITO
   ===========================================*/
 
-  function cargarListadoDeposito()
+  function cargarListadoDeposito($fechaInicio, $fechaFin)
   {
     // Preparar la consulta SQL con sentencia preparada
     $sql = "SELECT f.serie_factura, f.numero_factura, fd.fecha_deposito, fd.entidad_bancaria, fd.forma_pago,  fd.numero_centro, fd.numero_operacion,
     fd.fecha_registro, fd.id_factura_deposito, f.id_factura, f.id_estado_factura
     FROM factura_deposito fd
-    INNER JOIN factura f ON f.id_factura = fd.id_factura";
+    INNER JOIN factura f ON f.id_factura = fd.id_factura
+    WHERE fd.fecha_registro BETWEEN ? AND ? ORDER BY fd.fecha_registro DESC";
 
     // Ejecutar la consulta con los parámetros
-    $this->_conexion->ejecutar_sentencia($sql);
+    $params = array($fechaInicio, $fechaFin);
+    $this->_conexion->ejecutar_sentencia($sql, $params);
     return $this->_conexion->retorna_select();
   }
   /*===========================================

@@ -475,11 +475,12 @@ async function eliminarFacturaDeposito($factura) {
   });
 }
 
-async function cargarListadoFacturasDeposito() {
+async function cargarListadoFacturasDeposito($datos) {
   return new Promise(function (resolve, reject) {
     $.ajax({
       url: "../EC-BackEnd/Controlador/ModGenerales/Controlador_Deposito/Controlador_CargarListadoDeposito.php",
-      type: "GET",
+      type: "POST",
+      data: $datos,
       dataType: "json",
       success: function (datos) {
         resolve(datos);
