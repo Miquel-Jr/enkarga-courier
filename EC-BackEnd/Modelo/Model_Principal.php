@@ -32,17 +32,24 @@ class Model_Principal
   public function mostrarGuiaFacturaMes()
   {
 
-    $sql = "SELECT MONTH(g.fecha_registro) AS mes, COUNT(g.id_guia) AS guias_completas, 
-            ( 
-              SELECT COUNT(f.id_factura) FROM factura f 
-              WHERE YEAR(f.fecha_registro) = YEAR(CURDATE()) 
-              AND f.id_estado_factura = 2
-              AND MONTH(f.fecha_registro) = MONTH(g.fecha_registro) 
-            ) AS facturas_completas 
-          FROM guia g 
-          WHERE YEAR(g.fecha_registro) = YEAR(CURDATE()) 
-          AND g.id_estado_guia = 6
-          GROUP BY MONTH(g.fecha_registro)";
+    $sql = "SELECT mes, SUM(guias_completas) AS guias_completas, SUM(facturas_completas) AS facturas_completas
+          FROM (
+            SELECT MONTH(g.fecha_registro) AS mes, COUNT(DISTINCT g.id_guia) AS guias_completas, 0 AS facturas_completas 
+            FROM guia g
+            WHERE YEAR(g.fecha_registro) = YEAR(CURDATE()) 
+            AND g.id_estado_guia = 6
+            GROUP BY MONTH(g.fecha_registro)
+            
+            UNION ALL
+            
+            SELECT MONTH(f.fecha_registro) AS mes, 0 AS guias_completas, COUNT(DISTINCT f.id_factura) AS facturas_completas 
+            FROM factura f
+            WHERE YEAR(f.fecha_registro) = YEAR(CURDATE()) 
+            AND f.id_estado_factura = 2
+            GROUP BY MONTH(f.fecha_registro)
+          ) combined
+          GROUP BY mes
+          ORDER BY mes";
     $this->_conexion->ejecutar_sentencia($sql);
     return $this->_conexion->retorna_select();
   }

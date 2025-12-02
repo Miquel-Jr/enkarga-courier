@@ -521,7 +521,7 @@ function ventanaFacturaCrear() {
 
 /*==========================================================
 
-FUNCION PARA LLAMAR LA VISTA CONTABILIDAD - FACTURA - LISTADO
+FUNCION PARA LLAMAR LA VISTA CONTABILIDAD - LISTADO FACTURA
 
 ==========================================================*/
 
@@ -537,23 +537,7 @@ function ventanaFacturaListar() {
 
 /*==========================================================
 
-FUNCION PARA LLAMAR LA VISTA CONTABILIDAD - FACTURA - ACTUALIZAR
-
-==========================================================*/
-
-function ventanaFacturaActualizar() {
-  $.ajax({
-    url: "Modulos/ModContabilidad/ActualizarFactura.html",
-    success: function (data) {
-      $("#cuerpo").html(data);
-      clearInterval(intervalo);
-    },
-  });
-}
-
-/*==========================================================
-
-FUNCION PARA LLAMAR LA VISTA CONTABILIDAD - FACTURA - ACTUALIZAR
+FUNCION PARA LLAMAR LA VISTA CONTABILIDAD - LISTADO DEPOSITO
 
 ==========================================================*/
 
@@ -569,7 +553,7 @@ function ventanaDepositoListar() {
 
 /*==========================================================
 
-FUNCION PARA LLAMAR LA VISTA CONTABILIDAD - NOTA DE CREDITO - LISTAR
+FUNCION PARA LLAMAR LA VISTA CONTABILIDAD - LISTADO NOTA DE CREDITO
 
 ==========================================================*/
 
@@ -585,7 +569,7 @@ function ventanaNotaCreditoListar() {
 
 /*==========================================================
 
-FUNCION PARA LLAMAR LA VISTA CONTABILIDAD - FACTURA TRANSPORTE - LISTAR
+FUNCION PARA LLAMAR LA VISTA CONTABILIDAD - LISTADO FACTURA TRANSPORTE
 
 ==========================================================*/
 
