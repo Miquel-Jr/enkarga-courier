@@ -152,9 +152,6 @@
           <!--======= LISTAR FACTURA  =======-->
           <a id="LFACTURA" onclick="ventanaFacturaListar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Listar Factura</a>
 
-          <!--======= ACTUALIZAR FACTURA  =======-->
-          <a id="AFACTURA" onclick="ventanaFacturaActualizar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Actualizar Factura</a>
-
           <!--======= LISTAR DEPOSITO  =======-->
           <a id="LDEPOSITO" onclick="ventanaDepositoListar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Listar Deposito</a>
           

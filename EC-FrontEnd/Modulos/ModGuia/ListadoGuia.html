@@ -543,6 +543,10 @@
   =============================================*/
 
   $(document).ready(function () {
+    const now = new Date();
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+    document.querySelector("#fechaInicio").valueAsDate = firstDay;
+    document.querySelector("#fechaFin").valueAsDate = now;
     mostrarDatosGuia();
     mostrarListadoClientes();
     mostrarListadoTransportistas();
