@@ -51,6 +51,7 @@
 
 
         <?php
+
         if ($_SESSION["clientes"]) {
         ?>
           <!--===========================
@@ -67,9 +68,6 @@
           <!--======= LISTAR CLIENTE-SUCURSALES =======-->
           <a id="LCLIENTE" onclick="ventanaClienteSucursalListar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Listar cliente sucursal</a>
 
-          <!--======= ACTUALIZAR CLIENTE  =======-->
-          <a id="ACLIENTE" onclick="ventanaClienteActualizar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Actualizar cliente</a>
-
         <?php
         };
         if ($_SESSION["proveedor"]) {
@@ -85,15 +83,14 @@
           <!--======= LISTAR PROVEEDOR =======-->
           <a id="LPROVEEDOR" onclick="ventanaProveedorListar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Listar transportista</a>
 
-          <!--======= ACTUALIZAR PROVEEDOR  =======-->
-          <a id="APROVEEDOR" onclick="ventanaProveedorActualizar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Actualizar transportista</a>
         <?php
         };
-        if ($_SESSION["personal"]) {
+        if ($_SESSION["personal"] && ($_SESSION['id_perfil'] == 1 || $_SESSION['id_perfil'] == 2)) {
         ?>
           <!--===========================
             MODULO RECURSOS HUMANOS
           ============================-->
+
           <a id="PERSONAL" class="list-group-item list-group-item-action black white-text font-weight-bold" data-toggle="list" role="tab" style="cursor: default;"><i class="fas fa-lg fa-user white-text mr-2"></i>Personal</a>
 
           <!--======= NUEVO USUARIO  =======-->
@@ -109,6 +106,19 @@
           <a id="ACCESOS" onclick="ventanaAccesosPersonal();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Accesos</a>
         <?php
         };
+        if ($_SESSION["personal"] && ($_SESSION['id_perfil'] == 3 || $_SESSION['id_perfil'] == 4)) {
+        ?>
+          <!--===========================
+            MODULO RECURSOS HUMANOS
+          ============================-->
+
+          <a id="PERSONAL" class="list-group-item list-group-item-action black white-text font-weight-bold" data-toggle="list" role="tab" style="cursor: default;"><i class="fas fa-lg fa-user white-text mr-2"></i>Personal</a>
+
+          <!--======= ACTUALIZAR USUARIOS  =======-->
+          <a id="USUARIO" onclick="ventanaPersonalActualizar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Actualizar Personal</a>
+
+        <?php
+        };
         if ($_SESSION["operaciones"]) {
         ?>
           <!--===========================
@@ -121,9 +131,6 @@
 
           <!--======= LISTAR GUIA =======-->
           <a id="LGUIA" onclick="ventanaGuiaListar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Listar Guia</a>
-
-          <!--======= ACTUALIZAR GUIA =======-->
-          <a id="AGUIA" onclick="ventanaGuiaActualizar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Actualizar Guia</a>
 
           <!--======= SEGUIMIENTO GUIA =======-->
           <a id="SGUIA" onclick="ventanaGuiaSeguimiento();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Seguimiento Guia</a>
@@ -144,9 +151,6 @@
 
           <!--======= LISTAR FACTURA  =======-->
           <a id="LFACTURA" onclick="ventanaFacturaListar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Listar Factura</a>
-
-          <!--======= ACTUALIZAR FACTURA  =======-->
-          <a id="AFACTURA" onclick="ventanaFacturaActualizar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Actualizar Factura</a>
 
           <!--======= LISTAR DEPOSITO  =======-->
           <a id="LDEPOSITO" onclick="ventanaDepositoListar();return false" class="py-0 list-group-item list-group-item-action principal white-text font-weight-bold" data-toggle="list" role="tab">Listar Deposito</a>

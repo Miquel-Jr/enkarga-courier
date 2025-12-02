@@ -46,6 +46,7 @@ function validarPerfiles() {
     ventanaPrincipal();
   } else {
     const accesos = JSON.parse(sessionStorage.accesos);
+    const idPerfil = sessionStorage.id_perfil;
     var sessionLog = false;
     Object.keys(accesos).map((item) => {
       if (item === "clientes" && accesos[item] == "1" && !sessionLog) {
@@ -56,7 +57,11 @@ function validarPerfiles() {
         ventanaProveedorListar();
       } else if (item === "personal" && accesos[item] == "1" && !sessionLog) {
         sessionLog = true;
-        ventanaPersonalListar();
+        if (idPerfil === "3" || idPerfil === "4") {
+          ventanaPersonalActualizar();
+        } else {
+          ventanaPersonalListar();
+        }
       } else if (
         item === "operaciones" &&
         accesos[item] == "1" &&
@@ -260,22 +265,6 @@ function ventanaClienteSucursalListar() {
 
 /*==========================================================
 
-FUNCION PARA LLAMAR LA VISTA CLIENTE - ACTUALIZAR
-
-==========================================================*/
-
-function ventanaClienteActualizar() {
-  $.ajax({
-    url: "Modulos/ModClientes/ActualizarClientes.html",
-    success: function (data) {
-      $("#cuerpo").html(data);
-      clearInterval(intervalo);
-    },
-  });
-}
-
-/*==========================================================
-
 FUNCION PARA LLAMAR LA VISTA PROVEEDOR - NUEVO
 
 ==========================================================*/
@@ -299,22 +288,6 @@ FUNCION PARA LLAMAR LA VISTA PROVEEDOR - LISTADO
 function ventanaProveedorListar() {
   $.ajax({
     url: "Modulos/ModProveedor/ListadoProveedor.html",
-    success: function (data) {
-      $("#cuerpo").html(data);
-      clearInterval(intervalo);
-    },
-  });
-}
-
-/*==========================================================
-
-FUNCION PARA LLAMAR LA VISTA PROVEEDOR - ACTUALIZAR
-
-==========================================================*/
-
-function ventanaProveedorActualizar() {
-  $.ajax({
-    url: "Modulos/ModProveedor/ActualizarProveedor.html",
     success: function (data) {
       $("#cuerpo").html(data);
       clearInterval(intervalo);
@@ -500,22 +473,6 @@ function ventanaGuiaListar() {
 
 /*==========================================================
 
-FUNCION PARA LLAMAR LA VISTA GUIA - ACTUALIZAR
-
-==========================================================*/
-
-function ventanaGuiaActualizar() {
-  $.ajax({
-    url: "Modulos/ModGuia/ActualizarGuia.html",
-    success: function (data) {
-      $("#cuerpo").html(data);
-      clearInterval(intervalo);
-    },
-  });
-}
-
-/*==========================================================
-
 FUNCION PARA LLAMAR LA VISTA GUIA - SEGUIMIENTO
 
 ==========================================================*/
@@ -564,7 +521,7 @@ function ventanaFacturaCrear() {
 
 /*==========================================================
 
-FUNCION PARA LLAMAR LA VISTA CONTABILIDAD - FACTURA - LISTADO
+FUNCION PARA LLAMAR LA VISTA CONTABILIDAD - LISTADO FACTURA
 
 ==========================================================*/
 
@@ -580,23 +537,7 @@ function ventanaFacturaListar() {
 
 /*==========================================================
 
-FUNCION PARA LLAMAR LA VISTA CONTABILIDAD - FACTURA - ACTUALIZAR
-
-==========================================================*/
-
-function ventanaFacturaActualizar() {
-  $.ajax({
-    url: "Modulos/ModContabilidad/ActualizarFactura.html",
-    success: function (data) {
-      $("#cuerpo").html(data);
-      clearInterval(intervalo);
-    },
-  });
-}
-
-/*==========================================================
-
-FUNCION PARA LLAMAR LA VISTA CONTABILIDAD - FACTURA - ACTUALIZAR
+FUNCION PARA LLAMAR LA VISTA CONTABILIDAD - LISTADO DEPOSITO
 
 ==========================================================*/
 
@@ -612,7 +553,7 @@ function ventanaDepositoListar() {
 
 /*==========================================================
 
-FUNCION PARA LLAMAR LA VISTA CONTABILIDAD - NOTA DE CREDITO - LISTAR
+FUNCION PARA LLAMAR LA VISTA CONTABILIDAD - LISTADO NOTA DE CREDITO
 
 ==========================================================*/
 
@@ -628,7 +569,7 @@ function ventanaNotaCreditoListar() {
 
 /*==========================================================
 
-FUNCION PARA LLAMAR LA VISTA CONTABILIDAD - FACTURA TRANSPORTE - LISTAR
+FUNCION PARA LLAMAR LA VISTA CONTABILIDAD - LISTADO FACTURA TRANSPORTE
 
 ==========================================================*/
 

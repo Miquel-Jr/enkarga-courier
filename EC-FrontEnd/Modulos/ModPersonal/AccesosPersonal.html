@@ -75,7 +75,8 @@
   </div>
 
   <div class="form-inline justify-content-center">
-    <button type="button" onclick="mostrarLoader();return false" class="btn btn-guardar disabled" id="buscarPersonalButton">
+    <button type="button" onclick="mostrarLoader();return false" class="btn btn-guardar disabled"
+      id="buscarPersonalButton">
       Buscar
     </button>
   </div>
@@ -121,12 +122,6 @@
           <small id="perfilHelp" class="form-text text-muted">Campo obligatorio.</small>
         </div>
 
-        <div class="form-inline justify-content-center">
-          <button type="button" onclick="actualizarAccesos()" class="btn btn-guardar">
-            Actualizar Perfil
-          </button>
-        </div>
-
       </div>
     </div>
   </div>
@@ -141,7 +136,8 @@
         <div class="w-100"></div>
 
         <div class="col-12 col-md form-group">
-          <label class="col-form-label font-weight-bold" for="moduloCliente" class="form-inline justify-content-center">MODULO CLIENTE</label>
+          <label class="col-form-label font-weight-bold" for="moduloCliente"
+            class="form-inline justify-content-center">MODULO CLIENTE</label>
         </div>
 
         <div class="col-12 col-md form-group">
@@ -154,7 +150,8 @@
         <div class="w-100"></div>
 
         <div class="col-12 col-md form-group">
-          <label class="col-form-label font-weight-bold" for="moduloProveedor" class="form-inline justify-content-center">MODULO TRANSPORTISTA</label>
+          <label class="col-form-label font-weight-bold" for="moduloProveedor"
+            class="form-inline justify-content-center">MODULO TRANSPORTISTA</label>
         </div>
 
         <div class="col-12 col-md form-group">
@@ -167,7 +164,8 @@
         <div class="w-100"></div>
 
         <div class="col-12 col-md form-group">
-          <label class="col-form-label font-weight-bold" for="moduloPersonal" class="form-inline justify-content-center">MODULO PERSONAL</label>
+          <label class="col-form-label font-weight-bold" for="moduloPersonal"
+            class="form-inline justify-content-center">MODULO PERSONAL</label>
         </div>
 
         <div class="col-12 col-md form-group">
@@ -180,7 +178,8 @@
         <div class="w-100"></div>
 
         <div class="col-12 col-md form-group">
-          <label class="col-form-label font-weight-bold" for="moduloOperaciones" class="form-inline justify-content-center">MODULO OPERACIONES</label>
+          <label class="col-form-label font-weight-bold" for="moduloOperaciones"
+            class="form-inline justify-content-center">MODULO OPERACIONES</label>
         </div>
 
         <div class="col-12 col-md form-group">
@@ -193,7 +192,8 @@
         <div class="w-100"></div>
 
         <div class="col-12 col-md form-group">
-          <label class="col-form-label font-weight-bold" for="moduloContabilidad" class="form-inline justify-content-center">MODULO CONTABILIDAD</label>
+          <label class="col-form-label font-weight-bold" for="moduloContabilidad"
+            class="form-inline justify-content-center">MODULO CONTABILIDAD</label>
         </div>
 
         <div class="col-12 col-md form-group">
@@ -268,7 +268,7 @@
     var tablaPersonal =
       "<option value = 0 selected disabled> Elegir Personal</option>";
     if (Array.isArray(datos)) {
-      const listadoPersonal = datos.filter( (item) => item.id_perfil !== 1);
+      const listadoPersonal = datos.filter((item) => item.id_perfil !== 1);
       for (const personal of listadoPersonal) {
         tablaPersonal += `
           <option value=${personal.id_personal}>
@@ -387,10 +387,15 @@
       $("#moduloProveedor").prop('checked', true);
       $("#moduloPersonal").prop('checked', true);
       $("#moduloOperaciones").prop('checked', true);
+      $("#moduloContabilidad").prop('checked', false);
     }
 
     if (perfil === 3) {
+      $("#moduloCliente").prop('checked', false);
+      $("#moduloProveedor").prop('checked', false);
+      $("#moduloPersonal").prop('checked', false);
       $("#moduloOperaciones").prop('checked', true);
+      $("#moduloContabilidad").prop('checked', false);
     }
 
     if (perfil === 4) {

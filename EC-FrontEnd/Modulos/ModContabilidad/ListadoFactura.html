@@ -1,106 +1,1332 @@
+<style>
+  .carousel-container {
+    overflow: hidden;
+    margin: auto;
+  }
+
+  .carousel {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .form-card {
+    width: 85%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin: 10px;
+    padding: 20px;
+    background-color: #fff;
+    flex-shrink: 0;
+  }
+
+  .guia-list {
+    list-style-type: none;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .guia-list li {
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .guia-item {
+    flex: 1;
+    padding: 0 10px;
+  }
+</style>
+
 <!--DISEÑO GENERAL DE LA VISTA-->
-<section id="listado">
-  <!--TITULO DE LA VISTA-->
-  <h3 class="h3-responsive titulo font-weight-bold">LISTAR FACTURAS</h3>
+<form>
+  <section id="listado">
+    <!--TITULO DE LA VISTA-->
+    <h3 class="h3-responsive titulo font-weight-bold">LISTAR FACTURAS</h3>
 
-  <!--CONTENIDO PRINCIPAL DE LA VISTA-->
-  <table id="tablaListado" class="table table-striped table-bordered" cellspacing="0" width="100%">
-    <thead>
-      <tr>
-        <th>FACTURA</th>
-        <th>CLIENTE</th>
-        <th>RUC</th>
-        <th>RAZON SOCIAL</th>
-        <th>ORDEN SERVICIO</th>
-        <th>TOTAL COBRAR</th>
-        <th>FECHA REGISTRO</th>
-        <th>ESTADO</th>
-      </tr>
-    </thead>
-    <tbody id="cuerpoTabla"></tbody>
-  </table>
-</section>
+    <div class="form-row justify-content-center ">
+      <div class="form-group col-md-3">
+        <label class="col-form-label font-weight-bold" for="fechaInicio">Fecha Inicio</label>
+        <input required id="fechaInicio" class="form-control" type="date" aria-describedby="fechaInicioHelp"
+          placeholder="Ingresar fecha de inicio" />
+        <small id="fechaInicioHelp" class="form-text text-muted">Ejemplo: 2024-01-01.</small>
+      </div>
+      <div class="form-group col-md-3">
+        <label class="col-form-label font-weight-bold" for="fechaFin">Fecha Fin</label>
+        <input required id="fechaFin" class="form-control" type="date" aria-describedby="fechaFinHelp"
+          placeholder="Ingresar fecha fin" />
+        <small id="fechaFinHelp" class="form-text text-muted">Ejemplo: 2024-01-01.</small>
+      </div>
+    </div>
 
+    <div class="form-inline justify-content-center">
+      <button type="button" onclick="mostrarDatosFacturasDeposito();return false" class="btn btn-guardar ">
+        Filtrar
+      </button>
+      <button type="button" onclick="exportarExcel();return false" class="btn btn-success ml-2">
+        Exportar a Excel
+      </button>
+    </div>
+    <!--CONTENIDO PRINCIPAL DE LA VISTA-->
+    <table id="tablaListado" class="table table-striped table-bordered" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th>FACTURA</th>
+          <th>CLIENTE</th>
+          <th>RUC</th>
+          <th>RAZON SOCIAL</th>
+          <th>ORDEN SERVICIO</th>
+          <th>TOTAL COBRAR</th>
+          <th>FECHA REGISTRO</th>
+          <th>ESTADO</th>
+          <th>ACCION</th>
+        </tr>
+      </thead>
+      <tbody id="cuerpoTabla"></tbody>
+    </table>
+  </section>
+</form>
+
+<div class="modal fade" id="infoFactura" role="dialog" aria-labelledby="infoFacturaTitulo" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header principal">
+        <h5 class="modal-title white-text font-weight-bold">
+          Informacion de la factura
+        </h5>
+        <span id="codigo" class="badge badge-light badge-pill white-text font-weight-bold"></span>
+        <input type="hidden" id="estadoInicialFactura" value="0">
+        <button id="closeModal" type="button" class="close white-text font-weight-bold" data-dismiss="modal"
+          aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <!-- ESTADOS FACTURA -->
+        <div class="col-12 col-md form-group">
+          <label class="col-form-label font-weight-bold" for="estadosFactura">Estado Factura</label>
+          <select class="form-control mx-auto selectpicker" data-live-search="true" id="estadosFactura">
+            <option value="" selected>Seleccionar</option>
+          </select>
+          <small id="estadosFacturaHelp" class="form-text text-muted">Campo obligatorio.</small>
+        </div>
+
+        <!-- Convertido a pestañas: Guias | Factura | Deposito | Nota -->
+        <div>
+          <ul class="nav nav-tabs" id="facturaTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <a class="nav-link active" id="tab-guias-tab" data-bs-toggle="tab" data-toggle="tab" href="#tab-guias"
+                role="tab" aria-controls="tab-guias" aria-selected="true">Guias</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="tab-factura-tab" data-bs-toggle="tab" data-toggle="tab" href="#tab-factura"
+                role="tab" aria-controls="tab-factura" aria-selected="false">Factura</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="tab-deposito-tab" data-bs-toggle="tab" data-toggle="tab" href="#tab-deposito"
+                role="tab" aria-controls="tab-deposito" aria-selected="false">Deposito</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="tab-nota-credito-tab" data-bs-toggle="tab" data-toggle="tab"
+                href="#tab-nota-credito" role="tab" aria-controls="tab-nota-credito" aria-selected="false">Nota
+                crédito</a>
+            </li>
+          </ul>
+
+          <div class="tab-content mt-3" id="facturaTabsContent">
+            <div class="tab-pane fade show active" id="tab-guias" role="tabpanel" aria-labelledby="tab-guias-tab">
+
+
+              <div class="form-row">
+                <div class="col-12 mb-3">
+                  <h5>Seleccionar guía pendiente de factura</h5>
+                </div>
+                <div class="col-12 mb-3">
+                  <input type="text" class="form-control" id="buscarGuia" placeholder="Buscar guía..."
+                    onkeyup="filtrarGuias()">
+                </div>
+                <div class="col-12">
+                  <ul class="guia-list" id="guiaList">
+                  </ul>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="actualizarListadoGuiasFactura(); return false">
+                  Actualizar
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                  Cerrar
+                </button>
+              </div>
+
+            </div>
+            <div class="tab-pane fade" id="tab-factura" role="tabpanel" aria-labelledby="tab-factura-tab">
+              <div class="form-row">
+
+                <!-- SERIE -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="serieFactura">Serie</label>
+                  <input required id="serieFactura" onkeyup="obtenerMayuscula(this);" class="form-control" type="string"
+                    aria-describedby="serieFacturaHelp" placeholder="Ingresar serie de la factura" />
+                  <small id="serieFacturaHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- NUMERO -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="numeroFactura">Numero</label>
+                  <input required id="numeroFactura" onblur="autoCompletarCeros(this);" class="form-control"
+                    type="string" maxlength="8" aria-describedby="numeroFacturaHelp"
+                    placeholder="Ingresar numero de factura" />
+                  <small id="numeroFacturaHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- CLIENTE -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="cliente">Cliente</label>
+                  <select required id="cliente" class="form-control" aria-describedby="clienteHelp">
+                    <option value="0" selected disabled>Elegir Guia</option>
+                  </select>
+                  <small id="clienteHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+                <!-- FECHA VENCIMIENTO -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="fechaVencimiento">Fecha Vencimiento</label>
+                  <input required id="fechaVencimiento" class="form-control " type="date"
+                    aria-describedby="fechaVencimientoHelp" placeholder="Ingresar fecha de vencimiento" />
+                  <small id="fechaVencimientoHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- TIPO DE CREDITO -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="tipoCredito">Tipo de Crédito</label>
+                  <select required id="tipoCredito" class="form-control" aria-describedby="tipoCreditoHelp">
+                    <option value="CREDITO">CREDITO</option>
+                    <option value="CONTADO">CONTADO</option>
+                  </select>
+                  <small id="tipoCreditoHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- ORDEN DE SERVICIO -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="ordenServicio">Orden de servicio</label>
+                  <input id="ordenServicio" class="form-control " type="number" aria-describedby="ordenServicioHelp"
+                    placeholder="Ingresar orden de servicio" />
+                  <small id="ordenServicioHelp" class="form-text text-muted">Campo opcional.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+                <!-- BASE IMPONIBLE -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="baseImponible">Base Imponible</label>
+                  <input required id="baseImponible" class="form-control " type="number" step="0.01"
+                    aria-describedby="baseImponibleHelp" placeholder="Ingresar base imponible de la factura" />
+                  <small id="ordenServicioHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+                <!-- IGV -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="igv">IGV (18%)</label>
+                  <input required id="igv" class="form-control disabled" type="number" step="0.01"
+                    aria-describedby="igvHelp" placeholder="Igv calculado" />
+                  <small id="igvHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+                <!-- SUB TOTAL -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="subTotal">Sub total</label>
+                  <input required id="subTotal" class="form-control " type="number" step="0.01"
+                    aria-describedby="subTotalHelp" placeholder="Sub total calulado" />
+                  <small id="subTotalHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+                <!-- OCPION DETRACCION -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="usoDetraccion">Uso de Detraccion</label>
+                  <select required id="usoDetraccion" class="form-control" aria-describedby="usoDetraccionHelp">
+                    <option value="NO" selected>NO</option>
+                    <option value="SI">SI</option>
+                  </select>
+                  <small id="usoDetraccionHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- DETRACCION -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="detraccion">Detraccion (4%)</label>
+                  <input required id="detraccion" class="form-control disabled" type="number" step="0.01"
+                    aria-describedby="detraccionHelp" placeholder="Detraccion calculado" value="0.00" />
+                  <small id="detraccionHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- TOTAL -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="totalFacturado">Total</label>
+                  <input required id="totalFacturado" class="form-control disabled" type="number" step="0.01"
+                    aria-describedby="totalFacturaHelp" placeholder="Total a cobrar calculado" />
+                  <small id="totalFacturaHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="actualizarDatosFactura(); return false">
+                  Actualizar
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                  Cerrar
+                </button>
+              </div>
+
+            </div>
+
+            <div class="tab-pane fade" id="tab-deposito" role="tabpanel" aria-labelledby="tab-deposito-tab">
+              <div class="form-row">
+                <input type="hidden" id="deposito" value="0">
+                <div class="w-100"></div>
+
+                <!-- FECHA DEPOSITO -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="fechaDeposito">Fecha Deposito</label>
+                  <input required id="fechaDeposito" class="form-control " type="date"
+                    aria-describedby="fechaDepositoHelp" placeholder="Ingresar fecha deposito" />
+                  <small id="fechaDepositoHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- ENTIDAD BANCARIA -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="entidadBancaria">Entidad Bancaria</label>
+                  <select required id="entidadBancaria" class="form-control" aria-describedby="entidadBancariaHelp">
+                    <option value="BCP">BCP</option>
+                    <option value="BBVA">BBVA</option>
+                    <option value="SCOTIABANK">SCOTIABANK</option>
+                    <option value="INTERBANK">INTERBANK</option>
+                    <option value="MIBANCO">MIBANCO</option>
+                  </select>
+                  <small id="entidadBancariaHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- FORMA DE PAGO -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="formaPago">Forma de Pago</label>
+                  <select required id="formaPago" class="form-control" aria-describedby="formaPagoHelp">
+                    <option value="TRANSFERENCIA">TRANSFERENCIA</option>
+                    <option value="DEPOSITO">DEPOSITO</option>
+                  </select>
+                  <small id="formaPagoHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+                <!-- NUMERO CENTRO -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="numeroCentro">Numero Centro</label>
+                  <input required id="numeroCentro" class="form-control " type="number"
+                    aria-describedby="numeroCentroHelp" placeholder="Ingresar el numero centro de la operacion" />
+                  <small id="numeroCentroHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- NUMERO OPERACION -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="numeroOperacion">Numero Operacion</label>
+                  <input required id="numeroOperacion" class="form-control" type="number"
+                    aria-describedby="numeroOperacionHelp" placeholder="Numero operacion de la factura" />
+                  <small id="numeroOperacionHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+              </div>
+
+              <div class="modal-footer" id="depositoRegistrar">
+                <button type="button" onclick="registrarDatosDeposito();return false" class="btn btn-primary">
+                  Registrar
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                  Cerrar
+                </button>
+              </div>
+              <div class="modal-footer" id="depositoActualizar">
+                <button type="button" onclick="actualizarDatosDeposito();return false" class="btn btn-primary">
+                  Actualizar
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                  Cerrar
+                </button>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="tab-nota-credito" role="tabpanel" aria-labelledby="tab-nota-credito-tab">
+
+              <div class="form-row">
+
+                <input type="hidden" id="notaCredito" value="0">
+                <div class="w-100"></div>
+
+                <!-- FECHA DEPOSITO -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="fechaNotaCredito">Fecha Nota Credito</label>
+                  <input required id="fechaNotaCredito" class="form-control " type="date"
+                    aria-describedby="fechaNotaCreditoHelp" placeholder="Ingresar fecha nota de credito" />
+                  <small id="fechaNotaCreditoHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- SERIE -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="serieNotaCredito">Serie Nota Credito</label>
+                  <input required id="serieNotaCredito" onkeyup="obtenerMayuscula(this);" class="form-control"
+                    type="string" aria-describedby="serieNotaCreditoHelp"
+                    placeholder="Ingresar serie de la nota de credito" />
+                  <small id="serieNotaCreditoHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- NUMERO -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="numeroNotaCredito">Numero Nota Credito</label>
+                  <input required id="numeroNotaCredito" onblur="autoCompletarCeros(this);" class="form-control"
+                    type="string" maxlength="8" aria-describedby="numeroNotaCreditoaHelp"
+                    placeholder="Ingresar numero de la nota de credito" />
+                  <small id="numeroNotaCreditoaHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+                <!-- BASE IMPONIBLE -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="baseImponibleNotaCredito">Base Imponible</label>
+                  <input required id="baseImponibleNotaCredito" class="form-control " type="number" step="0.01"
+                    aria-describedby="baseImponibleNotaCreditoHelp"
+                    placeholder="Ingresar base imponible de la nota de credito" />
+                  <small id="baseImponibleNotaCreditoHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- IGV -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="igvNotaCredito">IGV (18%)</label>
+                  <input required id="igvNotaCredito" class="form-control disabled" type="number" step="0.01"
+                    aria-describedby="igvNotaCreditoHelp" placeholder="Igv calculado de la nota de credito" />
+                  <small id="igvNotaCreditoHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <!-- SUB TOTAL -->
+                <div class="col-12 col-md form-group">
+                  <label class="col-form-label font-weight-bold" for="totalNotaCredito">Total Nota de credito</label>
+                  <input required id="totalNotaCredito" class="form-control " type="number" step="0.01"
+                    aria-describedby="totalNotaCreditoHelp" placeholder="Total calulado de la nota de credito" />
+                  <small id="totalNotaCreditoHelp" class="form-text text-muted">Campo obligatorio.</small>
+                </div>
+
+                <div class="w-100"></div>
+
+              </div>
+
+              <div class="modal-footer" id="notaCreditoRegistrar">
+                <button type="button" onclick="registrarDatosNotaCredito();return false" class="btn btn-primary">
+                  Registrar
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                  Cerrar
+                </button>
+              </div>
+              <div class="modal-footer" id="notaCreditoActualizar">
+                <button type="button" onclick="actualizarDatosNotaCredito();return false" class="btn btn-primary">
+                  Actualizar
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                  Cerrar
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
 <!--ARCHIVOS JS DE LA VISTA-->
+<script src="Bootstrap/js/select2.min.js"></script>
+<link href="Bootstrap/css/select2.min.css" rel="stylesheet" />
 <script type="text/javascript" src="Modulos/ModContabilidad/VistaContabilidad.js"></script>
 <script type="text/javascript" src="Bootstrap/js/tablaDinamica.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/validator/13.6.0/validator.min.js"></script>
+<!-- SheetJS para exportar a Excel -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script type="text/javascript">
+  // Column keys for export (same order as headers)
+  var exportColumnKeys = ['factura', 'cliente', 'ruc', 'razon_social', 'orden_servicio', 'total_cobrar', 'fecha_registro', 'estado'];
+  var tablaFacturas = null;
 
   /*=============================================
-    - CARGAR FACTURAS - DOCUMENTO
+    - CARGAR FACTURAS DEPOSITO - DOCUMENTO
   =============================================*/
 
-  mostrarDatosFacturas()
+  $(document).ready(function () {
+    guiasSeleccionadas = [];
+    const now = new Date();
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+    document.querySelector("#fechaInicio").valueAsDate = firstDay;
+    document.querySelector("#fechaFin").valueAsDate = now;
+    mostrarDatosFacturas();
+    mostrarEstadosFactura();
+  });
+
+  /*=============================================
+    - MOSTRAR CALCULO FACTURA
+  =============================================*/
+
+  $("#baseImponible").change(function () {
+    const baseImponible = $("#baseImponible").val();
+    if (baseImponible.length > 0) {
+      const igv = Number(baseImponible) * 0.18;
+      const subTotal = Number(baseImponible) * 1.18;
+      $("#baseImponible").val(Number(baseImponible).toFixed(2));
+      $("#igv").val(igv.toFixed(2));
+      $("#subTotal").val(subTotal.toFixed(2));
+      const usoDetraccion = $("#usoDetraccion").val();
+      if (usoDetraccion === "SI") {
+        const detraccion = Number(subTotal) * 0.04;
+        const totalFacturado = Number(subTotal) * 0.96;
+        $("#detraccion").val(detraccion.toFixed(2));
+        $("#totalFacturado").val(totalFacturado.toFixed(2));
+        $("#totalFacturado").val(subTotal.toFixed(2));
+      } else {
+        $("#detraccion").val("0.00");
+        $("#totalFacturado").val(subTotal.toFixed(2));
+      }
+    } else {
+      $("#baseImponible").val("0.00");
+      $("#igv").val("0.00");
+      $("#subTotal").val("0.00");
+      $("#detraccion").val("0.00");
+      $("#totalFacturado").val("0.00");
+    }
+  });
+
+  $("#subTotal").change(function () {
+    const subTotal = $("#subTotal").val();
+    if (subTotal.length > 0) {
+      const baseImponible = Number(subTotal) / 1.18;
+      const igv = Number(baseImponible) * 0.18;
+      $("#baseImponible").val(Number(baseImponible).toFixed(2));
+      $("#igv").val(igv.toFixed(2));
+      $("#subTotal").val(Number(subTotal).toFixed(2));
+      const usoDetraccion = $("#usoDetraccion").val();
+      if (usoDetraccion === "SI") {
+        const detraccion = Number(subTotal) * 0.04;
+        const totalFacturado = Number(subTotal) * 0.96;
+        $("#detraccion").val(detraccion.toFixed(2));
+        $("#totalFacturado").val(totalFacturado.toFixed(2));
+      } else {
+        $("#detraccion").val("0.00");
+        $("#totalFacturado").val(Number(subTotal).toFixed(2));
+      }
+    } else {
+      $("#baseImponible").val("0.00");
+      $("#igv").val("0.00");
+      $("#subTotal").val("0.00");
+      $("#detraccion").val("0.00");
+      $("#totalFacturado").val("0.00");
+    }
+  });
+
+  $("#usoDetraccion").change(function () {
+    const usoDetraccion = $("#usoDetraccion").val();
+    const subTotal = $("#subTotal").val();
+    if (usoDetraccion === "SI") {
+      if (subTotal.length > 0) {
+        const detraccion = Number(subTotal) * 0.04;
+        const totalFacturado = Number(subTotal) * 0.96;
+        $("#detraccion").val(detraccion.toFixed(2));
+        $("#totalFacturado").val(totalFacturado.toFixed(2));
+      }
+    } else {
+      if (subTotal.length > 0) {
+        $("#detraccion").val("0.00");
+        $("#totalFacturado").val(Number(subTotal).toFixed(2));
+      }
+    }
+  });
+
+  $("#baseImponibleNotaCredito").change(function () {
+    const baseImponible = $("#baseImponibleNotaCredito").val();
+    if (baseImponible.length > 0) {
+      const igv = Number(baseImponible) * 0.18;
+      const total = Number(baseImponible) * 1.18;
+      $("#baseImponibleNotaCredito").val(Number(baseImponible).toFixed(2));
+      $("#igvNotaCredito").val(igv.toFixed(2));
+      $("#totalNotaCredito").val(total.toFixed(2));
+    } else {
+      $("#baseImponibleNotaCredito").val("0.00");
+      $("#igvNotaCredito").val("0.00");
+      $("#totalNotaCredito").val("0.00");
+    }
+  });
+
+  $("#totalNotaCredito").change(function () {
+    const total = $("#totalNotaCredito").val();
+    if (total.length > 0) {
+      const baseImponible = Number(total) / 1.18;
+      const igv = Number(baseImponible) * 0.18;
+      $("#totalNotaCredito").val(Number(total).toFixed(2));
+      $("#igvNotaCredito").val(igv.toFixed(2));
+      $("#baseImponibleNotaCredito").val(baseImponible.toFixed(2));
+    } else {
+      $("#baseImponibleNotaCredito").val("0.00");
+      $("#igvNotaCredito").val("0.00");
+      $("#totalNotaCredito").val("0.00");
+    }
+  });
+
+  /*=============================================
+    - MOSTRAR ESTADOS FACTURA
+  =============================================*/
+
+  async function mostrarEstadosFactura() {
+    const datos = await obtenerEstadosFactura();
+    var tablaEstados = "";
+    for (const estado of datos) {
+      tablaEstados += `
+          <option value=${estado.id_estado_factura}>
+            ${estado.descripcion}
+          </option>
+        `;
+    }
+    $("#estadosFactura").html(tablaEstados);
+  }
 
   /*=============================================
     - MOSTRAR FACTURAS
   =============================================*/
 
   async function mostrarDatosFacturas() {
-    const datos = await cargarListadoFacturas();
-    var tablaFacturas = "";
-    if (Array.isArray(datos)) {
-      for (const factura of datos) {
-        let badgeClass = "";
-        if (factura.id_estado_factura == "1") {
-          badgeClass = "bg-warning";
-        } else if (factura.id_estado_factura == "2") {
-          badgeClass = "bg-success";
-        } else if (factura.id_estado_factura == "3") {
-          badgeClass = "bg-danger";
-        }
-        tablaFacturas += `
-        <tr onclick="opcionesEliminarFactura('${factura.id_factura}', '${factura.id_factura_deposito}', '${factura.id_nota_credito}')" >
-          <td>${factura.serie_factura} - ${factura.numero_factura}</td>
-          <td>${factura.cliente}</td>
-          <td>${factura.ruc}</td>
-          <td>${factura.razon_social}</td>
-          <td>${factura.orden_servicio}</td>
-          <td>S/ ${factura.total_cobrar}</td>
-          <td>${factura.fecha_registro}</td>
-          <td>
-            <span class="badge ${badgeClass}">${factura.estado}</span>  
-          </td>
-        </tr>
-      `;
-      }
-      $("#cuerpoTabla").html(tablaFacturas);
+    const fechaInicio = $("#fechaInicio").val();
+    const fechaFin = $("#fechaFin").val();
+    const datos = await cargarListadoFacturas({
+      _fechaInicio: fechaInicio ? fechaInicio.concat(" 00:00:00") : undefined,
+      _fechaFin: fechaFin ? fechaFin.concat(" 23:59:59") : undefined
+    });
+
+    const filas = Array.isArray(datos) ? datos.map((factura) => {
+      return {
+        id_factura: factura.id_factura,
+        id_factura_deposito: factura.id_factura_deposito,
+        id_nota_credito: factura.id_nota_credito,
+        cliente: factura.cliente,
+        ruc: factura.ruc,
+        razon_social: factura.razon_social,
+        orden_servicio: factura.orden_servicio,
+        factura: `${factura.serie_factura} - ${factura.numero_factura}`,
+        total_cobrar: factura.total_cobrar,
+        fecha_registro: factura.fecha_registro,
+        id_estado_factura: factura.id_estado_factura,
+        estado: factura.estado,
+      };
+    }) : [];
+
+    if (!tablaFacturas) {
+      tablaFacturas = $("#tablaListado").DataTable({
+        data: filas,
+        columns: [
+          { data: "factura", title: "FACTURA" },
+          { data: "cliente", title: "CLIENTE" },
+          { data: "ruc", title: "RUC" },
+          { data: "razon_social", title: "RAZON SOCIAL" },
+          { data: "orden_servicio", title: "ORDEN SERVICIO" },
+          { data: "total_cobrar", title: "TOTAL COBRAR", render: $.fn.dataTable.render.number(',', '.', 2, 'S/ ') },
+          { data: "fecha_registro", title: "FECHA REGISTRO" },
+          {
+            data: 'estado',
+            title: "ESTADO",
+            render: function (data, type, row) {
+              if (type === 'display') {
+                const badgeClass = row.id_estado_factura == "1" ? "bg-warning" : row.id_estado_factura == "2" ? "bg-success" : "bg-danger";
+                return `<span class="badge ${badgeClass}">${data}</span>`;
+              }
+              return data;
+            }
+          },
+          {
+            data: null,
+            title: "ACCION",
+            orderable: false,
+            searchable: false,
+            className: 'no-export',
+            render: function (data, type, row) {
+              if (type === 'display') {
+                return `
+                  <button class='btn btn-sm btn-primary mr-1' onclick='ventanaFacturaEditar(${row.id_factura}); return false'><i class='fas fa-edit'></i></button>
+                  <button class='btn btn-sm btn-danger' onclick='opcionesEliminarFactura(${row.id_factura}, ${row.id_factura_deposito}, ${row.id_nota_credito})'><i class='fas fa-trash'></i></button>
+                `;
+              }
+              return '';
+            }
+          }
+        ],
+        dom: "Bfrtip",
+        lengthMenu: [
+          [10, 25, 50, -1],
+          ["VER 10 FILAS", "VER 25 FILAS", "VER 50 FILAS", "TODO"],
+        ],
+        order: [[6, 'desc']],
+        buttons: [
+          {
+            extend: "pageLength",
+            text: "VER 10 FILAS",
+          },
+          {
+            extend: "print",
+            title: "LISTADO DEPOSITO",
+            text: "IMPRIMIR",
+            exportOptions: { columns: ':not(.no-export)', orthogonal: 'export' }
+          },
+          {
+            extend: "pdfHtml5",
+            download: "open",
+            title: "LISTADO DEPOSITO",
+            text: "EXPORTAR PDF",
+            orientation: 'landscape',
+            pageSize: 'A4',
+            exportOptions: { columns: ':not(.no-export)', orthogonal: 'export' }
+          },
+        ],
+      });
     } else {
-      $("#cuerpoTabla").html(tablaFacturas);
+      tablaFacturas.clear();
+      if (filas.length) tablaFacturas.rows.add(filas);
+      tablaFacturas.draw(false);
+    }
+  }
+
+  /*=============================================
+    - MOSTRAR GUIAS SIN FACTURAR
+  =============================================*/
+
+  async function mostrarGuiasFactura($factura) {
+    const datos = await cargarGuiasFactura($factura);
+    var tablaGuias = "";
+    guiasSeleccionadas = [];
+    if (Array.isArray(datos)) {
+      guiasSeleccionadas = guiasSeleccionadas.concat(datos);
+      for (const guia of datos) {
+        const idGuia = encodeURIComponent(guia.id_guia);
+        const serieGuia = encodeURIComponent(guia.serie_guia);
+        const numeroGuia = encodeURIComponent(guia.numero_guia);
+        const ordenCompra = encodeURIComponent(guia.orden_compra);
+        const codigoCotizacion = encodeURIComponent(guia.codigo_cotizacion);
+
+        tablaGuias += `<li>
+                          <input type="checkbox" checked onchange="mostrarClienteSucursales();return false" name="guias" value="${idGuia}">
+                          <div class="guia-item"><strong>GUIA</strong>: ${serieGuia} - ${numeroGuia}</div>
+                          <div class="guia-item"><strong>ORDEN COMPRA</strong>: ${ordenCompra}</div>
+                          <div class="guia-item"><strong>COTIZACION</strong>: ${codigoCotizacion}</div>
+                      </li>`;
+      }
+    }
+    $("#guiaList").html(tablaGuias);
+  }
+
+  /*=============================================
+    - MOSTRAR GUIAS SIN FACTURAR
+  =============================================*/
+
+  async function mostrarGuiasSinFactura() {
+    const datos = await cargarGuiasSinFactura();
+    var tablaGuias = "";
+    if (Array.isArray(datos)) {
+      for (const guia of datos) {
+        const idGuia = encodeURIComponent(guia.id_guia);
+        const serieGuia = encodeURIComponent(guia.serie_guia);
+        const numeroGuia = encodeURIComponent(guia.numero_guia);
+        const ordenCompra = encodeURIComponent(guia.orden_compra);
+        const codigoCotizacion = encodeURIComponent(guia.codigo_cotizacion);
+
+        tablaGuias += `<li>
+                          <input type="checkbox" onchange="mostrarClienteSucursales();return false" name="guias" value="${idGuia}">
+                          <div class="guia-item"><strong>GUIA</strong>: ${serieGuia} - ${numeroGuia}</div>
+                          <div class="guia-item"><strong>ORDEN COMPRA</strong>: ${ordenCompra}</div>
+                          <div class="guia-item"><strong>COTIZACION</strong>: ${codigoCotizacion}</div>
+                      </li>`;
+      }
+    }
+    $("#guiaList").append(tablaGuias);
+  }
+
+  /*=============================================
+    - FILTRAR GUIAS
+  =============================================*/
+
+  function filtrarGuias() {
+    const input = document.getElementById('buscarGuia').value.toLowerCase();
+    const items = document.querySelectorAll('#guiaList li');
+
+    items.forEach(item => {
+      const texto = item.textContent.toLowerCase();
+      item.style.display = texto.includes(input) ? '' : 'none';
+    });
+  }
+
+  /*=============================================
+    - MOSTRAR CLIENTE SUCURSALES
+  =============================================*/
+
+  async function mostrarClienteSucursales() {
+
+    const checkboxes = document.querySelectorAll('input[name="guias"]:checked');
+    const guias = Array.from(checkboxes).map(checkbox => ({ id_guia: Number(checkbox.value) }));
+    const clientes = []
+    var tablaSucursales = "<option value = '0' selected disabled> Elegir Guia</option>";
+    if (guias.length > 0) {
+
+      for await (const guia of guias) {
+        const datos = await cargarDatosGuiaId({ _idGuia: guia.id_guia });
+        clientes.push(datos.id_cliente);
+      }
+      const sucursales = new Set(clientes);
+      const resultado = await cargarListadoClienteSucursales({ _idCliente: Array.from(sucursales).toString() });
+      tablaSucursales = "<option value = '0' selected disabled> Elegir Cliente</option>";
+      for (const sucursal of resultado) {
+        tablaSucursales += `<option value='${sucursal.id_cliente_sucursal}'> ${sucursal.ruc} ${sucursal.razon_social}</option>`;
+      }
+    }
+    const cliente = Number($("#cliente").val() ?? 0);
+    $("#cliente").html(tablaSucursales);
+    $("#cliente").select2();
+    $("#cliente").val(cliente).trigger('change');
+  }
+
+  /*=============================================
+    - MODAL EDITAR FACTURA
+  =============================================*/
+
+  async function ventanaFacturaEditar(idFactura) {
+    const modalGuia = new bootstrap.Modal(
+      document.getElementById("infoFactura")
+    );
+
+    const datos = await cargarDatosFacturaId({
+      _idFactura: idFactura
+    });
+
+    $("#codigo").html(datos.id_factura);
+    $("#fechaRegistro").html(datos.fecha_registro);
+    $("#estadoInicialFactura").val(datos.id_estado_factura);
+    $("#estadosFactura").val(datos.id_estado_factura);
+    $("#serieFactura").val(datos.serie_factura);
+    $("#numeroFactura").val(datos.numero_factura);
+    $("#fechaVencimiento").val(datos.fecha_vencimiento);
+    $("#tipoCredito").val(datos.tipo_credito);
+    $("#ordenServicio").val(datos.orden_servicio);
+    $("#baseImponible").val(datos.base_imponible);
+    $("#igv").val(datos.igv);
+    $("#subTotal").val(datos.subtotal);
+    if (Number(datos.detraccion) === 0) {
+      $("#usoDetraccion").val("NO");
+    } else {
+      $("#usoDetraccion").val("SI");
+    }
+    $("#detraccion").val(datos.detraccion);
+    $("#totalFacturado").val(datos.total_cobrar);
+    await mostrarGuiasFactura({ _idFactura: idFactura });
+    await mostrarGuiasSinFactura();
+    await mostrarClienteSucursales();
+    await cargarDatosDeposito(idFactura);
+    await cargarDatosNotaCredito(idFactura);
+    $("#cliente").val(datos.id_cliente_sucursal).trigger('change');
+    modalGuia.show();
+  }
+
+  /*=============================================
+    - MOSTRAR DATOS FACTURA - DEPOSITO
+  =============================================*/
+
+  async function cargarDatosDeposito(idFactura) {
+    const datos = await cargarDepositoIdFactura({
+      _idFactura: idFactura
+    });
+    if (datos.response === 0) {
+      document.querySelector("#fechaDeposito").valueAsDate = new Date();
+      document.getElementById("depositoActualizar").classList.add("d-none");
+      document.getElementById("depositoRegistrar").classList.remove("d-none");
+      $("#deposito").val("");
+      $("#entidadBancaria").val("");
+      $("#formaPago").val("");
+      $("#numeroCentro").val("");
+      $("#numeroOperacion").val("");
+    } else {
+      document.getElementById("depositoActualizar").classList.remove("d-none");
+      document.getElementById("depositoRegistrar").classList.add("d-none");
+      $("#deposito").val(datos.id_factura_deposito);
+      $("#fechaDeposito").val(datos.fecha_deposito);
+      $("#entidadBancaria").val(datos.entidad_bancaria);
+      $("#formaPago").val(datos.forma_pago);
+      $("#numeroCentro").val(datos.numero_centro);
+      $("#numeroOperacion").val(datos.numero_operacion);
+    }
+  }
+
+  /*=============================================
+    - MOSTRAR DATOS FACTURA - NOTA CREDITO
+  =============================================*/
+
+  async function cargarDatosNotaCredito(idFactura) {
+    const datos = await cargarNotaCreditoIdFactura({
+      _idFactura: idFactura
+    });
+    if (datos.response === 0) {
+      document.querySelector("#fechaNotaCredito").valueAsDate = new Date();
+      document.getElementById("notaCreditoActualizar").classList.add("d-none");
+      document.getElementById("notaCreditoRegistrar").classList.remove("d-none");
+      $("#notaCredito").val("");
+      $("#serieNotaCredito").val("");
+      $("#numeroNotaCredito").val("");
+      $("#baseImponibleNotaCredito").val("");
+      $("#igvNotaCredito").val("");
+      $("#totalNotaCredito").val("");
+    } else {
+      document.getElementById("notaCreditoActualizar").classList.remove("d-none");
+      document.getElementById("notaCreditoRegistrar").classList.add("d-none");
+      $("#notaCredito").val(datos.id_nota_credito);
+      $("#fechaNotaCredito").val(datos.fecha_nota_credito);
+      $("#serieNotaCredito").val(datos.serie_nota_credito);
+      $("#numeroNotaCredito").val(datos.numero_nota_credito);
+      $("#baseImponibleNotaCredito").val(datos.base_imponible);
+      $("#igvNotaCredito").val(datos.igv);
+      $("#totalNotaCredito").val(datos.total);
+    }
+  }
+
+  /*=============================================
+    - ACTUALIZAR LISTADO GUIAS - FACTURA
+  =============================================*/
+
+  async function actualizarListadoGuiasFactura() {
+    const factura = $("#codigo").html();
+    const checkboxes = document.querySelectorAll('input[name="guias"]:checked');
+    const guias = Array.from(checkboxes).map(checkbox => ({ id_guia: Number(checkbox.value) }));
+    const guiasRevisadas = guias.map(item => {
+      const verificarExistencia = guiasSeleccionadas.find(guia => guia.id_guia === item.id_guia);
+      if (verificarExistencia) {
+        return {
+          id_guia: verificarExistencia.id_guia,
+          id_guia_factura: verificarExistencia.id_guia_factura,
+        }
+      } else {
+        return { ...item };
+      }
+    });
+
+    const datosEliminar = await eliminarDatosGuiasFactura({
+      _idFactura: factura,
+      _guias: guiasRevisadas
+    });
+    const datosRegistrar = await registrarDatosGuiasFactura({
+      _idFactura: factura,
+      _guias: guiasRevisadas
+    });
+
+    if (datosEliminar.response === 1 && datosRegistrar.response === 1) {
+      Swal.fire({
+        icon: "success",
+        title: "Guias Factura",
+        text: datosRegistrar.message
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Guias Factura",
+        text: datosEliminar.message ?? datosRegistrar.message
+      });
     }
 
-    $("#tablaListado").DataTable({
-      dom: "Bfrtip",
-      lengthMenu: [
-        [10, 25, 50, -1],
-        ["VER 10 FILAS", "VER 25 FILAS", "VER 50 FILAS", "TODO"],
-      ],
-      order: [[6, 'desc']],
-      buttons: [
-        {
-          extend: "pageLength",
-          text: "VER 10 FILAS",
-        },
-        {
-          extend: "print",
-          title: "LISTADO FACTURA",
-          text: "IMPRIMIR",
-        },
-        {
-          extend: "pdfHtml5",
-          download: "open",
-          title: "LISTADO FACTURA",
-          text: "EXPORTAR PDF",
-        },
-      ],
+    await actualizarDatosEstadoFactura(datosRegistrar.message);
+    $("#closeModal").click();
+    await mostrarDatosFacturas();
+  }
+
+  /*=============================================
+    - ACTUALIZAR DATOS FACTURA
+  =============================================*/
+
+  async function actualizarDatosFactura() {
+    const factura = $("#codigo").html();
+    const serie = $("#serieFactura").val();
+    const numero = $("#numeroFactura").val();
+    const cliente = $("#cliente").val();
+    const fechaVencimiento = $("#fechaVencimiento").val();
+    const tipoCredito = $("#tipoCredito").val();
+    const ordenServicio = $("#ordenServicio").val();
+    const baseImponible = $("#baseImponible").val();
+    const igv = $("#igv").val();
+    const subTotal = $("#subTotal").val();
+    const detraccion = $("#detraccion").val();
+    const totalFacturado = $("#totalFacturado").val();
+    const checkboxes = document.querySelectorAll('input[name="guias"]:checked');
+    const guias = Array.from(checkboxes).map(checkbox => ({ id_guia: Number(checkbox.value) }));
+    const info = {
+      icon: "error",
+      title: "Campo Inválido",
+    };
+
+    if (guias.length === 0) {
+      info.text = "Debe seleccionar al menos una guía para la factura";
+    } else if (!validator.isLength(fechaVencimiento, { min: 8 })) {
+      info.text = "El campo fecha de vencimiento debe ser seleccionado";
+    } else if (!validator.isLength(baseImponible, { min: 1 })) {
+      info.text = "El campo base imponible no puede estar vacío";
+    } else if (!validator.isLength(igv, { min: 1 })) {
+      info.text = "El campo igv no puede estar vacío";
+    } else if (!validator.isLength(subTotal, { min: 1 })) {
+      info.text = "El campo subtotal no puede estar vacío";
+    } else if (Number(baseImponible) === 0) {
+      info.text = "La base imponible no puede ser 0.00";
+    }
+
+    if (info.text) {
+      cerrarLoader();
+      Swal.fire(info);
+      return false;
+    }
+
+    const datos = await actualizarFactura({
+      _idFactura: factura,
+      _serie: serie,
+      _numero: numero,
+      _cliente: cliente,
+      _fechaVencimiento: fechaVencimiento,
+      _tipoCredito: tipoCredito,
+      _ordenServicio: ordenServicio,
+      _baseImponible: baseImponible,
+      _igv: igv,
+      _subtotal: subTotal,
+      _detraccion: detraccion,
+      _total: totalFacturado
     });
+
+    if (datos.response === 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Factura",
+        text: datos.message,
+      });
+    } else {
+      Swal.fire({
+        icon: "success",
+        title: "Factura",
+        text: datos.message,
+      });
+    }
+
+    await actualizarDatosEstadoFactura(datos.message);
+    $("#closeModal").click();
+    await mostrarDatosFacturas();
+  }
+
+  /*=============================================
+    - ACTUALIZAR DATOS ESTADO FACTURA
+  =============================================*/
+
+  async function actualizarDatosEstadoFactura(prevMessage = null) {
+
+    const estadoFacturaAnterior = $("#estadoInicialFactura").val();
+    const estadoFacturaNuevo = $("#estadosFactura").val();
+
+    if (estadoFacturaAnterior === estadoFacturaNuevo) {
+      return;
+    }
+
+    const datos = await actualizarEstadoFactura({
+      _idFactura: $("#codigo").html(),
+      _idEstadoFactura: estadoFacturaNuevo
+    });
+
+    if (datos.response === 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Estado Factura",
+        text: datos.message,
+      });
+    } else {
+      Swal.fire({
+        icon: "success",
+        title: "Estado Factura",
+        html: (prevMessage ? prevMessage + "<br>" : "") + datos.message,
+      });
+      $("#estadoInicialFactura").val(estadoFacturaNuevo);
+    }
+  }
+
+  /*=============================================
+    - REGISTRAR DATOS DEPOSITO
+  =============================================*/
+
+  async function registrarDatosDeposito() {
+    const idFactura = $("#codigo").html();
+    const fechaDeposito = $("#fechaDeposito").val();
+    const entidadBancaria = $("#entidadBancaria").val();
+    const formaPago = $("#formaPago").val();
+    const numeroCentro = $("#numeroCentro").val();
+    const numeroOperacion = $("#numeroOperacion").val();
+
+    const info = {
+      icon: "error",
+      title: "Campo Inválido",
+    };
+
+    if (!fechaDeposito) {
+      info.text = "El campo fecha de depósito debe ser seleccionado";
+    } else if (!entidadBancaria || !validator.isLength(entidadBancaria, { min: 3 })) {
+      info.text = "El campo entidad bancaria debe ser seleccionado";
+    } else if (!formaPago || !validator.isLength(formaPago, { min: 8 })) {
+      info.text = "El campo forma de pago debe ser seleccionado";
+    } else if (!numeroCentro || !validator.isLength(numeroCentro, { min: 1 })) {
+      info.text = "El campo numero centro no puede estar vacío";
+    } else if (!numeroOperacion || !validator.isLength(numeroOperacion, { min: 1 })) {
+      info.text = "El campo numero operacion no puede estar vacío";
+    }
+
+    if (info.text) {
+      Swal.fire(info);
+      return false;
+    }
+
+    const datos = await registrarDeposito({
+      _idFactura: idFactura,
+      _fechaDeposito: fechaDeposito,
+      _entidadBancaria: entidadBancaria,
+      _formaPago: formaPago,
+      _numeroCentro: numeroCentro,
+      _numeroOperacion: numeroOperacion
+    });
+
+    if (datos.response === 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Deposito",
+        text: datos.message
+      });
+    } else {
+      Swal.fire({
+        icon: "success",
+        title: "Deposito",
+        text: datos.message
+      });
+    }
+
+    await actualizarDatosEstadoFactura(datos.message);
+    $("#closeModal").click();
+    await mostrarDatosFacturas();
+  }
+
+  /*=============================================
+    - ACTUALIZAR DATOS DEPOSITO
+  =============================================*/
+
+  async function actualizarDatosDeposito() {
+    const idFactura = $("#codigo").html();
+    const idDeposito = $("#deposito").val();
+    const fechaDeposito = $("#fechaDeposito").val();
+    const entidadBancaria = $("#entidadBancaria").val();
+    const formaPago = $("#formaPago").val();
+    const numeroCentro = $("#numeroCentro").val();
+    const numeroOperacion = $("#numeroOperacion").val();
+
+    const info = {
+      icon: "error",
+      title: "Campo Inválido",
+    };
+
+    if (!fechaDeposito) {
+      info.text = "El campo fecha de depósito debe ser seleccionado";
+    } else if (!entidadBancaria || !validator.isLength(entidadBancaria, { min: 3 })) {
+      info.text = "El campo entidad bancaria debe ser seleccionado";
+    } else if (!formaPago || !validator.isLength(formaPago, { min: 8 })) {
+      info.text = "El campo forma de pago debe ser seleccionado";
+    } else if (!numeroCentro || !validator.isLength(numeroCentro, { min: 1 })) {
+      info.text = "El campo numero centro no puede estar vacío";
+    } else if (!numeroOperacion || !validator.isLength(numeroOperacion, { min: 1 })) {
+      info.text = "El campo numero operacion no puede estar vacío";
+    }
+
+    if (info.text) {
+      Swal.fire(info);
+      return false;
+    }
+
+    const datos = await actualizarDeposito({
+      _idFacturaDeposito: idDeposito,
+      _idFactura: idFactura,
+      _fechaDeposito: fechaDeposito,
+      _entidadBancaria: entidadBancaria,
+      _formaPago: formaPago,
+      _numeroCentro: numeroCentro,
+      _numeroOperacion: numeroOperacion
+    });
+
+    if (datos.response === 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Deposito",
+        text: datos.message
+      });
+    } else {
+      Swal.fire({
+        icon: "success",
+        title: "Deposito",
+        text: datos.message
+      });
+    }
+
+    await actualizarDatosEstadoFactura(datos.message);
+    $("#closeModal").click();
+    await mostrarDatosFacturas();
+  }
+
+  /*=============================================
+    - REGISTRAR DATOS NOTA CREDITO
+  =============================================*/
+
+  async function registrarDatosNotaCredito() {
+    const idFactura = $("#codigo").html();
+    const fechaNotaCredito = $("#fechaNotaCredito").val();
+    const serieNotaCredito = $("#serieNotaCredito").val();
+    const numeroNotaCredito = $("#numeroNotaCredito").val();
+    const baseImponibleNotaCredito = $("#baseImponibleNotaCredito").val();
+    const igvNotaCredito = $("#igvNotaCredito").val();
+    const totalNotaCredito = $("#totalNotaCredito").val();
+
+    const info = {
+      icon: "error",
+      title: "Campo Inválido",
+    };
+
+    if (!validator.isLength(fechaNotaCredito, { min: 8 })) {
+      info.text = "El campo fecha de nota de credito debe ser seleccionado";
+    } else if (!validator.isLength(serieNotaCredito, { min: 2 })) {
+      info.text = "El campo serie nota de credito debe tener una longitud minima de 2 caracteres";
+    } else if (!validator.isLength(numeroNotaCredito, { min: 1 })) {
+      info.text = "El campo numero nota de credito no debe ir vacio";
+    } else if (!validator.isLength(baseImponibleNotaCredito, { min: 1 })) {
+      info.text = "El campo base imponible no debe ir vacio";
+    } else if (!validator.isLength(igvNotaCredito, { min: 1 })) {
+      info.text = "El campo igv no debe ir vacio";
+    } else if (!validator.isLength(totalNotaCredito, { min: 1 })) {
+      info.text = "El campo total no debe ir vacio";
+    }
+
+    if (info.text) {
+      Swal.fire(info);
+      return false;
+    }
+
+    const datos = await registrarNotaCredito({
+      _idFactura: idFactura,
+      _fechaNotaCredito: fechaNotaCredito,
+      _serieNotaCredito: serieNotaCredito,
+      _numeroNotaCredito: numeroNotaCredito,
+      _baseImponible: baseImponibleNotaCredito,
+      _igv: igvNotaCredito,
+      _total: totalNotaCredito
+    });
+
+    if (datos.response === 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Nota de credito",
+        text: datos.message
+      });
+    } else {
+      Swal.fire({
+        icon: "success",
+        title: "Nota de credito",
+        text: datos.message
+      });
+    }
+    await actualizarDatosEstadoFactura(datos.message);
+    $("#closeModal").click();
+    await mostrarDatosFacturas();
+  }
+
+  /*=============================================
+    - ACTUALIZAR DATOS NOTA CREDITO
+  =============================================*/
+
+  async function actualizarDatosNotaCredito() {
+    const idFactura = $("#codigo").html();
+    const idNotaCredito = $("#notaCredito").val();
+    const fechaNotaCredito = $("#fechaNotaCredito").val();
+    const serieNotaCredito = $("#serieNotaCredito").val();
+    const numeroNotaCredito = $("#numeroNotaCredito").val();
+    const baseImponibleNotaCredito = $("#baseImponibleNotaCredito").val();
+    const igvNotaCredito = $("#igvNotaCredito").val();
+    const totalNotaCredito = $("#totalNotaCredito").val();
+
+    const info = {
+      icon: "error",
+      title: "Campo Inválido",
+    };
+
+    if (!fechaNotaCredito) {
+      info.text = "El campo fecha de nota de credito debe ser seleccionado";
+    } else if (!serieNotaCredito || !validator.isLength(serieNotaCredito, { min: 2 })) {
+      info.text = "El campo serie nota de credito debe tener una longitud minima de 2 caracteres";
+    } else if (!numeroNotaCredito || !validator.isLength(numeroNotaCredito, { min: 1 })) {
+      info.text = "El campo numero nota de credito no debe ir vacio";
+    } else if (!baseImponibleNotaCredito || !validator.isLength(baseImponibleNotaCredito, { min: 1 })) {
+      info.text = "El campo base imponible no debe ir vacio";
+    } else if (!igvNotaCredito || !validator.isLength(igvNotaCredito, { min: 1 })) {
+      info.text = "El campo igv no debe ir vacio";
+    } else if (!totalNotaCredito || !validator.isLength(totalNotaCredito, { min: 1 })) {
+      info.text = "El campo total no debe ir vacio";
+    }
+
+    if (info.text) {
+      Swal.fire(info);
+      return false;
+    }
+
+    const datos = await actualizarNotaCredito({
+      _idNotaCredito: idNotaCredito,
+      _idFactura: idFactura,
+      _fechaNotaCredito: fechaNotaCredito,
+      _serieNotaCredito: serieNotaCredito,
+      _numeroNotaCredito: numeroNotaCredito,
+      _baseImponible: baseImponibleNotaCredito,
+      _igv: igvNotaCredito,
+      _total: totalNotaCredito
+    });
+
+    if (datos.response === 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Nota de credito",
+        text: datos.message
+      });
+    } else {
+      Swal.fire({
+        icon: "success",
+        title: "Nota de credito",
+        text: datos.message
+      });
+    }
+    await actualizarDatosEstadoFactura(datos.message);
+    $("#closeModal").click();
+    await mostrarDatosFacturas();
   }
 
   /*=============================================
     - OPCIONES ELIMINAR FACTURAS
   =============================================*/
 
-  async function opcionesEliminarFactura(id_factura, id_factura_deposito, id_nota_credito) {
+  async function opcionesEliminarFactura(idFactura, idFacturaDeposito, idNotaCredito) {
     Swal.fire({
       title: "¿Deseas eliminar esta factura? Se eliminará el depósito y/o nota de crédito asociado",
       showCancelButton: true,
@@ -109,36 +1335,63 @@
     }).then(async (result) => {
       if (result.isConfirmed) {
 
-        if (id_factura_deposito) {
+        if (idFacturaDeposito) {
           await eliminarFacturaDeposito({
-            _idFacturaDeposito: id_factura_deposito
+            _idFacturaDeposito: idFacturaDeposito
           })
         }
 
-        if (id_nota_credito) {
+        if (idNotaCredito) {
           await eliminarNotaCredito({
-            _idNotaCredito: id_nota_credito
+            _idNotaCredito: idNotaCredito
           })
         }
 
         await eliminarDatosGuiasFactura({
-          _idFactura: id_factura
+          _idFactura: idFactura
         });
 
         await eliminarFactura({
-          _idFactura: id_factura
+          _idFactura: idFactura
         });
 
 
-        ventanaFacturaListar();
+        await mostrarDatosFacturas();
 
         Swal.fire({
           icon: "success",
-          title: "Factura eliminada",
+          title: "Factura",
           text: "La factura se eliminó correctamente",
         });
 
       }
     });
   }
+
+  /*=============================================
+    - EXPORTAR A EXCEL
+  =============================================*/
+
+  function exportarExcel() {
+    let data = [];
+    let headers = [];
+    // obtener headers visibles (sin .no-export)
+    $('#tablaListado thead th').not('.no-export').each(function () {
+      headers.push($(this).text());
+    });
+    data.push(headers);
+    if (tablaFacturas) {
+      const rows = tablaFacturas.rows({ search: 'applied' }).data().toArray();
+      for (const row of rows) {
+        const fila = exportColumnKeys.map(k => row[k] ?? '');
+        data.push(fila);
+      }
+    }
+    var ws = XLSX.utils.aoa_to_sheet(data);
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Reporte");
+    XLSX.writeFile(wb, "ReporteFacturas.xlsx");
+  }
+
+
 </script>

@@ -82,15 +82,15 @@ class Model_Guia
     CONSULTA: ACTUALIZAR GUIA
   ===========================================*/
 
-  function actualizarDatosGuia($serie, $numero, $fechaEmision, $idTransportista, $idCliente, $ordenCompra, $cotizacion, $remitente, $direccionRemitente, $destinatario, $direccionDestinatario, $largoGuia, $anchoGuia, $altoGuia, $idGuia)
+  function actualizarDatosGuia($serie, $numero, $fechaEmision, $idTransportista, $idCliente, $ordenCompra, $cotizacion, $remitente, $direccionRemitente, $destinatario, $direccionDestinatario, $largoGuia, $anchoGuia, $altoGuia, $idEstadoGuia, $idGuia)
   {
     // Preparar la consulta SQL con sentencia preparada
     $sql = "UPDATE guia SET serie_guia = ?, numero_guia = ? , fecha_emision = ?, id_transportista = ?, id_cliente = ?, orden_compra = ?,
     codigo_cotizacion = ?, id_sucursal_remitente = ?, direccion_remitente = ?, id_sucursal_destinatario = ?, direccion_destinatario = ?,
-    largo_guia = ?, ancho_guia = ? , alto_guia = ? WHERE id_guia = ?";
+    largo_guia = ?, ancho_guia = ? , alto_guia = ?, id_estado_guia = ? WHERE id_guia = ?";
 
     // Ejecutar la consulta con los parámetros
-    $params = array($serie, $numero, $fechaEmision, $idTransportista, $idCliente, $ordenCompra, $cotizacion, $remitente, $direccionRemitente, $destinatario, $direccionDestinatario, $largoGuia, $anchoGuia, $altoGuia, $idGuia);
+    $params = array($serie, $numero, $fechaEmision, $idTransportista, $idCliente, $ordenCompra, $cotizacion, $remitente, $direccionRemitente, $destinatario, $direccionDestinatario, $largoGuia, $anchoGuia, $altoGuia, $idEstadoGuia, $idGuia);
     $this->_conexion->ejecutar_sentencia($sql, $params);
     return $this->_conexion->insert_registro();
   }

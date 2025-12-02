@@ -131,6 +131,7 @@ CREATE TABLE `cliente_sucursal` (
 DROP TABLE IF EXISTS `configuracion_empresa`;
 CREATE TABLE `configuracion_empresa` (
   `ruc` varchar(20) NOT NULL,
+  `razon_social` varchar(100) NOT NULL,
   `direccion` text NOT NULL,
   `id_distrito` varchar(10) NOT NULL,
   `referencia` varchar(100) NOT NULL,
@@ -155,8 +156,8 @@ TRUNCATE TABLE `configuracion_empresa`;
 -- Volcado de datos para la tabla `configuracion_empresa`
 --
 
-INSERT INTO `configuracion_empresa` (`ruc`, `direccion`, `id_distrito`, `referencia`, `telefax`, `celular`, `correo_institucional`, `correo_personal`) VALUES
-('20563622319', 'Av. Elias Aguire Mz. 11V Lt.2', '150143', 'Tablada de Lurin', '01-2671930', '920030179', 'enkarga@gmail.com', 'roxana.operaciones@hotmail.com');
+INSERT INTO `configuracion_empresa` (`ruc`,`razon_social`, `direccion`, `id_distrito`, `referencia`, `telefax`, `celular`, `correo_institucional`, `correo_personal`) VALUES
+('20563622319', 'ENKARGA COURIER SAC', 'Av. Elias Aguire Mz. 11V Lt.2', '150143', 'Tablada de Lurin', '01-2671930', '920030179', 'enkarga@gmail.com', 'roxana.operaciones@hotmail.com');
 
 -- --------------------------------------------------------
 
@@ -2524,7 +2525,6 @@ CREATE TABLE `personal` (
   `apellidos` varchar(100) NOT NULL COMMENT 'Apellidos del personal',
   `tipo_documento` int(11) NOT NULL COMMENT 'Tipo documento del personal',
   `numero_documento` varchar(20) NOT NULL COMMENT 'Numero documento del personal',
-  `fecha_nacimiento` date NOT NULL COMMENT 'Fecha de nacimiento del personal',
   `correo` varchar(100) DEFAULT NULL COMMENT 'Correo del personal',
   `id_distrito` varchar(10) NOT NULL COMMENT 'Id distrito del personal',
   `direccion` varchar(100) NOT NULL COMMENT 'Direccion del personal',
@@ -2553,9 +2553,9 @@ TRUNCATE TABLE `personal`;
 -- Volcado de datos para la tabla `personal`
 --
 
-INSERT INTO `personal` (`id_personal`, `nombres`, `apellidos`, `tipo_documento`, `numero_documento`, `fecha_nacimiento`, `correo`, `id_distrito`, `direccion`, `telefono`, `celular`, `fecha_registro`, `id_estado`) VALUES
-(1, 'MIGUEL', 'RAMIREZ', 1, '78451245', '1978-03-01', 'miguel@gmail.com', '150116', 'Av Sta rosa de quilmes 102', NULL, NULL, '2024-03-17 00:55:22', 1),
-(4, 'JOSE ALBERTO', 'CACERES MENDIOLA', 1, '12121212', '1997-02-21', '', '130102', '', NULL, NULL, '2024-06-24 11:22:09', 1);
+INSERT INTO `personal` (`id_personal`, `nombres`, `apellidos`, `tipo_documento`, `numero_documento`, `correo`, `id_distrito`, `direccion`, `telefono`, `celular`, `fecha_registro`, `id_estado`) VALUES
+(1, 'MIGUEL', 'RAMIREZ', 1, '78451245', 'miguel@gmail.com', '150116', 'Av Sta rosa de quilmes 102', NULL, NULL, '2024-03-17 00:55:22', 1),
+(4, 'JOSE ALBERTO', 'CACERES MENDIOLA', 1, '12121212', '', '130102', '', NULL, NULL, '2024-06-24 11:22:09', 1);
 
 -- --------------------------------------------------------
 
@@ -2875,7 +2875,8 @@ TRUNCATE TABLE `tipo_documento`;
 INSERT INTO `tipo_documento` (`tipo_documento`, `descripcion`, `id_estado`) VALUES
 (1, 'DNI', 1),
 (2, 'CE', 1),
-(3, 'PASAPORTE', 1);
+(3, 'PASAPORTE', 1),
+(4, 'RUC', 1);
 
 -- --------------------------------------------------------
 

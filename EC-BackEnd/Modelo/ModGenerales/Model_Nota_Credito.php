@@ -40,16 +40,18 @@ class Model_Nota_Credito
     CONSULTA: LISTADO NOTA CREDITO
   ===========================================*/
 
-  function cargarListadoNotaCredito()
+  function cargarListadoNotaCredito($fechaInicio, $fechaFin)
   {
     // Preparar la consulta SQL con sentencia preparada
     $sql = "SELECT nc.id_nota_credito, nc.serie_nota_credito, nc.numero_nota_credito, nc.fecha_nota_credito, nc.total, nc.fecha_registro, 
     f.serie_factura, f.numero_factura, nc.base_imponible, nc.igv, nc.total, nc.id_factura
     FROM nota_credito nc
-    INNER JOIN factura f ON f.id_factura = nc.id_factura";
+    INNER JOIN factura f ON f.id_factura = nc.id_factura
+    WHERE nc.fecha_registro BETWEEN ? AND ? ORDER BY nc.fecha_registro DESC";
 
     // Ejecutar la consulta con los parámetros
-    $this->_conexion->ejecutar_sentencia($sql);
+    $params = array($fechaInicio, $fechaFin);
+    $this->_conexion->ejecutar_sentencia($sql, $params);
     return $this->_conexion->retorna_select();
   }
   /*===========================================

@@ -16,17 +16,156 @@
         <th>TELEFONO</th>
         <th>CELULAR</th>
         <th>ESTADO</th>
+        <th>ACCION</th>
       </tr>
     </thead>
     <tbody id="cuerpoTabla"></tbody>
   </table>
 </section>
 
+<div class="modal fade" id="infoTransportista" role="dialog" aria-labelledby="infoTransportistaLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header principal">
+        <h5 class="modal-title white-text font-weight-bold">
+          Informacion del Transportista
+        </h5>
+        <span id="codigo" class="badge badge-light badge-pill white-text font-weight-bold"></span>
+        <button id="closeModal" type="button" class="close white-text font-weight-bold" data-dismiss="modal"
+          aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <!--DATOS Empresa-->
+        <div class="form-row">
+
+          <!-- RUC -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="ruc">RUC</label>
+            <input required id="ruc" type="number" min="1"
+              oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              maxlength="11" class="form-control" aria-describedby="rucHelp"
+              placeholder="Ingresar ruc del transportista" />
+            <small id="rucHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <!--RAZON SOCIAL -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="razonSocial">Razon Social</label>
+            <input required id="razonSocial" class="form-control" onkeyup="obtenerMayuscula(this);" type="string"
+              aria-describedby="razonSocialHelp" placeholder="Ingresar razon social del transportista" />
+            <small id="razonSocialHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <div class="w-100"></div>
+
+          <!--CORREO  -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="correo">Correo</label>
+            <input required id="correo" class="form-control" type="string" aria-describedby="correoHelp"
+              placeholder="Ingresar correo del transportista" />
+            <small id="correoHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <!-- DEPARTAMENTO -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="departamento">Departamento</label>
+            <select required id="departamento" onchange="cargarProvincia(this.value);" class="form-control"></select>
+            <small id="correoHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <div class="w-100"></div>
+
+          <!-- PROVINCIA -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="provincia">Provincia</label>
+            <select required id="provincia" onchange="cargarDistrito(this.value);" class="form-control"></select>
+            <small id="correoHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <!-- DISTRITO -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="distrito">Distrito</label>
+            <select required id="distrito" class="form-control" aria-describedby="distritoHelp"></select>
+            <small id="distritoHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <div class="w-100"></div>
+
+          <!--DIRECCION DEL PROVEEDOR-->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="direccion">Direccion del transportista</label>
+            <input required id="direccion" class="form-control" type="string" aria-describedby="direccionHelp"
+              placeholder="Ingresar direccion del transportista" />
+            <small id="direccionHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <div class="w-100"></div>
+
+          <!-- TELEFONO -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="telefono">Telefono Empresa</label>
+            <input id="telefono" class="form-control" type="string" aria-describedby="telefonoHelp"
+              placeholder="Ingresar telefono del transportista" />
+            <small id="telefonoHelp" class="form-text text-muted">Campo opcional.</small>
+          </div>
+
+          <!-- CELULAR -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="celular">Celular Empresa</label>
+            <input id="celular" class="form-control" type="string" aria-describedby="celularHelp"
+              placeholder="Ingresar celular del transportista" />
+            <small id="celularHelp" class="form-text text-muted">Campo opcional.</small>
+          </div>
+
+
+          <div class="w-100"></div>
+
+          <!--ESTADO -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="estado">Estado</label>
+            <select required id="estado" class="form-control"></select>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="actualizarProveedor"
+          onclick="actualizarDatosProveedor(); return false" data-dismiss="modal">
+          Actualizar
+        </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="loader"></div>
+
 <!--ARCHIVOS JS DE LA VISTA-->
+<script src="Bootstrap/js/select2.min.js"></script>
+<link href="Bootstrap/css/select2.min.css" rel="stylesheet" />
 <script type="text/javascript" src="Modulos/ModClientes/VistaClientes.js"></script>
 <script type="text/javascript" src="Modulos/ModProveedor/VistaProveedor.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/validator/13.6.0/validator.min.js"></script>
 <script type="text/javascript" src="Bootstrap/js/tablaDinamica.js"></script>
 <script type="text/javascript">
+
+  function abrirLoader() {
+    document.getElementById("loader").style.display = "block";
+  }
+
+  function cerrarLoader() {
+    document.getElementById("loader").style.display = "none";
+  }
 
   /*=============================================
   - CARGAR PROVEEDORES -> DOCUMENTO
@@ -38,107 +177,262 @@
     - MOSTRAR PROVEEDORES
   =============================================*/
 
+  // variable para mantener la instancia de DataTable
+  var tablaProveedores = null;
+
   async function mostrarDatosProveedores() {
+    await cargarEstados();
     let datos = await obtenerDatosProveedores();
-    var tablaProveedores = "";
-    if (Array.isArray(datos)) {
-      for (const proveedor of datos) {
-        tablaProveedores += `
-          <tr>
-            <td>${proveedor.id_proveedor}</td>
-            <td>${proveedor.ruc}</td>
-            <td>${proveedor.razon_social}</td>
-            <td>${proveedor.distrito}</td>
-            <td>${proveedor.direccion}</td>
-            <td>${proveedor.correo}</td>
-            <td>${proveedor.telefono}</td>
-            <td>${proveedor.celular}</td>
-            <td class="editable">${proveedor.estado}</td>
-          </tr>
-        `;
-      }
-      $("#cuerpoTabla").html(tablaProveedores);
+
+    // convertir datos a formato de filas para DataTables
+    const filas = Array.isArray(datos)
+      ? datos.map((proveedor) => [
+        proveedor.id_proveedor,
+        proveedor.ruc,
+        proveedor.razon_social,
+        proveedor.distrito,
+        proveedor.direccion,
+        proveedor.correo,
+        proveedor.telefono,
+        proveedor.celular,
+        proveedor.estado,
+        ` <button class="btn btn-sm btn-primary" onclick="ventanaProveedorEditar(${proveedor.id_proveedor})"><i class="fas fa-edit"></i></button>`,
+      ])
+      : [];
+
+    // Inicializar DataTable una sola vez
+    if (!tablaProveedores) {
+      tablaProveedores = $("#tablaListado").DataTable({
+        data: filas,
+        columns: [
+          { title: "COD" },
+          { title: "RUC" },
+          { title: "RAZON SOCIAL" },
+          { title: "DISTRITO" },
+          { title: "DIRECCION" },
+          { title: "CORREO" },
+          { title: "TELEFONO" },
+          { title: "CELULAR" },
+          { title: "ESTADO" },
+          { title: "ACCION", orderable: false, searchable: false },
+        ],
+        dom: "Bfrtip",
+        lengthMenu: [
+          [10, 25, 50, -1],
+          ["VER 10 FILAS", "VER 25 FILAS", "VER 50 FILAS", "TODO"],
+        ],
+        buttons: [
+          {
+            extend: "pageLength",
+            text: "VER 10 FILAS",
+          },
+          {
+            extend: "print",
+            title: "LISTADO TRANSPORTISTA",
+            text: "IMPRIMIR",
+          },
+          {
+            extend: "pdfHtml5",
+            download: "open",
+            title: "LISTADO TRANSPORTISTA",
+            text: "EXPORTAR PDF",
+          },
+        ],
+      });
     } else {
-      datos = [];
-      $("#cuerpoTabla").html(tablaProveedores);
+      // Actualizar datos de la tabla existente sin re-inicializar
+      tablaProveedores.clear();
+      if (filas.length) tablaProveedores.rows.add(filas);
+      tablaProveedores.draw(false); // false para mantener paginación donde sea posible
     }
 
-    const table = $("#tablaListado").DataTable({
-      dom: "Bfrtip",
-      lengthMenu: [
-        [10, 25, 50, -1],
-        ["VER 10 FILAS", "VER 25 FILAS", "VER 50 FILAS", "TODO"],
-      ],
-      buttons: [
-        {
-          extend: "pageLength",
-          text: "VER 10 FILAS",
-        },
-        {
-          extend: "print",
-          title: "LISTADO TRANSPORTISTA",
-          text: "IMPRIMIR",
-        },
-        {
-          extend: "pdfHtml5",
-          download: "open",
-          title: "LISTADO TRANSPORTISTA",
-          text: "EXPORTAR PDF",
-        },
-      ],
-    });
+  }
 
-    // Función para convertir td a select
-    function convertTdToSelect(td) {
-      var cellData = td.text();
-      var selectHtml = `
-        <select class="form-control">
-          <option value="1" ${cellData === 'ACTIVO' ? 'selected' : ''}>ACTIVO</option>
-          <option value="2" ${cellData === 'INACTIVO' ? 'selected' : ''}>INACTIVO</option>
-        </select>
-      `;
-      td.html(selectHtml);
+  /*=============================================
+    - OBTENER PROVEEDOR (MODAL EDITAR)
+  =============================================*/
+
+  async function ventanaProveedorEditar(idProveedor) {
+    const proveedor = await obtenerDatosProveedorXID(idProveedor);
+
+    if (proveedor.id_proveedor) {
+      $("#codigo").html(proveedor.id_proveedor);
+      $("#ruc").val(proveedor.ruc);
+      $("#razonSocial").val(proveedor.razon_social);
+      $("#correo").val(proveedor.correo);
+      await cargarDepartamento(proveedor.id_departamento);
+      await cargarProvincia(proveedor.id_departamento, proveedor.id_provincia);
+      await cargarDistrito(proveedor.id_provincia, proveedor.id_distrito);
+      $("#direccion").val(proveedor.direccion);
+      $("#telefono").val(proveedor.telefono);
+      $("#celular").val(proveedor.celular);
+      $("#estado").val(proveedor.id_estado);
+      $("#infoTransportista").modal("show");
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Transportista no encontrado",
+        text: "El transportista que intenta editar no existe."
+      });
+    }
+  }
+
+  /*=============================================
+    - ACTUALIZAR DATOS PROVEEDOR
+  =============================================*/
+
+  async function actualizarDatosProveedor() {
+    abrirLoader();
+    validarCampos();
+  }
+
+  /*=============================================
+    - VALIDAR FORMULARIO
+  =============================================*/
+
+  function validarCampos() {
+    const idProveedor = $("#codigo").html();
+
+    const ruc = $("#ruc").val();
+    const razonSocial = $("#razonSocial").val();
+    const correo = $("#correo").val();
+    const distrito = $("#distrito").val();
+    const direccion = $("#direccion").val();
+    const telefono = $("#telefono").val();
+    const celular = $("#celular").val();
+
+    const estado = $("#estado").val();
+
+    const info = {
+      icon: "error",
+      title: "Campo Inválido",
+    };
+
+    if (ruc && !validator.isLength(ruc, { min: 11, max: 11 })) {
+      if (!/^(10|20)$/.test(ruc.substring(0, 2))) {
+        info.text = "El campo ruc debe iniciar con [10|20]";
+      } else {
+        info.text = "El campo ruc debe tener 11 caracteres numéricos";
+      }
+    } else if (razonSocial && !validator.isLength(razonSocial, { min: 1 })) {
+      info.text = "El campo razon social es obligatorio";
+    } else if (correo && !validator.isEmail(correo)) {
+      info.text = "El campo correo debe ser un correo válido";
+    } else if (!distrito || !validator.isLength(distrito, { min: 1 })) {
+      info.text = "El campo distrito es obligatorio";
+    } else if (!validator.isLength(direccion, { min: 1 })) {
+      info.text = "El campo direccion es obligatorio";
     }
 
-    // Evento para convertir td a select al pasar el mouse
-    $('#tablaListado tbody').on('mouseenter', 'td.editable', function () {
-      if ($(this).find('select').length === 0) {
-        convertTdToSelect($(this));
-      }
-    });
+    if (info.text) {
+      cerrarLoader();
+      Swal.fire(info);
+      return false;
+    }
 
-    // Evento para convertir select a td al quitar el mouse
-    $('#tablaListado tbody').on('mouseleave', 'td.editable', async function () {
-      if ($(this).find('select').length > 0) {
-        const selectedValue = Number($(this).find('select').val());
-        const selectedText = $(this).find('select option:selected').text();
-        const row = $(this).closest('tr');
-        const index = row.index();
-        const id = row.find('td:first').text();
-        if (selectedValue !== datos[index].id_estado) {
-          const resultado = await actualizarEstadoProveedor({
-            _idProveedor: id,
-            _idEstado: selectedValue
-          });
-
-          if (resultado.response === 0) {
-            Swal.fire({
-              icon: "error",
-              title: "Transportista no actualizado",
-              text: resultado.message
-            });
-          } else {
-            Swal.fire({
-              icon: "success",
-              title: "Transportista actualizado",
-              text: resultado.message
-            });
-            ventanaProveedorListar();
-          }
-        } else {
-          $(this).html(selectedText);
-        }
-      }
+    validarProveedor({
+      _idProveedor: Number(idProveedor),
+      _ruc: ruc,
+      _razonSocial: razonSocial,
+      _correo: correo,
+      _distrito: distrito,
+      _direccion: direccion,
+      _celular: celular,
+      _telefono: telefono,
+      _idEstado: estado
     });
   }
+
+  /*=============================================
+    - VALIDAR PROVEEDOR
+  =============================================*/
+
+  function validarProveedor($proveedor) {
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Proveedor/Controlador_ValidarProveedor.php",
+      type: "POST",
+      data: $proveedor,
+      dataType: "json",
+      error: function (error) {
+        cerrarLoader();
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        if (datos.response == 0) {
+          actualizarProveedor($proveedor);
+        } else {
+          cerrarLoader();
+          if (datos.id_proveedor === $proveedor._idProveedor) {
+            actualizarProveedor($proveedor);
+          } else {
+            Swal.fire({
+              icon: "warning",
+              title: "Transportista encontrado",
+              text: `El numero de ruc existe con el proveedor: ${datos.razon_social}`,
+            });
+          }
+        }
+      },
+    });
+  }
+
+  /*=============================================
+    - ACTUALIZAR PROVEEDOR
+  =============================================*/
+
+  function actualizarProveedor($proveedor) {
+    $.ajax({
+      url: "../EC-BackEnd/Controlador/ModMaestros/Controlador_Proveedor/Controlador_ActualizarProveedor.php",
+      type: "POST",
+      data: $proveedor,
+      dataType: "json",
+      error: function (error) {
+        cerrarLoader();
+        if (error.status == 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Error del servidor",
+            text: "No se pudo establecer conexion con el servidor",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error no identificado",
+            text: "Contactarse con su proveedor",
+          });
+        }
+      },
+      success: function (datos) {
+        cerrarLoader();
+        if (datos.response == 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Transportista no actualizado",
+            text: datos.message,
+          });
+        } else {
+          Swal.fire({
+            icon: "success",
+            title: "Transportista actualizado",
+            text: datos.message,
+          });
+          mostrarDatosProveedores();
+        }
+      },
+    });
+  }
+
+
 </script>

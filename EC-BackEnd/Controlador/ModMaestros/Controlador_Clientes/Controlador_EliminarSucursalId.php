@@ -4,35 +4,30 @@
 //LLAMADA A LOS ARCHIVOS DE CONEXION A LA BD Y EL MODELO CORRESPONDIENTE AL CONTROLADOR
 //
 require_once(__DIR__ . "/../../../Modelo/ConexionBD.php");
-require_once(__DIR__ . "/../../../Modelo/ModMaestros/Model_Usuario.php");
+require_once(__DIR__ . "/../../../Modelo/ModMaestros/Model_Clientes.php");
 
-$Model_Usuario = new Model_Usuario();
+$Model_Clientes = new Model_Clientes();
 
 
-if (isset($_POST['_idPersonal'])) {
-
+if (isset($_POST['_idSucursal'])) {
 
   //GUARDAR PARAMETROS EN VARIABLES
 
-  $idPersonal = $_POST['_idPersonal'];
-  $usuario = $_POST['_usuario'];
-  $clave = $_POST['_clave'];
-  $idEstado = $_POST['_idEstado'];
-
+  $idSucursal = $_POST['_idSucursal'];
   //MENSAJE A MOSTRAR SI ENCUENTRA RESULTADOS
 
-  if ($Model_Usuario->actualizarUsuario($idPersonal, $usuario, $clave, $idEstado)) {
+  if ($Model_Clientes->eliminarSucursalId($idSucursal)) {
     $msg = array(
       "response" => 1,
-      "message" => "Actualizacion correcta"
+      "message" => "Sucursal eliminado correctamente"
     );
 
-    // MENSAJE A MOSTRAR NO ENCUENTRA RESULTADOS    
+    // MENSAJE A MOSTRAR NO ENCUENTRA RESULTADOS
 
   } else {
     $msg = array(
       "response" => 0,
-      "message" => "Ingrese correctamente los datos"
+      "message" => "No se pudo eliminar la sucursal"
     );
   }
 

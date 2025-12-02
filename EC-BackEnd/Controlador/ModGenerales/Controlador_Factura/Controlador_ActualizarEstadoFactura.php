@@ -22,7 +22,7 @@ if (isset($_POST['_idFactura'])) {
   if ($consulta) {
     $data = array(
       "response" => 1,
-      "message" => "Factura actualizada correctamente"
+      "message" => "Estado Factura actualizada correctamente"
     );
     // MENSAJE A MOSTRAR NO ENCUENTRA RESULTADOS    
 

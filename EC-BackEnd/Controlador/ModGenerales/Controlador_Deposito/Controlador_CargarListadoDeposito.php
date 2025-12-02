@@ -8,15 +8,28 @@ require_once(__DIR__ . "/../../../Modelo/ModGenerales/Model_Deposito.php");
 
 $Model_Deposito = new Model_Deposito();
 
-if ($Model_Deposito->cargarListadoDeposito()) {
+if (isset($_POST['_fechaInicio']) && isset($_POST['_fechaFin'])) {
 
-  $data = $Model_Deposito->cargarListadoDeposito();
-  
+  //GUARDAR PARAMETROS EN VARIABLES
+  $fechaInicio = $_POST['_fechaInicio'];
+  $fechaFin = $_POST['_fechaFin'];
+
+  if ($Model_Deposito->cargarListadoDeposito($fechaInicio, $fechaFin)) {
+
+    $data = $Model_Deposito->cargarListadoDeposito($fechaInicio, $fechaFin);
+    
+  } else {
+
+    $data = array(
+      "response" => 1,
+      "message" => "No existen registros."
+    );
+  }
 } else {
 
   $data = array(
-    "response" => 1,
-    "message" => "No existen registros."
+    "response" => 0,
+    "message" => "Parametros no encontrados"
   );
 }
 header('Content-type: application/json; charset=utf-8');

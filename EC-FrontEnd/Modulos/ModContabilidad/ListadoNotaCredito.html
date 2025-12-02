@@ -1,120 +1,388 @@
 <!--DISEÑO GENERAL DE LA VISTA-->
-<section id="listado">
-  <!--TITULO DE LA VISTA-->
-  <h3 class="h3-responsive titulo font-weight-bold">LISTAR NOTA DE CREDITO</h3>
+<form>
+  <section id="listado">
+    <!--TITULO DE LA VISTA-->
+    <h3 class="h3-responsive titulo font-weight-bold">LISTAR NOTA DE CREDITO</h3>
 
-  <!--CONTENIDO PRINCIPAL DE LA VISTA-->
-  <table id="tablaListado" class="table table-striped table-bordered" cellspacing="0" width="100%">
-    <thead>
-      <tr>
-        <th>NOTA CREDITO</th>
-        <th>FACTURA</th>
-        <th>FECHA NOTA CREDITO</th>
-        <th>BASE IMPONIBLE</th>
-        <th>IGV</th>
-        <th>TOTAL</th>
-        <th>FECHA REGISTRO</th>
-      </tr>
-    </thead>
-    <tbody id="cuerpoTabla"></tbody>
-  </table>
-</section>
+    <div class="form-row justify-content-center ">
+      <div class="form-group col-md-3">
+        <label class="col-form-label font-weight-bold" for="fechaInicio">Fecha Inicio</label>
+        <input required id="fechaInicio" class="form-control" type="date" aria-describedby="fechaInicioHelp"
+          placeholder="Ingresar fecha de inicio" />
+        <small id="fechaInicioHelp" class="form-text text-muted">Ejemplo: 2024-01-01.</small>
+      </div>
+      <div class="form-group col-md-3">
+        <label class="col-form-label font-weight-bold" for="fechaFin">Fecha Fin</label>
+        <input required id="fechaFin" class="form-control" type="date" aria-describedby="fechaFinHelp"
+          placeholder="Ingresar fecha fin" />
+        <small id="fechaFinHelp" class="form-text text-muted">Ejemplo: 2024-01-01.</small>
+      </div>
+    </div>
+
+    <div class="form-inline justify-content-center">
+      <button type="button" onclick="mostrarDatosNotaCredito();return false" class="btn btn-guardar ">
+        Filtrar
+      </button>
+      <button type="button" onclick="exportarExcel();return false" class="btn btn-success ml-2">
+        Exportar a Excel
+      </button>
+    </div>
+
+    <!--CONTENIDO PRINCIPAL DE LA VISTA-->
+    <table id="tablaListado" class="table table-striped table-bordered" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th>NOTA CREDITO</th>
+          <th>FACTURA</th>
+          <th>FECHA NOTA CREDITO</th>
+          <th>BASE IMPONIBLE</th>
+          <th>IGV</th>
+          <th>TOTAL</th>
+          <th>FECHA REGISTRO</th>
+          <th class="no-export">ACCION</th>
+        </tr>
+      </thead>
+      <tbody id="cuerpoTabla"></tbody>
+    </table>
+  </section>
+</form>
+
+<!-- Modal Editar Nota Crédito -->
+<div class="modal fade" id="modalEditarNotaCredito" tabindex="-1" role="dialog"
+  aria-labelledby="modalEditarNotaCreditoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header principal">
+        <h5 class="modal-title white-text font-weight-bold">
+          Informacion Nota credito
+        </h5>
+        <span id="notaCredito" class="badge badge-light badge-pill white-text font-weight-bold"></span>
+        <span id="codigo" class="badge badge-light badge-pill white-text font-weight-bold d-none"></span>
+        <button id="closeModal" type="button" class="close white-text font-weight-bold" data-dismiss="modal"
+          aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <!-- FECHA DEPOSITO -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="fechaNotaCredito">Fecha Nota Credito</label>
+            <input required id="fechaNotaCredito" class="form-control " type="date"
+              aria-describedby="fechaNotaCreditoHelp" placeholder="Ingresar fecha nota de credito" />
+            <small id="fechaNotaCreditoHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <!-- SERIE -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="serieNotaCredito">Serie Nota Credito</label>
+            <input required id="serieNotaCredito" onkeyup="obtenerMayuscula(this);" class="form-control" type="string"
+              aria-describedby="serieNotaCreditoHelp" placeholder="Ingresar serie de la nota de credito" />
+            <small id="serieNotaCreditoHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <!-- NUMERO -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="numeroNotaCredito">Numero Nota Credito</label>
+            <input required id="numeroNotaCredito" onblur="autoCompletarCeros(this);" class="form-control" type="string"
+              maxlength="8" aria-describedby="numeroNotaCreditoaHelp"
+              placeholder="Ingresar numero de la nota de credito" />
+            <small id="numeroNotaCreditoaHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <div class="w-100"></div>
+
+          <!-- BASE IMPONIBLE -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="baseImponibleNotaCredito">Base Imponible</label>
+            <input required id="baseImponibleNotaCredito" class="form-control " type="number" step="0.01"
+              aria-describedby="baseImponibleNotaCreditoHelp"
+              placeholder="Ingresar base imponible de la nota de credito" />
+            <small id="baseImponibleNotaCreditoHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <!-- IGV -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="igvNotaCredito">IGV (18%)</label>
+            <input required id="igvNotaCredito" class="form-control disabled" type="number" step="0.01"
+              aria-describedby="igvNotaCreditoHelp" placeholder="Igv calculado de la nota de credito" />
+            <small id="igvNotaCreditoHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <!-- SUB TOTAL -->
+          <div class="col-12 col-md form-group">
+            <label class="col-form-label font-weight-bold" for="totalNotaCredito">Total Nota de credito</label>
+            <input required id="totalNotaCredito" class="form-control " type="number" step="0.01"
+              aria-describedby="totalNotaCreditoHelp" placeholder="Total calulado de la nota de credito" />
+            <small id="totalNotaCreditoHelp" class="form-text text-muted">Campo obligatorio.</small>
+          </div>
+
+          <div class="w-100"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="actualizarNotaCredito"
+          onclick="validarFormularioActualizarNotaCredito(); return false">
+          Actualizar
+        </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!--ARCHIVOS JS DE LA VISTA-->
 <script type="text/javascript" src="Modulos/ModContabilidad/VistaContabilidad.js"></script>
 <script type="text/javascript" src="Bootstrap/js/tablaDinamica.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/validator/13.6.0/validator.min.js"></script>
+<!-- SheetJS para exportar a Excel -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script type="text/javascript">
+
+  // Column keys for export (same order as headers)
+  var exportColumnKeys = ['nota_credito', 'factura', 'fecha_nota_credito', 'base_imponible', 'igv', 'total', 'fecha_registro'];
+  var tablaNotaCredito = null;
+
+  $("#baseImponibleNotaCredito").change(function () {
+    const baseImponible = $("#baseImponibleNotaCredito").val();
+    if (baseImponible.length > 0) {
+      const igv = Number(baseImponible) * 0.18;
+      const total = Number(baseImponible) * 1.18;
+      $("#baseImponibleNotaCredito").val(Number(baseImponible).toFixed(2));
+      $("#igvNotaCredito").val(igv.toFixed(2));
+      $("#totalNotaCredito").val(total.toFixed(2));
+    } else {
+      $("#baseImponibleNotaCredito").val("0.00");
+      $("#igvNotaCredito").val("0.00");
+      $("#totalNotaCredito").val("0.00");
+    }
+  });
+
+  $("#totalNotaCredito").change(function () {
+    const total = $("#totalNotaCredito").val();
+    if (total.length > 0) {
+      const baseImponible = Number(total) / 1.18;
+      const igv = Number(baseImponible) * 0.18;
+      $("#totalNotaCredito").val(Number(total).toFixed(2));
+      $("#igvNotaCredito").val(igv.toFixed(2));
+      $("#baseImponibleNotaCredito").val(baseImponible.toFixed(2));
+    } else {
+      $("#baseImponibleNotaCredito").val("0.00");
+      $("#igvNotaCredito").val("0.00");
+      $("#totalNotaCredito").val("0.00");
+    }
+  });
 
   /*=============================================
     - CARGAR NOTAS DE CREDITO - DOCUMENTO
   =============================================*/
 
-  mostrarDatosNotaCredito()
+  $(document).ready(function () {
+    const now = new Date();
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+    document.querySelector("#fechaInicio").valueAsDate = firstDay;
+    document.querySelector("#fechaFin").valueAsDate = now;
+    mostrarDatosNotaCredito();
+  });
 
   /*=============================================
     - MOSTRAR NOTAS DE CREDITO
   =============================================*/
 
   async function mostrarDatosNotaCredito() {
-    const datos = await cargarListadoNotaCredito();
-    var tablaFacturas = "";
-    if (Array.isArray(datos)) {
-      for (const factura of datos) {
-        tablaFacturas += `
-        <tr onclick="opcionesEliminarNotaCredito('${factura.id_nota_credito}', ${factura.id_factura})" >
-          <td>${factura.serie_nota_credito} - ${factura.numero_nota_credito}</td>
-          <td>${factura.serie_factura} - ${factura.numero_factura}</td>
-          <td>${factura.fecha_nota_credito}</td>
-          <td>S/ ${factura.base_imponible}</td>
-          <td>S/ ${factura.igv}</td>
-          <td>S/ ${factura.total}</td>
-          <td>${factura.fecha_registro}</td>
-        </tr>
-      `;
-      }
-      $("#cuerpoTabla").html(tablaFacturas);
-    } else {
-      $("#cuerpoTabla").html(tablaFacturas);
-    }
-
-    $("#tablaListado").DataTable({
-      dom: "Bfrtip",
-      lengthMenu: [
-        [10, 25, 50, -1],
-        ["VER 10 FILAS", "VER 25 FILAS", "VER 50 FILAS", "TODO"],
-      ],
-      order: [[6, 'desc']],
-      buttons: [
-        {
-          extend: "pageLength",
-          text: "VER 10 FILAS",
-        },
-        {
-          extend: "print",
-          title: "LISTADO NOTA DE CREDITO",
-          text: "IMPRIMIR",
-        },
-        {
-          extend: "pdfHtml5",
-          download: "open",
-          title: "LISTADO NOTA DE CREDITO",
-          text: "EXPORTAR PDF",
-        },
-      ],
+    const fechaInicio = $("#fechaInicio").val();
+    const fechaFin = $("#fechaFin").val();
+    const datos = await cargarListadoNotaCredito({
+      _fechaInicio: fechaInicio ? fechaInicio.concat(" 00:00:00") : undefined,
+      _fechaFin: fechaFin ? fechaFin.concat(" 23:59:59") : undefined
     });
+
+    const filas = Array.isArray(datos)
+      ? datos.map((factura) => {
+        return {
+          id_factura: factura.id_factura,
+          id_nota_credito: factura.id_nota_credito,
+          id_factura: factura.id_factura,
+          nota_credito: `${factura.serie_nota_credito} - ${factura.numero_nota_credito}`,
+          factura: `${factura.serie_factura} - ${factura.numero_factura}`,
+          fecha_nota_credito: factura.fecha_nota_credito,
+          base_imponible: factura.base_imponible ? `S/ ${factura.base_imponible}` : '',
+          igv: factura.igv ? `S/ ${factura.igv}` : '',
+          total: factura.total ? `S/ ${factura.total}` : '',
+          fecha_registro: factura.fecha_registro
+        };
+      })
+      : [];
+
+    if (!tablaNotaCredito) {
+      tablaNotaCredito = $("#tablaListado").DataTable({
+        data: filas,
+        columns: [
+          { data: 'nota_credito', title: "NOTA CREDITO" },
+          { data: 'factura', title: "FACTURA" },
+          { data: 'fecha_nota_credito', title: "FECHA NOTA CREDITO" },
+          { data: 'base_imponible', title: "BASE IMPONIBLE" },
+          { data: 'igv', title: "IGV" },
+          { data: 'total', title: "TOTAL" },
+          { data: 'fecha_registro', title: "FECHA REGISTRO" },
+          {
+            data: null,
+            title: "ACCION",
+            orderable: false,
+            searchable: false,
+            className: 'no-export',
+            render: function (data, type, row) {
+              if (type === 'display') {
+                return `<button class='btn btn-sm btn-primary' onclick='ventanaListadoNotaCreditoEditar(${row.id_factura})'><i class='fas fa-edit'></i></button>`;
+              }
+              return '';
+            }
+          }
+        ],
+        dom: "Bfrtip",
+        lengthMenu: [
+          [10, 25, 50, -1],
+          ["VER 10 FILAS", "VER 25 FILAS", "VER 50 FILAS", "TODO"],
+        ],
+        order: [[6, 'desc']],
+        buttons: [
+          {
+            extend: "pageLength",
+            text: "VER 10 FILAS",
+          },
+          {
+            extend: "print",
+            title: "LISTADO NOTA DE CREDITO",
+            text: "IMPRIMIR",
+            exportOptions: { columns: ':not(.no-export)', orthogonal: 'export' }
+          },
+          {
+            extend: "pdfHtml5",
+            download: "open",
+            title: "LISTADO NOTA DE CREDITO",
+            text: "EXPORTAR PDF",
+            orientation: 'landscape',
+            pageSize: 'A4',
+            exportOptions: { columns: ':not(.no-export)', orthogonal: 'export' }
+          },
+        ],
+      });
+    } else {
+      tablaNotaCredito.clear();
+      if (filas.length) tablaNotaCredito.rows.add(filas);
+      tablaNotaCredito.draw(false);
+    }
+  }
+
+  // Función para exportar la tabla a Excel usando SheetJS
+  function exportarExcel() {
+    let data = [];
+    let headers = [];
+    // obtener headers visibles (sin .no-export)
+    $('#tablaListado thead th').not('.no-export').each(function () {
+      headers.push($(this).text());
+    });
+    data.push(headers);
+    if (tablaNotaCredito) {
+      const rows = tablaNotaCredito.rows({ search: 'applied' }).data().toArray();
+      for (const row of rows) {
+        const fila = exportColumnKeys.map(k => row[k] ?? '');
+        data.push(fila);
+      }
+    }
+    var ws = XLSX.utils.aoa_to_sheet(data);
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Reporte");
+    XLSX.writeFile(wb, "ReporteNotaCredito.xlsx");
   }
 
   /*=============================================
-    - OPCIONES ELIMINAR DEPOSITO
+    - ABRIR MODAL EDITAR NOTA CREDITO
   =============================================*/
 
-  async function opcionesEliminarNotaCredito(id_nota_credito, id_factura) {
-    Swal.fire({
-      title: "¿Deseas eliminar esta nota de credito?. Al eliminar este registro se actualizará a pagado",
-      showCancelButton: true,
-      confirmButtonText: "Eliminar registro",
-      confirmButtonColor: "#d33",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-
-        const datos = await actualizarEstadoFactura({
-          _idFactura: id_factura,
-          _idEstadoFactura: 2
-        });
-
-        await eliminarNotaCredito({
-          _idNotaCredito: id_nota_credito
-        });
-
-        ventanaDepositoListar();
-
-        Swal.fire({
-          icon: "success",
-          title: "Nota de credito eliminado",
-          text: "La nota de credito se eliminó correctamente",
-        });
-
-      }
+  async function ventanaListadoNotaCreditoEditar(idFactura) {
+    const datos = await cargarNotaCreditoIdFactura({
+      _idFactura: idFactura
     });
+
+    $("#codigo").html(datos.id_factura);
+    $("#notaCredito").html(datos.id_nota_credito);
+    $("#fechaNotaCredito").val(datos.fecha_nota_credito);
+    $("#serieNotaCredito").val(datos.serie_nota_credito);
+    $("#numeroNotaCredito").val(datos.numero_nota_credito);
+    $("#baseImponibleNotaCredito").val(datos.base_imponible);
+    $("#igvNotaCredito").val(datos.igv);
+    $("#totalNotaCredito").val(datos.total);
+    $("#modalEditarNotaCredito").modal("show");
+
+  }
+
+
+  /*=============================================
+    - VALIDAR NOTA CREDITO - ACTUALIZAR
+  =============================================*/
+
+  async function validarFormularioActualizarNotaCredito() {
+    const idNotaCredito = $("#notaCredito").html();
+    const idFactura = $("#codigo").html();
+    const fechaNotaCredito = $("#fechaNotaCredito").val();
+    const serieNotaCredito = $("#serieNotaCredito").val();
+    const numeroNotaCredito = $("#numeroNotaCredito").val();
+    const baseImponibleNotaCredito = $("#baseImponibleNotaCredito").val();
+    const igvNotaCredito = $("#igvNotaCredito").val();
+    const totalNotaCredito = $("#totalNotaCredito").val();
+
+    const info = {
+      icon: "error",
+      title: "Campo Inválido",
+    };
+
+    if (!validator.isLength(fechaNotaCredito, { min: 8 })) {
+      info.text = "El campo fecha de nota de credito debe ser seleccionado";
+    } else if (!validator.isLength(serieNotaCredito, { min: 2 })) {
+      info.text = "El campo serie nota de credito debe tener una longitud minima de 2 caracteres";
+    } else if (!validator.isLength(numeroNotaCredito, { min: 1 })) {
+      info.text = "El campo numero nota de credito no debe ir vacio";
+    } else if (!validator.isLength(baseImponibleNotaCredito, { min: 1 })) {
+      info.text = "El campo base imponible no debe ir vacio";
+    } else if (!validator.isLength(igvNotaCredito, { min: 1 })) {
+      info.text = "El campo igv no debe ir vacio";
+    } else if (!validator.isLength(totalNotaCredito, { min: 1 })) {
+      info.text = "El campo total no debe ir vacio";
+    }
+
+    if (info.text) {
+      Swal.fire(info);
+      return false;
+    }
+
+    const datos = await actualizarNotaCredito({
+      _idNotaCredito: idNotaCredito,
+      _idFactura: idFactura,
+      _fechaNotaCredito: fechaNotaCredito,
+      _serieNotaCredito: serieNotaCredito,
+      _numeroNotaCredito: numeroNotaCredito,
+      _baseImponible: baseImponibleNotaCredito,
+      _igv: igvNotaCredito,
+      _total: totalNotaCredito
+    });
+
+    if (datos.response === 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Nota de credito",
+        text: datos.message
+      });
+    } else {
+      $("#closeModal").click();
+      await mostrarDatosNotaCredito();
+      Swal.fire({
+        icon: "success",
+        title: "Nota de credito",
+        text: datos.message
+      });
+    }
   }
 </script>

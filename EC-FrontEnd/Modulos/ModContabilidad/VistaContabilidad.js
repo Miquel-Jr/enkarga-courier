@@ -475,11 +475,12 @@ async function eliminarFacturaDeposito($factura) {
   });
 }
 
-async function cargarListadoFacturasDeposito() {
+async function cargarListadoFacturasDeposito($datos) {
   return new Promise(function (resolve, reject) {
     $.ajax({
       url: "../EC-BackEnd/Controlador/ModGenerales/Controlador_Deposito/Controlador_CargarListadoDeposito.php",
-      type: "GET",
+      type: "POST",
+      data: $datos,
       dataType: "json",
       success: function (datos) {
         resolve(datos);
@@ -509,7 +510,7 @@ async function cargarDepositoIdFactura($factura) {
     $.ajax({
       url: "../EC-BackEnd/Controlador/ModGenerales/Controlador_Deposito/Controlador_CargarDepositoIdFactura.php",
       type: "POST",
-      data: $factura, 
+      data: $factura,
       dataType: "json",
       success: function (datos) {
         resolve(datos);
@@ -539,7 +540,7 @@ async function registrarNotaCredito($notaCredito) {
     $.ajax({
       url: "../EC-BackEnd/Controlador/ModGenerales/Controlador_Nota_Credito/Controlador_RegistrarNotaCredito.php",
       type: "POST",
-      data: $notaCredito, 
+      data: $notaCredito,
       dataType: "json",
       success: function (datos) {
         resolve(datos);
@@ -569,7 +570,7 @@ async function actualizarNotaCredito($notaCredito) {
     $.ajax({
       url: "../EC-BackEnd/Controlador/ModGenerales/Controlador_Nota_Credito/Controlador_ActualizarNotaCredito.php",
       type: "POST",
-      data: $notaCredito, 
+      data: $notaCredito,
       dataType: "json",
       success: function (datos) {
         resolve(datos);
@@ -599,7 +600,7 @@ async function eliminarNotaCredito($notaCredito) {
     $.ajax({
       url: "../EC-BackEnd/Controlador/ModGenerales/Controlador_Nota_Credito/Controlador_EliminarNotaCredito.php",
       type: "POST",
-      data: $notaCredito, 
+      data: $notaCredito,
       dataType: "json",
       success: function (datos) {
         resolve(datos);
@@ -629,7 +630,7 @@ async function cargarNotaCreditoIdFactura($factura) {
     $.ajax({
       url: "../EC-BackEnd/Controlador/ModGenerales/Controlador_Nota_Credito/Controlador_CargarNotaCreditoIdFactura.php",
       type: "POST",
-      data: $factura, 
+      data: $factura,
       dataType: "json",
       success: function (datos) {
         resolve(datos);
@@ -654,11 +655,12 @@ async function cargarNotaCreditoIdFactura($factura) {
   });
 }
 
-async function cargarListadoNotaCredito() {
+async function cargarListadoNotaCredito($datos) {
   return new Promise(function (resolve, reject) {
     $.ajax({
       url: "../EC-BackEnd/Controlador/ModGenerales/Controlador_Nota_Credito/Controlador_CargarListadoNotaCredito.php",
-      type: "GET", 
+      type: "POST",
+      data: $datos,
       dataType: "json",
       success: function (datos) {
         resolve(datos);
@@ -683,11 +685,12 @@ async function cargarListadoNotaCredito() {
   });
 }
 
-async function cargarListadoGuiaTransporte() {
+async function cargarListadoGuiaTransporte($guia) {
   return new Promise(function (resolve, reject) {
     $.ajax({
       url: "../EC-BackEnd/Controlador/ModGenerales/Controlador_Guia_Transporte/Controlador_CargarListadoGuiaTransporte.php",
-      type: "GET", 
+      type: "POST",
+      data: $guia,
       dataType: "json",
       success: function (datos) {
         resolve(datos);
